@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1036321280326",
+    "project_id": "edutask-30033",
+    "storage_bucket": "edutask-30033.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1036321280326:android:673e39dcd69e0ddbfb1547",
+        "android_client_info": {
+          "package_name": "com.example.edutask"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDScGaCWlQlnpSvhEAscvO44WcZk1gmo0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
