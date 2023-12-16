@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutask/util/navigator_util.dart';
+import 'package:edutask/util/quit_dialogue_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/custom_button_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
@@ -50,17 +51,20 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: homeAppBarWidget(context),
-      body: switchedLoadingContainer(
-          _isLoading,
-          Column(
-            children: [
-              welcomeWidgets(
-                  userType: 'ADMIN', profileImageURL: profileImageURL),
-              _homeButtons()
-            ],
-          )),
+    return WillPopScope(
+      onWillPop: () => displayQuitDialogue(context),
+      child: Scaffold(
+        appBar: homeAppBarWidget(context),
+        body: switchedLoadingContainer(
+            _isLoading,
+            Column(
+              children: [
+                welcomeWidgets(
+                    userType: 'ADMIN', profileImageURL: profileImageURL),
+                _homeButtons()
+              ],
+            )),
+      ),
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/util/quit_dialogue_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
@@ -51,24 +52,27 @@ class _TeacherHomeScreenState extends State<TeacherHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: homeAppBarWidget(context),
-      bottomNavigationBar:
-          userBottomNavBar(context, index: 0, userType: 'TEACHER'),
-      body: switchedLoadingContainer(
-          _isLoading,
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                welcomeWidgets(
-                    userType: 'TEACHER', profileImageURL: profileImageURL),
-                all20Pix(
-                    child: Column(
-                  children: [_pendingSubmissions(), _teacherSchedule()],
-                ))
-              ],
-            ),
-          )),
+    return WillPopScope(
+      onWillPop: () => displayQuitDialogue(context),
+      child: Scaffold(
+        appBar: homeAppBarWidget(context),
+        bottomNavigationBar:
+            userBottomNavBar(context, index: 0, userType: 'TEACHER'),
+        body: switchedLoadingContainer(
+            _isLoading,
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  welcomeWidgets(
+                      userType: 'TEACHER', profileImageURL: profileImageURL),
+                  all20Pix(
+                      child: Column(
+                    children: [_pendingSubmissions(), _teacherSchedule()],
+                  ))
+                ],
+              ),
+            )),
+      ),
     );
   }
 
