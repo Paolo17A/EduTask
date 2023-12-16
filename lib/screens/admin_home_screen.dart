@@ -5,7 +5,6 @@ import 'package:edutask/widgets/custom_button_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_miscellaneous_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
-import 'package:edutask/widgets/custom_text_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +18,6 @@ class AdminHomeScreen extends StatefulWidget {
 class _AdminHomeScreenState extends State<AdminHomeScreen> {
   bool _isLoading = false;
 
-  String userType = '';
   String profileImageURL = '';
 
   @override
@@ -36,7 +34,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .get();
       final userData = user.data() as Map<dynamic, dynamic>;
-      userType = userData['userType'];
       profileImageURL = userData['profileImageURL'];
 
       setState(() {
@@ -54,25 +51,16 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeAppBarWidget(),
+      appBar: homeAppBarWidget(context),
       body: switchedLoadingContainer(
           _isLoading,
           Column(
-            children: [welcomeWidgets(), _homeButtons()],
+            children: [
+              welcomeWidgets(
+                  userType: 'ADMIN', profileImageURL: profileImageURL),
+              _homeButtons()
+            ],
           )),
-    );
-  }
-
-  Widget welcomeWidgets() {
-    return SizedBox(
-      width: double.infinity,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          interText('WELCOME, $userType', fontSize: 50),
-          buildProfileImageWidget(profileImageURL: profileImageURL)
-        ],
-      ),
     );
   }
 
@@ -80,12 +68,18 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     return all20Pix(
         child: Column(
       children: [
-        _homeButton('STUDENT RECORDS', () {}),
-        _homeButton('TEACHER RECORDS', () {}),
+        _homeButton(
+            'STUDENT RECORDS',
+            () => Navigator.of(context)
+                .pushNamed(NavigatorRoutes.adminStudentRecords)),
+        _homeButton(
+            'TEACHER RECORDS',
+            () => Navigator.of(context)
+                .pushNamed(NavigatorRoutes.adminTeacherRecords)),
         _homeButton(
             'SECTION RECORDS',
-            () =>
-                Navigator.of(context).pushNamed(NavigatorRoutes.adminSections))
+            () => Navigator.of(context)
+                .pushNamed(NavigatorRoutes.adminSectionRecords))
       ],
     ));
   }

@@ -1,35 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
-import 'package:edutask/widgets/custom_button_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
-import 'package:edutask/widgets/custom_miscellaneous_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
-import 'package:edutask/widgets/custom_text_widgets.dart';
-import 'package:edutask/widgets/dropdown_widget.dart';
-import 'package:edutask/widgets/edutask_text_field_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-class TeacherRegisterScreen extends StatefulWidget {
-  const TeacherRegisterScreen({super.key});
+import '../widgets/custom_button_widgets.dart';
+import '../widgets/custom_miscellaneous_widgets.dart';
+import '../widgets/custom_text_widgets.dart';
+import '../widgets/edutask_text_field_widget.dart';
+
+class StudentRegisterScreen extends StatefulWidget {
+  const StudentRegisterScreen({super.key});
 
   @override
-  State<TeacherRegisterScreen> createState() => _TeacherRegisterScreenState();
+  State<StudentRegisterScreen> createState() => _StudentRegisterScreenState();
 }
 
 enum RegistrastionStates { register, profile }
 
-class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
+class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
   bool _isLoading = false;
   RegistrastionStates currentState = RegistrastionStates.register;
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-  String handledSubject = '';
-  final teacherNumberController = TextEditingController();
+  final studentNumberController = TextEditingController();
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
 
@@ -41,18 +40,6 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
     confirmPasswordController.dispose();
     firstNameController.dispose();
     lastNameController.dispose();
-  }
-
-  void loginTeacherUser() {
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
-    try {
-      setState(() {
-        _isLoading = true;
-      });
-    } catch (error) {
-      scaffoldMessenger.showSnackBar(
-          SnackBar(content: Text('Error logging in admin: $error')));
-    }
   }
 
   void goPreviousState() {
@@ -69,7 +56,7 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
     if (currentState == RegistrastionStates.register) {
       validateRegisterEntries();
     } else if (currentState == RegistrastionStates.profile) {
-      registerThisTeacher();
+      finishStudentRegistration();
     }
   }
 
@@ -128,13 +115,13 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
     }
   }
 
-  void registerThisTeacher() async {
+  void finishStudentRegistration() async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
     try {
-      if (handledSubject.isEmpty ||
-          firstNameController.text.isEmpty ||
-          lastNameController.text.isEmpty) {
+      if (firstNameController.text.isEmpty ||
+          lastNameController.text.isEmpty ||
+          studentNumberController.text.isEmpty) {
         scaffoldMessenger.showSnackBar(const SnackBar(
             content: Text('Please fill up all provided fields.')));
         return;
@@ -144,70 +131,79 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
       });
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
+
+      await FirebaseFirestore.instance
+          .collection('grades')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .set({
+        'SCIENCE': {'assignments': {}, 'quizzes': {}},
+        'MATHEMATICS': {'assignments': {}, 'quizzes': {}},
+        'ENGLISH': {'assignments': {}, 'quizzes': {}},
+        'AP': {'assignments': {}, 'quizzes': {}},
+        'FILIPINO': {'assignments': {}, 'quizzes': {}},
+        'EPP': {'assignments': {}, 'quizzes': {}},
+        'MAPEH': {'assignments': {}, 'quizzes': {}},
+        'ESP': {'assignments': {}, 'quizzes': {}}
+      });
+
       await FirebaseFirestore.instance
           .collection('users')
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .set({
-        'userType': 'TEACHER',
+        'userType': 'STUDENT',
         'email': emailController.text,
         'password': passwordController.text,
-        'subject': handledSubject,
-        'IDNumber': teacherNumberController.text,
+        'IDNumber': studentNumberController.text,
         'firstName': firstNameController.text,
         'lastName': lastNameController.text,
-        'handledSections': [],
+        'section': '',
         'profileImageURL': ''
       });
-      await FirebaseAuth.instance.signOut();
-      scaffoldMessenger.showSnackBar(const SnackBar(
-          content: Text('Successfully registered new teacher!')));
       setState(() {
         _isLoading = false;
       });
+      scaffoldMessenger.showSnackBar(const SnackBar(
+          content: Text('Sucessfully created new student user!')));
       navigator.pop();
-      navigator.pushReplacementNamed(NavigatorRoutes.teacherLogin);
+      navigator.pushReplacementNamed(NavigatorRoutes.studentLogin);
     } catch (error) {
       scaffoldMessenger.showSnackBar(
-          SnackBar(content: Text('Error registering new teacher: $error')));
+          SnackBar(content: Text('Error registering new student: $error')));
       setState(() {
         _isLoading = false;
       });
     }
   }
 
-  //  BUILD WIDGETS
-  //============================================================================
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-          appBar: authenticationAppBarWidget(),
-          body: stackedLoadingContainer(
-              context,
-              _isLoading,
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: SingleChildScrollView(
-                  child: all20Pix(
-                      child: Column(
-                    children: [
-                      authenticationIcon(context, iconData: Icons.people),
-                      const Gap(30),
-                      interText('TEACHER REGISTER',
-                          color: Colors.black, fontSize: 35),
-                      Container(
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(30)),
-                          child: currentState == RegistrastionStates.register
-                              ? _registerFieldsContainer()
-                              : _profileFieldsContainer()),
-                    ],
-                  )),
-                ),
-              ))),
+        appBar: authenticationAppBarWidget(),
+        body: stackedLoadingContainer(
+            context,
+            _isLoading,
+            SingleChildScrollView(
+              child: all20Pix(
+                  child: Column(
+                children: [
+                  authenticationIcon(context, iconData: Icons.person),
+                  const Gap(30),
+                  interText('STUDENT REGISTER',
+                      color: Colors.black, fontSize: 35),
+                  Container(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(30)),
+                      child: currentState == RegistrastionStates.register
+                          ? _registerFieldsContainer()
+                          : _profileFieldsContainer()),
+                ],
+              )),
+            )),
+      ),
     );
   }
 
@@ -227,8 +223,7 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
     return all20Pix(
         child: Column(
       children: [
-        _sectionDropdown(),
-        _teacherNumber(),
+        _studentNumber(),
         _firstName(),
         _lastName(),
         _navigatorButtons()
@@ -280,41 +275,14 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
     ));
   }
 
-  Widget _sectionDropdown() {
+  Widget _studentNumber() {
     return vertical10horizontal4(Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        interText('Handled Subject', fontSize: 18),
-        Container(
-          decoration: BoxDecoration(
-              border: Border.all(), borderRadius: BorderRadius.circular(20)),
-          child: dropdownWidget(handledSubject, (newVal) {
-            setState(() {
-              handledSubject = newVal!;
-            });
-          }, [
-            'SCIENCE',
-            'MATHEMATICS',
-            'ENGLISH',
-            'AP',
-            'FILIPINO',
-            'EPP',
-            'MAPEH',
-            'ESP'
-          ], '', false),
-        ),
-      ],
-    ));
-  }
-
-  Widget _teacherNumber() {
-    return vertical10horizontal4(Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        interText('Teacher Number', fontSize: 18),
+        interText('Student Number', fontSize: 18),
         EduTaskTextField(
-            text: 'Teacher Number',
-            controller: teacherNumberController,
+            text: 'Student Number',
+            controller: studentNumberController,
             textInputType: TextInputType.number,
             displayPrefixIcon: const Icon(Icons.numbers)),
       ],
@@ -329,7 +297,7 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
         EduTaskTextField(
             text: 'First Name',
             controller: firstNameController,
-            textInputType: TextInputType.text,
+            textInputType: TextInputType.name,
             displayPrefixIcon: const Icon(Icons.person)),
       ],
     ));
@@ -343,7 +311,7 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
         EduTaskTextField(
             text: 'Last Name',
             controller: lastNameController,
-            textInputType: TextInputType.text,
+            textInputType: TextInputType.name,
             displayPrefixIcon: const Icon(Icons.person)),
       ],
     ));

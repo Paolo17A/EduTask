@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 import 'custom_text_widgets.dart';
 
@@ -43,4 +46,45 @@ Widget buildProfileImageWidget(
               color: Colors.black,
             )),
   ]);
+}
+
+Widget welcomeWidgets(
+    {required String userType, required String profileImageURL}) {
+  return SizedBox(
+    width: double.infinity,
+    child: Column(
+      children: [
+        all10Pix(
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+            interText('WELCOME,\n$userType', fontSize: 30),
+            buildProfileImageWidget(profileImageURL: profileImageURL)
+          ]),
+        ),
+        Container(height: 15, color: Colors.grey)
+      ],
+    ),
+  );
+}
+
+Widget userRecordEntry(
+    {required DocumentSnapshot userDoc,
+    required Color color,
+    required Function onTap}) {
+  final userData = userDoc.data() as Map<dynamic, dynamic>;
+  String formattedName = '${userData['firstName']} ${userData['lastName']}';
+  String profileImageURL = userData['profileImageURL'];
+  return GestureDetector(
+    onTap: () => onTap(),
+    child: Container(
+      color: color,
+      height: 50,
+      padding: const EdgeInsets.all(10),
+      child: Row(children: [
+        buildProfileImageWidget(profileImageURL: profileImageURL, radius: 15),
+        const Gap(16),
+        interText(formattedName, fontSize: 16)
+      ]),
+    ),
+  );
 }

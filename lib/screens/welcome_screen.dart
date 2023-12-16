@@ -15,7 +15,10 @@ class WelcomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             welcomeButton(context,
-                onPress: () {}, iconData: Icons.person, label: 'STUDENT'),
+                onPress: () => Navigator.of(context)
+                    .pushNamed(NavigatorRoutes.studentLogin),
+                iconData: Icons.person,
+                label: 'STUDENT'),
             welcomeButton(context,
                 onPress: () => Navigator.of(context)
                     .pushNamed(NavigatorRoutes.teacherLogin),

@@ -14,14 +14,14 @@ import 'package:gap/gap.dart';
 
 import '../widgets/custom_button_widgets.dart';
 
-class TeacherLoginScreen extends StatefulWidget {
-  const TeacherLoginScreen({super.key});
+class StudentLoginScreen extends StatefulWidget {
+  const StudentLoginScreen({super.key});
 
   @override
-  State<TeacherLoginScreen> createState() => _TeacherLoginScreenState();
+  State<StudentLoginScreen> createState() => _StudentLoginScreenState();
 }
 
-class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
+class _StudentLoginScreenState extends State<StudentLoginScreen> {
   bool _isLoading = false;
 
   final emailController = TextEditingController();
@@ -30,6 +30,11 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
   void loginTeacherUser() async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      scaffoldMessenger.showSnackBar(
+          const SnackBar(content: Text('Please fill up all fields')));
+      return;
+    }
     try {
       setState(() {
         _isLoading = true;
@@ -42,21 +47,36 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .get();
       final userData = user.data() as Map<dynamic, dynamic>;
-      if (userData['userType'] != 'TEACHER') {
+      if (userData['userType'] != 'STUDENT') {
         scaffoldMessenger.showSnackBar(
-            const SnackBar(content: Text('This log-in is for teachers only.')));
+            const SnackBar(content: Text('This log-in is for students only.')));
         await FirebaseAuth.instance.signOut();
         emailController.clear();
         passwordController.clear();
+        setState(() {
+          _isLoading = false;
+        });
         return;
       }
+      if (userData['section'].toString().isEmpty) {
+        scaffoldMessenger.showSnackBar(const SnackBar(
+            content: Text('You have not yet been assigned a section')));
+        await FirebaseAuth.instance.signOut();
+        emailController.clear();
+        passwordController.clear();
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+
       setState(() {
         _isLoading = false;
       });
-      navigator.pushNamed(NavigatorRoutes.teacherHome);
+      navigator.pushNamed(NavigatorRoutes.studentHome);
     } catch (error) {
       scaffoldMessenger.showSnackBar(
-          SnackBar(content: Text('Error logging in teacher: $error')));
+          SnackBar(content: Text('Error logging in student: $error')));
       setState(() {
         _isLoading = false;
       });
@@ -78,14 +98,14 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
                   child: all20Pix(
                       child: Column(
                     children: [
-                      authenticationIcon(context, iconData: Icons.people),
+                      authenticationIcon(context, iconData: Icons.person),
                       const Gap(30),
-                      interText('TEACHER LOG-IN',
+                      interText('STUDENT LOG-IN',
                           color: Colors.black, fontSize: 35),
                       _fieldsContainer(),
                       logInBottomRow(context,
                           onRegister: () => Navigator.of(context)
-                              .pushNamed(NavigatorRoutes.teacherRegister))
+                              .pushNamed(NavigatorRoutes.studentRegister))
                     ],
                   )),
                 ),

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_unnecessary_containers
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
