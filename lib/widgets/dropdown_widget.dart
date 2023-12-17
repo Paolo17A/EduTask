@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 
@@ -27,5 +28,22 @@ Widget dropdownWidget(
     items: dropdownItems,
     onChanged: onDropdownValueChanged,
     selectedItem: label,
+  );
+}
+
+Widget userDocumentSnapshotDropdownWidget(
+  String selectedOption,
+  Function(String?) onDropdownValueChanged,
+  List<DocumentSnapshot> dropdownDocuments,
+) {
+  return DropdownButton<String>(
+    value: selectedOption,
+    items: dropdownDocuments.map((doc) {
+      final docData = doc.data() as Map<dynamic, dynamic>;
+      String formattedName = '${docData['firstName']} ${docData['lastName']}';
+      return DropdownMenuItem<String>(
+          value: doc.id, child: Text(formattedName));
+    }).toList(),
+    onChanged: onDropdownValueChanged,
   );
 }

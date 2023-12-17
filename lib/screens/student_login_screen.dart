@@ -69,6 +69,13 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
         });
         return;
       }
+      //  reset the password in firebase in case users forgot their password and reset it using an email link.
+      if (userData['password'] != passwordController.text) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .update({'password': passwordController.text});
+      }
 
       setState(() {
         _isLoading = false;

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutask/util/quit_dialogue_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
+import 'package:edutask/widgets/app_drawer_widget.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:edutask/widgets/custom_text_widgets.dart';
@@ -20,6 +21,7 @@ class TeacherHomeScreen extends StatefulWidget {
 
 class _TeacherHomeScreenState extends State<TeacherHomeScreen> {
   bool _isLoading = true;
+  String userType = '';
   String profileImageURL = '';
 
   @override
@@ -36,6 +38,7 @@ class _TeacherHomeScreenState extends State<TeacherHomeScreen> {
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .get();
       final userData = user.data() as Map<dynamic, dynamic>;
+      userType = userData['userType'];
       profileImageURL = userData['profileImageURL'];
 
       setState(() {
@@ -55,7 +58,8 @@ class _TeacherHomeScreenState extends State<TeacherHomeScreen> {
     return WillPopScope(
       onWillPop: () => displayQuitDialogue(context),
       child: Scaffold(
-        appBar: homeAppBarWidget(context),
+        appBar: homeAppBarWidget(context, mayGoBack: true),
+        drawer: appDrawer(context, userType: userType),
         bottomNavigationBar:
             userBottomNavBar(context, index: 0, userType: 'TEACHER'),
         body: switchedLoadingContainer(

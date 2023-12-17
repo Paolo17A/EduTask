@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/util/quit_dialogue_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
+import 'package:edutask/widgets/app_drawer_widget.dart';
 import 'package:edutask/widgets/custom_button_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_miscellaneous_widgets.dart';
@@ -18,7 +19,7 @@ class AdminHomeScreen extends StatefulWidget {
 
 class _AdminHomeScreenState extends State<AdminHomeScreen> {
   bool _isLoading = false;
-
+  String userType = '';
   String profileImageURL = '';
 
   @override
@@ -35,6 +36,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .get();
       final userData = user.data() as Map<dynamic, dynamic>;
+      userType = userData['userType'];
       profileImageURL = userData['profileImageURL'];
 
       setState(() {
@@ -54,7 +56,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     return WillPopScope(
       onWillPop: () => displayQuitDialogue(context),
       child: Scaffold(
-        appBar: homeAppBarWidget(context),
+        appBar: homeAppBarWidget(context, mayGoBack: true),
+        drawer: appDrawer(context, userType: userType),
         body: switchedLoadingContainer(
             _isLoading,
             Column(
@@ -91,6 +94,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   Widget _homeButton(String label, Function onPress) {
     return all10Pix(
         child: ovalButton(label,
-            onPress: onPress, width: MediaQuery.of(context).size.width * 0.75));
+            onPress: onPress,
+            width: MediaQuery.of(context).size.width * 0.75,
+            height: 125));
   }
 }

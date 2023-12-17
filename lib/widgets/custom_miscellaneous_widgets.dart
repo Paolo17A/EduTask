@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -23,7 +24,9 @@ Widget logInBottomRow(BuildContext context, {required Function onRegister}) {
           onPressed: () => Navigator.of(context).pop(),
           child: interText('< Back', fontSize: 15)),
       TextButton(
-          onPressed: () {}, child: interText('Forgot Password?', fontSize: 15)),
+          onPressed: () =>
+              Navigator.of(context).pushNamed(NavigatorRoutes.resetPassword),
+          child: interText('Forgot Password?', fontSize: 15)),
       TextButton(
           onPressed: () => onRegister(),
           child: interText('Register', fontSize: 15))

@@ -28,15 +28,22 @@ Widget welcomeButton(BuildContext context,
 }
 
 Widget ovalButton(String label,
-    {required Function onPress, double? width, Color color = Colors.black}) {
+    {required Function onPress,
+    double? width,
+    double? height,
+    Color color = Colors.black}) {
   return SizedBox(
     width: width,
+    height: height,
     child: ElevatedButton(
       onPressed: () => onPress(),
       style: ElevatedButton.styleFrom(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
-      child: interText(label, fontWeight: FontWeight.bold, color: color),
+      child: interText(label,
+          fontWeight: FontWeight.bold,
+          color: color,
+          textAlign: TextAlign.center),
     ),
   );
 }

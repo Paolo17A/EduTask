@@ -1,14 +1,20 @@
 import 'package:edutask/firebase_options.dart';
+import 'package:edutask/screens/add_section_screen.dart';
 import 'package:edutask/screens/admin_home_screen.dart';
 import 'package:edutask/screens/admin_login_screen.dart';
+import 'package:edutask/screens/admin_profile_screen.dart';
 import 'package:edutask/screens/admin_section_records_screen.dart';
 import 'package:edutask/screens/admin_student_records_screen.dart';
 import 'package:edutask/screens/admin_teacher_records_screen.dart';
+import 'package:edutask/screens/change_password_screen.dart';
+import 'package:edutask/screens/reset_password_screen.dart';
 import 'package:edutask/screens/student_home_screen.dart';
 import 'package:edutask/screens/student_login_screen.dart';
+import 'package:edutask/screens/student_profile_screen.dart';
 import 'package:edutask/screens/student_register_screen.dart';
 import 'package:edutask/screens/teacher_home_screen.dart';
 import 'package:edutask/screens/teacher_login_screen.dart';
+import 'package:edutask/screens/teacher_profile_screen.dart';
 import 'package:edutask/screens/teacher_register_screen.dart';
 import 'package:edutask/screens/welcome_screen.dart';
 import 'package:edutask/util/navigator_util.dart';
@@ -26,16 +32,20 @@ void main() async {
 
 final Map<String, WidgetBuilder> _routes = {
   NavigatorRoutes.welcome: (context) => const WelcomeScreen(),
+  NavigatorRoutes.resetPassword: (context) => const ResetPasswordScreen(),
+  NavigatorRoutes.changePassword: (context) => const ChangePasswordScreen(),
 
   //  TEACHER
   NavigatorRoutes.teacherLogin: (context) => const TeacherLoginScreen(),
   NavigatorRoutes.teacherRegister: (context) => const TeacherRegisterScreen(),
   NavigatorRoutes.teacherHome: (context) => const TeacherHomeScreen(),
+  NavigatorRoutes.teacherProfile: (context) => const TeacherProfileScreen(),
 
   //  STUDENTS
   NavigatorRoutes.studentLogin: (context) => const StudentLoginScreen(),
   NavigatorRoutes.studentRegister: (context) => const StudentRegisterScreen(),
   NavigatorRoutes.studentHome: (context) => const StudentHomeScreen(),
+  NavigatorRoutes.studentProfile: (context) => const StudentProfileScreen(),
 
   //ADMIN
   NavigatorRoutes.adminLogin: (context) => const AdminLoginScreen(),
@@ -45,7 +55,9 @@ final Map<String, WidgetBuilder> _routes = {
   NavigatorRoutes.adminTeacherRecords: (context) =>
       const AdminTeacherRecordsScreen(),
   NavigatorRoutes.adminSectionRecords: (context) =>
-      const AdminSectionRecordsScreen()
+      const AdminSectionRecordsScreen(),
+  NavigatorRoutes.addSection: (context) => const AddSectionScreen(),
+  NavigatorRoutes.adminProfile: (context) => const AdminProfileScreen()
 };
 
 final ThemeData _themeData = ThemeData(

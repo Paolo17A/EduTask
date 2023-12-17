@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_unnecessary_containers
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/custom_button_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
@@ -171,7 +172,9 @@ class _AdminSectionRecordsScreenState extends State<AdminSectionRecordsScreen> {
                             textInputType: TextInputType.text,
                             displayPrefixIcon: null)),
                     const Gap(40),
-                    ovalButton('ADD SECTION', onPress: addNewSection)
+                    ovalButton('ADD SECTION',
+                        onPress: () => Navigator.of(context)
+                            .pushNamed(NavigatorRoutes.addSection))
                   ]),
                 ),
               ),

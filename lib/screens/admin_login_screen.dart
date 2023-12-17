@@ -52,6 +52,9 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
         await FirebaseAuth.instance.signOut();
         emailController.clear();
         passwordController.clear();
+        setState(() {
+          _isLoading = false;
+        });
         return;
       }
       setState(() {
@@ -149,10 +152,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
         children: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: interText('< Back', fontSize: 15)),
-          TextButton(
-              onPressed: () {},
-              child: interText('Forgot Password?', fontSize: 15)),
+              child: interText('< Back', fontSize: 15))
         ],
       ),
     );

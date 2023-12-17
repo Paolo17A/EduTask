@@ -4,16 +4,20 @@ import 'package:flutter/material.dart';
 
 class NavigatorRoutes {
   static const welcome = '/';
+  static const resetPassword = '/resetPassword';
+  static const changePassword = '/changePassword';
 
   //  TEACHER
   static const teacherLogin = '/teacherLogin';
   static const teacherRegister = '/teacherRegister';
   static const teacherHome = '/teacherHome';
+  static const teacherProfile = '/teacherProfile';
 
   //  STUDENT
   static const studentLogin = '/studentLogin';
   static const studentRegister = '/studentRegister';
   static const studentHome = '/studentHome';
+  static const studentProfile = '/studentProfile';
 
   //  ADMIN
   static const adminLogin = '/adminLogin';
@@ -21,6 +25,8 @@ class NavigatorRoutes {
   static const adminStudentRecords = '/adminStudentRecords';
   static const adminTeacherRecords = '/adminTeacherRecords';
   static const adminSectionRecords = '/adminSectionRecords';
+  static const addSection = '/addSection';
+  static const adminProfile = '/adminProfile';
 
   static void selectedUserRecord(BuildContext context,
       {required DocumentSnapshot userDoc}) {
