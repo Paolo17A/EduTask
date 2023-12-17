@@ -7,7 +7,6 @@ import 'package:edutask/widgets/custom_button_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:edutask/widgets/custom_text_widgets.dart';
-import 'package:edutask/widgets/edutask_text_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -22,8 +21,6 @@ class AdminSectionRecordsScreen extends StatefulWidget {
 class _AdminSectionRecordsScreenState extends State<AdminSectionRecordsScreen> {
   bool _isLoading = true;
   List<DocumentSnapshot> sectionDocs = [];
-
-  final sectionNameController = TextEditingController();
 
   @override
   void didChangeDependencies() {
@@ -49,46 +46,6 @@ class _AdminSectionRecordsScreenState extends State<AdminSectionRecordsScreen> {
     }
   }
 
-  void addNewSection() async {
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
-    if (sectionNameController.text.isEmpty) {
-      scaffoldMessenger.showSnackBar(
-          const SnackBar(content: Text('Please provide a section name.')));
-      return;
-    }
-    try {
-      Navigator.of(context).pop();
-      setState(() {
-        _isLoading = true;
-      });
-      String sectionID = DateTime.now().millisecondsSinceEpoch.toString();
-      await FirebaseFirestore.instance
-          .collection('sections')
-          .doc(sectionID)
-          .set({
-        'name': sectionNameController.text,
-        'SCIENCE': '',
-        'MATHEMATICS': '',
-        'ENGLISH': '',
-        'AP': '',
-        'FILIPINO': '',
-        'EPP': '',
-        'MAPEH': '',
-        'ESP': '',
-        'students': []
-      });
-      scaffoldMessenger.showSnackBar(
-          const SnackBar(content: Text('Successfully added new section')));
-      getAllSections();
-    } catch (error) {
-      scaffoldMessenger.showSnackBar(
-          SnackBar(content: Text('Error getting all sections: $error')));
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,7 +59,9 @@ class _AdminSectionRecordsScreenState extends State<AdminSectionRecordsScreen> {
                   _studentRecordsHeader(),
                   _sectionsContainer(),
                   const Gap(20),
-                  ovalButton('ADD SECTION', onPress: showAddSectionDialog)
+                  ovalButton('ADD SECTION',
+                      onPress: () => Navigator.of(context)
+                          .pushNamed(NavigatorRoutes.addSection))
                 ],
               )),
             )));
@@ -133,7 +92,8 @@ class _AdminSectionRecordsScreenState extends State<AdminSectionRecordsScreen> {
               sectionDocs[index].data() as Map<dynamic, dynamic>;
           String name = sectionData['name'];
           return GestureDetector(
-              onTap: () {},
+              onTap: () => NavigatorRoutes.selectedSection(context,
+                  sectionDoc: sectionDocs[index]),
               child: Container(
                 color: index % 2 == 0
                     ? Colors.grey.withOpacity(0.9)
@@ -148,36 +108,5 @@ class _AdminSectionRecordsScreenState extends State<AdminSectionRecordsScreen> {
                 ),
               ));
         });
-  }
-
-  void showAddSectionDialog() {
-    sectionNameController.clear();
-    showDialog(
-        context: context,
-        builder: (context) => GestureDetector(
-              onTap: () => FocusScope.of(context).unfocus(),
-              child: AlertDialog(
-                content: SizedBox(
-                  //width: MediaQuery.of(context).size.width * 0.45,
-                  height: MediaQuery.of(context).size.height * 0.5,
-                  child: Column(children: [
-                    interText('ADD NEW SECTION',
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                    all10Pix(
-                        child: EduTaskTextField(
-                            text: 'Section Name',
-                            controller: sectionNameController,
-                            textInputType: TextInputType.text,
-                            displayPrefixIcon: null)),
-                    const Gap(40),
-                    ovalButton('ADD SECTION',
-                        onPress: () => Navigator.of(context)
-                            .pushNamed(NavigatorRoutes.addSection))
-                  ]),
-                ),
-              ),
-            ));
   }
 }

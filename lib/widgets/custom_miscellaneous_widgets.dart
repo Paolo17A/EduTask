@@ -91,3 +91,24 @@ Widget userRecordEntry(
     ),
   );
 }
+
+Widget sectionTeacherContainer(BuildContext context,
+    {required String subjectLabel, required String formattedName}) {
+  return vertical10horizontal4(
+    Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        interText(subjectLabel),
+        Container(
+            width: MediaQuery.of(context).size.width * 0.4,
+            color: Colors.grey,
+            padding: EdgeInsets.all(10),
+            child: Center(
+              child: Row(children: [
+                interText(formattedName.isNotEmpty ? formattedName : 'N/A')
+              ]),
+            ))
+      ],
+    ),
+  );
+}

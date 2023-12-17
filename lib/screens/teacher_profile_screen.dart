@@ -28,6 +28,7 @@ class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
   bool _isInitialized = false;
   bool _editMode = false;
   String userType = '';
+  String subject = '';
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   String profileImageURL = '';
@@ -48,6 +49,7 @@ class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
           .get();
       final userData = user.data() as Map<dynamic, dynamic>;
       userType = userData['userType'];
+      subject = userData['subject'];
       firstNameController.text = userData['firstName'];
       lastNameController.text = userData['lastName'];
       profileImageURL = userData['profileImageURL'];
@@ -164,7 +166,12 @@ class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
+      onTap: () {
+        final FocusScopeNode currentScope = FocusScope.of(context);
+        if (!currentScope.hasPrimaryFocus && currentScope.hasFocus) {
+          FocusManager.instance.primaryFocus!.unfocus();
+        }
+      },
       child: Scaffold(
         appBar: homeAppBarWidget(context, mayGoBack: true),
         drawer: appDrawer(context, userType: userType),
@@ -175,7 +182,7 @@ class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
               child: all20Pix(
                   child: Column(
                 children: [
-                  _basicAdminData(),
+                  _basicTeacherData(),
                   const Gap(30),
                   if (_editMode)
                     ovalButton('CANCEL CHANGES',
@@ -197,48 +204,54 @@ class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
     );
   }
 
-  Widget _basicAdminData() {
+  Widget _basicTeacherData() {
     return vertical20Pix(
-      child: Row(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.35,
-            child: Column(
-              children: [
-                buildProfileImageWidget(
-                    profileImageURL: profileImageURL,
-                    radius: MediaQuery.of(context).size.width * 0.2),
-                if (_editMode)
-                  ovalButton('UPLOAD PHOTO', onPress: _pickProfileImage),
-                if (_editMode && profileImageURL.isNotEmpty)
-                  ovalButton('DELETE PHOTO', onPress: _removeProfileImage)
-              ],
-            ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.5,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                interText('First Name', fontSize: 20),
-                EduTaskTextField(
-                    text: 'First Name',
-                    controller: firstNameController,
-                    textInputType: TextInputType.name,
-                    displayPrefixIcon: null,
-                    enabled: _editMode),
-                const Gap(15),
-                interText('Last Name', fontSize: 20),
-                EduTaskTextField(
-                    text: 'Last Name',
-                    controller: lastNameController,
-                    textInputType: TextInputType.name,
-                    displayPrefixIcon: null,
-                    enabled: _editMode)
-              ],
-            ),
+          interText('Subject Handled: $subject', fontSize: 23),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.35,
+                child: Column(
+                  children: [
+                    buildProfileImageWidget(
+                        profileImageURL: profileImageURL,
+                        radius: MediaQuery.of(context).size.width * 0.2),
+                    if (_editMode)
+                      ovalButton('UPLOAD PHOTO', onPress: _pickProfileImage),
+                    if (_editMode && profileImageURL.isNotEmpty)
+                      ovalButton('DELETE PHOTO', onPress: _removeProfileImage)
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    interText('First Name', fontSize: 20),
+                    EduTaskTextField(
+                        text: 'First Name',
+                        controller: firstNameController,
+                        textInputType: TextInputType.name,
+                        displayPrefixIcon: null,
+                        enabled: _editMode),
+                    const Gap(15),
+                    interText('Last Name', fontSize: 20),
+                    EduTaskTextField(
+                        text: 'Last Name',
+                        controller: lastNameController,
+                        textInputType: TextInputType.name,
+                        displayPrefixIcon: null,
+                        enabled: _editMode)
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),

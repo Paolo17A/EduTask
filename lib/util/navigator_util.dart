@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/screens/admin_selected_section_screen.dart';
 import 'package:edutask/screens/selected_user_record_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -32,5 +33,12 @@ class NavigatorRoutes {
       {required DocumentSnapshot userDoc}) {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => SelectedUserRecordScreen(userDoc: userDoc)));
+  }
+
+  static void selectedSection(BuildContext context,
+      {required DocumentSnapshot sectionDoc}) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) =>
+            AdminSelectedSectionScreen(sectionDoc: sectionDoc)));
   }
 }

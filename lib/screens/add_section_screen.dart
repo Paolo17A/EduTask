@@ -20,6 +20,7 @@ class AddSectionScreen extends StatefulWidget {
 
 class _AddSectionScreenState extends State<AddSectionScreen> {
   bool _isLoading = true;
+  bool _isInitialized = false;
 
   final sectionNameController = TextEditingController();
 
@@ -48,6 +49,7 @@ class _AddSectionScreenState extends State<AddSectionScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    if (!_isInitialized) getAllTeachers();
   }
 
   void getAllTeachers() async {
@@ -110,9 +112,18 @@ class _AddSectionScreenState extends State<AddSectionScreen> {
       final students = await FirebaseFirestore.instance
           .collection('users')
           .where('userType', isEqualTo: 'STUDENT')
-          .where('section', isNotEqualTo: '')
           .get();
       studentDocs = students.docs;
+      studentDocs = studentDocs.where(
+        (student) {
+          final studentData = student.data() as Map<dynamic, dynamic>;
+          return studentData['section'].toString().isEmpty;
+        },
+      ).toList();
+      setState(() {
+        _isLoading = false;
+        _isInitialized = true;
+      });
     } catch (error) {
       scaffoldMessenger.showSnackBar(
           SnackBar(content: Text('Error getting all teachers: $error')));
@@ -131,7 +142,6 @@ class _AddSectionScreenState extends State<AddSectionScreen> {
       return;
     }
     try {
-      Navigator.of(context).pop();
       setState(() {
         _isLoading = true;
       });
@@ -149,7 +159,9 @@ class _AddSectionScreenState extends State<AddSectionScreen> {
         'EPP': selectedEPPTeacherID,
         'MAPEH': selectedMAPEHTeacherID,
         'ESP': selectedESPTeacherID,
-        'students': []
+        'students': [],
+        'assignments': [],
+        'quizzes': []
       });
 
       if (selectedScienceTeacherID.isNotEmpty) {
@@ -169,8 +181,65 @@ class _AddSectionScreenState extends State<AddSectionScreen> {
           'handledSections': FieldValue.arrayUnion([sectionID])
         });
       }
+
+      if (selectedEnglishTeacherID.isNotEmpty) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(selectedEnglishTeacherID)
+            .update({
+          'handledSections': FieldValue.arrayUnion([sectionID])
+        });
+      }
+
+      if (selectedAPTeacherID.isNotEmpty) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(selectedAPTeacherID)
+            .update({
+          'handledSections': FieldValue.arrayUnion([sectionID])
+        });
+      }
+
+      if (selectedFilipinoTeacherID.isNotEmpty) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(selectedFilipinoTeacherID)
+            .update({
+          'handledSections': FieldValue.arrayUnion([sectionID])
+        });
+      }
+
+      if (selectedEPPTeacherID.isNotEmpty) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(selectedEPPTeacherID)
+            .update({
+          'handledSections': FieldValue.arrayUnion([sectionID])
+        });
+      }
+
+      if (selectedESPTeacherID.isNotEmpty) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(selectedESPTeacherID)
+            .update({
+          'handledSections': FieldValue.arrayUnion([sectionID])
+        });
+      }
+
+      if (selectedMAPEHTeacherID.isNotEmpty) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(selectedMAPEHTeacherID)
+            .update({
+          'handledSections': FieldValue.arrayUnion([sectionID])
+        });
+      }
       scaffoldMessenger.showSnackBar(
           const SnackBar(content: Text('Successfully added new section')));
+      setState(() {
+        _isLoading = false;
+      });
       navigator.pop();
       navigator.pushReplacementNamed(NavigatorRoutes.adminSectionRecords);
     } catch (error) {
@@ -184,26 +253,29 @@ class _AddSectionScreenState extends State<AddSectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: homeAppBarWidget(context),
-      body: stackedLoadingContainer(
-          context,
-          _isLoading,
-          SingleChildScrollView(
-            child: all20Pix(
-                child: Column(
-              children: [
-                _newSectionHeader(),
-                const Gap(20),
-                _sectionName(),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [_teacherColumn(), _studentsColumn()]),
-                const Gap(15),
-                ovalButton('ADD NEW SECTION', onPress: addNewSection)
-              ],
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        appBar: homeAppBarWidget(context),
+        body: stackedLoadingContainer(
+            context,
+            _isLoading,
+            SingleChildScrollView(
+              child: all20Pix(
+                  child: Column(
+                children: [
+                  _newSectionHeader(),
+                  const Gap(20),
+                  _sectionName(),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [_teacher1stColumn(), _teacher2ndColumn()]),
+                  const Gap(15),
+                  ovalButton('ADD NEW SECTION', onPress: addNewSection)
+                ],
+              )),
             )),
-          )),
+      ),
     );
   }
 
@@ -226,7 +298,7 @@ class _AddSectionScreenState extends State<AddSectionScreen> {
     ));
   }
 
-  Widget _teacherColumn() {
+  Widget _teacher1stColumn() {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.4,
       child: Column(
@@ -235,14 +307,24 @@ class _AddSectionScreenState extends State<AddSectionScreen> {
           _scienceTeachers(),
           _mathTeachers(),
           _englishTeachers(),
+          _apTeachers()
         ],
       ),
     );
   }
 
-  Widget _studentsColumn() {
+  Widget _teacher2ndColumn() {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.4,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _filipinoTeachers(),
+          _eppTeachers(),
+          _espTeachers(),
+          _mapehTeachers()
+        ],
+      ),
     );
   }
 
@@ -274,7 +356,7 @@ class _AddSectionScreenState extends State<AddSectionScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         interText('Math Teachers', fontSize: 18),
-        if (scienceTeachers.isNotEmpty)
+        if (mathTeachers.isNotEmpty)
           Container(
             decoration: BoxDecoration(
                 border: Border.all(), borderRadius: BorderRadius.circular(20)),
@@ -296,11 +378,11 @@ class _AddSectionScreenState extends State<AddSectionScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         interText('English Teachers', fontSize: 18),
-        if (scienceTeachers.isNotEmpty)
+        if (englishTeachers.isNotEmpty)
           Container(
             decoration: BoxDecoration(
                 border: Border.all(), borderRadius: BorderRadius.circular(20)),
-            child: userDocumentSnapshotDropdownWidget(selectedMathTeacherID,
+            child: userDocumentSnapshotDropdownWidget(selectedEnglishTeacherID,
                 (newVal) {
               setState(() {
                 selectedEnglishTeacherID = newVal!;
@@ -310,6 +392,117 @@ class _AddSectionScreenState extends State<AddSectionScreen> {
         else
           interText('NO ENGLISH TEACHERS AVAILABLE',
               fontWeight: FontWeight.bold)
+      ],
+    ));
+  }
+
+  Widget _apTeachers() {
+    return vertical10horizontal4(Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        interText('AP Teachers', fontSize: 18),
+        if (apTeachers.isNotEmpty)
+          Container(
+            decoration: BoxDecoration(
+                border: Border.all(), borderRadius: BorderRadius.circular(20)),
+            child: userDocumentSnapshotDropdownWidget(selectedAPTeacherID,
+                (newVal) {
+              setState(() {
+                selectedAPTeacherID = newVal!;
+              });
+            }, apTeachers),
+          )
+        else
+          interText('NO AP TEACHERS AVAILABLE', fontWeight: FontWeight.bold)
+      ],
+    ));
+  }
+
+  Widget _filipinoTeachers() {
+    return vertical10horizontal4(Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        interText('Filipino Teachers', fontSize: 18),
+        if (filipinoTeachers.isNotEmpty)
+          Container(
+            decoration: BoxDecoration(
+                border: Border.all(), borderRadius: BorderRadius.circular(20)),
+            child: userDocumentSnapshotDropdownWidget(selectedFilipinoTeacherID,
+                (newVal) {
+              setState(() {
+                selectedFilipinoTeacherID = newVal!;
+              });
+            }, filipinoTeachers),
+          )
+        else
+          interText('NO FILIPINO TEACHERS AVAILABLE',
+              fontWeight: FontWeight.bold)
+      ],
+    ));
+  }
+
+  Widget _eppTeachers() {
+    return vertical10horizontal4(Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        interText('EPP Teachers', fontSize: 18),
+        if (eppTeachers.isNotEmpty)
+          Container(
+            decoration: BoxDecoration(
+                border: Border.all(), borderRadius: BorderRadius.circular(20)),
+            child: userDocumentSnapshotDropdownWidget(selectedEPPTeacherID,
+                (newVal) {
+              setState(() {
+                selectedEPPTeacherID = newVal!;
+              });
+            }, eppTeachers),
+          )
+        else
+          interText('NO EPP TEACHERS AVAILABLE', fontWeight: FontWeight.bold)
+      ],
+    ));
+  }
+
+  Widget _espTeachers() {
+    return vertical10horizontal4(Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        interText('ESP Teachers', fontSize: 18),
+        if (espTeachers.isNotEmpty)
+          Container(
+            decoration: BoxDecoration(
+                border: Border.all(), borderRadius: BorderRadius.circular(20)),
+            child: userDocumentSnapshotDropdownWidget(selectedESPTeacherID,
+                (newVal) {
+              setState(() {
+                selectedESPTeacherID = newVal!;
+              });
+            }, espTeachers),
+          )
+        else
+          interText('NO ESP TEACHERS AVAILABLE', fontWeight: FontWeight.bold)
+      ],
+    ));
+  }
+
+  Widget _mapehTeachers() {
+    return vertical10horizontal4(Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        interText('MAPEH Teachers', fontSize: 18),
+        if (mapehTeachers.isNotEmpty)
+          Container(
+            decoration: BoxDecoration(
+                border: Border.all(), borderRadius: BorderRadius.circular(20)),
+            child: userDocumentSnapshotDropdownWidget(selectedMAPEHTeacherID,
+                (newVal) {
+              setState(() {
+                selectedMAPEHTeacherID = newVal!;
+              });
+            }, mapehTeachers),
+          )
+        else
+          interText('NO MAPEH TEACHERS AVAILABLE', fontWeight: FontWeight.bold)
       ],
     ));
   }

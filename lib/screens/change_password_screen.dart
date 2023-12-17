@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/util/quit_dialogue_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/app_drawer_widget.dart';
 import 'package:edutask/widgets/custom_button_widgets.dart';
@@ -114,36 +115,39 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Scaffold(
-          appBar: homeAppBarWidget(context, mayGoBack: true),
-          drawer: appDrawer(context, userType: userType),
-          body: stackedLoadingContainer(
-              context,
-              _isLoading,
-              SingleChildScrollView(
-                child: all20Pix(
-                    child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(30)),
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    children: [
-                      _currentPassword(),
-                      _newPassword(),
-                      _confirmNewPassword(),
-                      vertical20Pix(
-                        child: ovalButton('CHANGE PASSWORD',
-                            onPress: () => changeUserPassword()),
-                      )
-                    ],
-                  ),
+    return WillPopScope(
+      onWillPop: () => displayQuitDialogue(context),
+      child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Scaffold(
+            appBar: homeAppBarWidget(context, mayGoBack: true),
+            drawer: appDrawer(context, userType: userType),
+            body: stackedLoadingContainer(
+                context,
+                _isLoading,
+                SingleChildScrollView(
+                  child: all20Pix(
+                      child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(30)),
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        _currentPassword(),
+                        _newPassword(),
+                        _confirmNewPassword(),
+                        vertical20Pix(
+                          child: ovalButton('CHANGE PASSWORD',
+                              onPress: () => changeUserPassword()),
+                        )
+                      ],
+                    ),
+                  )),
                 )),
-              )),
-        ));
+          )),
+    );
   }
 
   Widget _currentPassword() {
@@ -181,7 +185,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         interText('Confirm New Password', fontSize: 18),
         EduTaskTextField(
             text: 'Confirm New Password',
-            controller: newPasswordController,
+            controller: confirmNewPasswordController,
             textInputType: TextInputType.visiblePassword,
             displayPrefixIcon: const Icon(Icons.lock)),
       ],

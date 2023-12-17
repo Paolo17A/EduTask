@@ -43,10 +43,16 @@ dependencies:
   dropdown_search: ^5.0.6
   image_picker: ^1.0.5
   firebase_storage: ^11.5.6
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+flutter_launcher_icons:
+  android: true
+  image_path_android: "assets/images/central_elem_logo.png"
+  min_sdk_android: 21
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
