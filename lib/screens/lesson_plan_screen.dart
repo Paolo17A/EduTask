@@ -88,7 +88,8 @@ class _LessonPlanScreenState extends State<LessonPlanScreen> {
           .collection('lessons')
           .doc(lessonDoc.id)
           .delete();
-
+      scaffoldMessenger.showSnackBar(
+          SnackBar(content: Text('Successfully deleted this lesson')));
       getLessonPlan();
     } catch (error) {
       scaffoldMessenger.showSnackBar(
@@ -124,10 +125,49 @@ class _LessonPlanScreenState extends State<LessonPlanScreen> {
           .doc(assignmentDoc.id)
           .delete();
 
+      scaffoldMessenger.showSnackBar(
+          SnackBar(content: Text('Successfully deleted this assignment.')));
       getLessonPlan();
     } catch (error) {
       scaffoldMessenger.showSnackBar(
           SnackBar(content: Text('Error deleting this assignment: $error')));
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void deleteQuiz(DocumentSnapshot quizDoc) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      final quizData = quizDoc.data() as Map<dynamic, dynamic>;
+
+      //  1. Disassociate this assignment from every associated section
+      List<dynamic> associatedSections = quizData['associatedSections'];
+      for (var section in associatedSections) {
+        await FirebaseFirestore.instance
+            .collection('sections')
+            .doc(section)
+            .update({
+          'quizzes': FieldValue.arrayRemove([quizDoc.id])
+        });
+      }
+
+      //  2. Delete the assignment document
+      await FirebaseFirestore.instance
+          .collection('quizzes')
+          .doc(quizDoc.id)
+          .delete();
+
+      scaffoldMessenger.showSnackBar(
+          SnackBar(content: Text('Successfully deleted this quiz.')));
+      getLessonPlan();
+    } catch (error) {
+      scaffoldMessenger.showSnackBar(
+          SnackBar(content: Text('Error deleting this quiz: $error')));
       setState(() {
         _isLoading = false;
       });
@@ -169,41 +209,43 @@ class _LessonPlanScreenState extends State<LessonPlanScreen> {
   }
 
   Widget _expandableLessons() {
-    return ExpansionTile(
-      collapsedBackgroundColor: Colors.grey.withOpacity(0.5),
-      backgroundColor: Colors.grey.withOpacity(0.5),
-      textColor: Colors.black,
-      iconColor: Colors.black,
-      collapsedShape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10), side: BorderSide()),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10), side: BorderSide()),
-      title: interText('LESSONS'),
-      children: [
-        ovalButton('CREATE LESSON',
-            onPress: () =>
-                Navigator.of(context).pushNamed(NavigatorRoutes.addLesson)),
-        Gap(15),
-        lessonDocs.isNotEmpty
-            ? SizedBox(
-                height: MediaQuery.of(context).size.height * 0.3,
-                child: ListView.builder(
-                    shrinkWrap: false,
-                    itemCount: lessonDocs.length,
-                    itemBuilder: (context, index) => teacherMaterialEntry(
-                        context,
-                        materialDoc: lessonDocs[index],
-                        onEdit: () => NavigatorRoutes.editLesson(context,
-                            lessonID: lessonDocs[index].id),
-                        onDelete: () => displayDeleteEntryDialog(context,
-                            message:
-                                'Are you sure you want to delete this lesson?',
-                            deleteWord: 'Delete',
-                            deleteEntry: () =>
-                                deleteLesson(lessonDocs[index])))),
-              )
-            : interText('NO AVAILABLE  LESSONS', fontSize: 20)
-      ],
+    return vertical20Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: Colors.grey.withOpacity(0.5),
+        backgroundColor: Colors.grey.withOpacity(0.5),
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('LESSONS'),
+        children: [
+          ovalButton('CREATE LESSON',
+              onPress: () =>
+                  Navigator.of(context).pushNamed(NavigatorRoutes.addLesson)),
+          Gap(15),
+          lessonDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: lessonDocs.length,
+                      itemBuilder: (context, index) => teacherMaterialEntry(
+                          context,
+                          materialDoc: lessonDocs[index],
+                          onEdit: () => NavigatorRoutes.editLesson(context,
+                              lessonID: lessonDocs[index].id),
+                          onDelete: () => displayDeleteEntryDialog(context,
+                              message:
+                                  'Are you sure you want to delete this lesson?',
+                              deleteWord: 'Delete',
+                              deleteEntry: () =>
+                                  deleteLesson(lessonDocs[index])))),
+                )
+              : interText('NO AVAILABLE  LESSONS', fontSize: 20)
+        ],
+      ),
     );
   }
 
@@ -273,13 +315,14 @@ class _LessonPlanScreenState extends State<LessonPlanScreen> {
                       itemCount: quizDocs.length,
                       itemBuilder: (context, index) => teacherMaterialEntry(
                           context,
-                          materialDoc: assignmentDocs[index],
-                          onEdit: () {},
+                          materialDoc: quizDocs[index],
+                          onEdit: () => NavigatorRoutes.editQuiz(context,
+                              quizID: quizDocs[index].id),
                           onDelete: () => displayDeleteEntryDialog(context,
                               message:
                                   'Are you sure you want to delete this quiz?',
                               deleteWord: 'Delete',
-                              deleteEntry: () {}))),
+                              deleteEntry: () => deleteQuiz(quizDocs[index])))),
                 )
               : interText('NO AVAILABLE QUIZZES', fontSize: 20)
         ],

@@ -13,16 +13,17 @@ import 'package:gap/gap.dart';
 
 import '../widgets/string_choices_radio_widget.dart';
 
-class AddQuizScreen extends StatefulWidget {
-  const AddQuizScreen({super.key});
+class EditQuizScreen extends StatefulWidget {
+  final String quizID;
+  const EditQuizScreen({super.key, required this.quizID});
 
   @override
-  State<AddQuizScreen> createState() => _AddQuizScreenState();
+  State<EditQuizScreen> createState() => _EditQuizScreenState();
 }
 
-class _AddQuizScreenState extends State<AddQuizScreen> {
+class _EditQuizScreenState extends State<EditQuizScreen> {
   bool _isLoading = false;
-
+  bool _isInitialized = false;
   int currentQuestion = 0;
 
   final TextEditingController _titleController = TextEditingController();
@@ -42,12 +43,54 @@ class _AddQuizScreenState extends State<AddQuizScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) getSerializedQuizContent();
+  }
+
+  @override
   void dispose() {
     super.dispose();
     _titleController.dispose();
     _questionController.dispose();
     for (var choice in _choicesControllers) {
       choice.dispose();
+    }
+  }
+
+  void getSerializedQuizContent() async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      final quiz = await FirebaseFirestore.instance
+          .collection('quizzes')
+          .doc(widget.quizID)
+          .get();
+      final quizData = quiz.data() as Map<dynamic, dynamic>;
+      quizQuestions = jsonDecode(quizData['quizContent']);
+      print('QUIZ QUESTIONS: $quizQuestions');
+      print('quiz questions length: ${quizQuestions.length}');
+      _titleController.text = quizData['title'];
+      _questionController.text = quizQuestions[currentQuestion]['question'];
+      for (int i = 0; i < _choicesControllers.length; i++) {
+        _choicesControllers[i].text =
+            quizQuestions[currentQuestion]['options'][choiceLetters[i]];
+      }
+      _correctChoiceString = quizQuestions[currentQuestion]['answer'];
+      stringChoice.currentState?.setChoice(_correctChoiceString!);
+      setState(() {
+        _isLoading = false;
+        _isInitialized = true;
+      });
+    } catch (error) {
+      scaffoldMessenger.showSnackBar(SnackBar(
+          content: Text('Error getting serialized quiz content: $error')));
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -118,10 +161,9 @@ class _AddQuizScreenState extends State<AddQuizScreen> {
 
     setState(() {
       currentQuestion++;
-      print('current question: $currentQuestion');
       if (currentQuestion == 10) {
         //currentQuestion--;
-        addNewQuiz();
+        editQuiz();
         return;
       }
       if (currentQuestion <= quizQuestions.length - 1) {
@@ -133,7 +175,8 @@ class _AddQuizScreenState extends State<AddQuizScreen> {
         }
         _correctChoiceString = selectedQuestion['answer'];
         stringChoice.currentState?.setChoice(_correctChoiceString!);
-      } else {
+      }
+      /*else {
         _questionController.clear();
 
         for (TextEditingController choice in _choicesControllers) {
@@ -141,11 +184,11 @@ class _AddQuizScreenState extends State<AddQuizScreen> {
         }
         _correctChoiceString = null;
         stringChoice.currentState?.resetChoice();
-      }
+      }*/
     });
   }
 
-  void addNewQuiz() async {
+  void editQuiz() async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
     try {
@@ -169,21 +212,22 @@ class _AddQuizScreenState extends State<AddQuizScreen> {
       }
       String encodedQuiz = jsonEncode(quizQuestions);
 
-      String quizID = DateTime.now().millisecondsSinceEpoch.toString();
-      await FirebaseFirestore.instance.collection('quizzes').doc(quizID).set({
+      await FirebaseFirestore.instance
+          .collection('quizzes')
+          .doc(widget.quizID)
+          .update({
         'title': _titleController.text.trim(),
         'quizContent': encodedQuiz,
         'teacherID': FirebaseAuth.instance.currentUser!.uid,
-        'associatedSections': []
       });
 
-      scaffoldMessenger
-          .showSnackBar(SnackBar(content: Text('Successfully added new quiz')));
+      scaffoldMessenger.showSnackBar(
+          SnackBar(content: Text('Successfully edited this quiz')));
       navigator.pop();
       navigator.pushReplacementNamed(NavigatorRoutes.lessonPlan);
     } catch (error) {
       scaffoldMessenger.showSnackBar(
-          SnackBar(content: Text('Error adding new quiz: $error')));
+          SnackBar(content: Text('Error editing this quiz: $error')));
       setState(() {
         _isLoading = false;
       });

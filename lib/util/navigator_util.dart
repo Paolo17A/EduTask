@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutask/screens/admin_selected_section_screen.dart';
 import 'package:edutask/screens/edit_lesson_screen.dart';
+import 'package:edutask/screens/edit_quiz_screen.dart';
 import 'package:edutask/screens/selected_user_record_screen.dart';
 import 'package:edutask/screens/teacher_selected_section_screen.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +41,11 @@ class NavigatorRoutes {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) =>
             EditAssignmentScreen(assignmentID: assignmentID)));
+  }
+
+  static void editQuiz(BuildContext context, {required String quizID}) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => EditQuizScreen(quizID: quizID)));
   }
 
   //  STUDENT

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutask/util/navigator_util.dart';
+import 'package:edutask/widgets/custom_button_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -151,9 +152,7 @@ Widget teacherMaterialEntry(BuildContext context,
 }
 
 Widget sectionMaterialEntry(BuildContext context,
-    {required DocumentSnapshot materialDoc,
-    required Function onEdit,
-    required Function onDelete}) {
+    {required DocumentSnapshot materialDoc, required Function onRemove}) {
   final materialData = materialDoc.data() as Map<dynamic, dynamic>;
   String title = materialData['title'];
   return vertical10horizontal4(Container(
@@ -167,12 +166,7 @@ Widget sectionMaterialEntry(BuildContext context,
       SizedBox(
           width: MediaQuery.of(context).size.width * 0.5,
           child: interText(title, fontSize: 15)),
-      IconButton(
-          onPressed: () => onDelete(),
-          icon: Icon(
-            Icons.remove,
-            color: Colors.black,
-          ))
+      ovalButton('REMOVE', onPress: () => onRemove())
     ]),
   ));
 }
