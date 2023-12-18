@@ -161,7 +161,8 @@ class _AddSectionScreenState extends State<AddSectionScreen> {
         'ESP': selectedESPTeacherID,
         'students': [],
         'assignments': [],
-        'quizzes': []
+        'quizzes': [],
+        'lessons': []
       });
 
       if (selectedScienceTeacherID.isNotEmpty) {

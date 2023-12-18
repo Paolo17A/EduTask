@@ -1,7 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutask/screens/admin_selected_section_screen.dart';
+import 'package:edutask/screens/edit_lesson_screen.dart';
 import 'package:edutask/screens/selected_user_record_screen.dart';
+import 'package:edutask/screens/teacher_selected_section_screen.dart';
 import 'package:flutter/material.dart';
+
+import '../screens/edit_assignment_screen.dart';
 
 class NavigatorRoutes {
   static const welcome = '/';
@@ -13,6 +17,30 @@ class NavigatorRoutes {
   static const teacherRegister = '/teacherRegister';
   static const teacherHome = '/teacherHome';
   static const teacherProfile = '/teacherProfile';
+  static const teacherHandledSections = '/teacherHandledSections';
+  static const lessonPlan = '/lessonPlan';
+  static const addLesson = '/addLesson';
+  static const addAssignment = '/addAssignment';
+  static const addQuiz = '/addQuiz';
+
+  static void teacherSelectedSection(BuildContext context,
+      {required String sectionID}) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) =>
+            TeacherSelectedSectionScreen(sectionID: sectionID)));
+  }
+
+  static void editLesson(BuildContext context, {required String lessonID}) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => EditLessonScreen(lessonID: lessonID)));
+  }
+
+  static void editAssignment(BuildContext context,
+      {required String assignmentID}) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) =>
+            EditAssignmentScreen(assignmentID: assignmentID)));
+  }
 
   //  STUDENT
   static const studentLogin = '/studentLogin';
@@ -35,7 +63,7 @@ class NavigatorRoutes {
         builder: (context) => SelectedUserRecordScreen(userDoc: userDoc)));
   }
 
-  static void selectedSection(BuildContext context,
+  static void adminSelectedSection(BuildContext context,
       {required DocumentSnapshot sectionDoc}) {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) =>

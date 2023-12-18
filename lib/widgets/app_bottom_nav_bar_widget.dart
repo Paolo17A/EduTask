@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../util/navigator_util.dart';
+
 Widget userBottomNavBar(BuildContext context,
     {required int index, required String userType}) {
   return BottomNavigationBar(
@@ -29,6 +31,23 @@ Widget userBottomNavBar(BuildContext context,
     onTap: (tappedIndex) {
       if (tappedIndex == index) {
         return;
+      }
+      if (userType == 'TEACHER') {
+        switch (tappedIndex) {
+          case 0:
+            Navigator.of(context).pushNamed(NavigatorRoutes.teacherHome);
+            break;
+          case 1:
+            Navigator.of(context)
+                .pushNamed(NavigatorRoutes.teacherHandledSections);
+            break;
+        }
+      } else if (userType == 'STUDENT') {
+        switch (tappedIndex) {
+          case 0:
+            Navigator.of(context).pushNamed(NavigatorRoutes.studentHome);
+            break;
+        }
       }
     },
   );

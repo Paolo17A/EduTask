@@ -1,0 +1,251 @@
+import 'package:edutask/widgets/app_bar_widgets.dart';
+import 'package:edutask/widgets/custom_container_widgets.dart';
+import 'package:edutask/widgets/custom_padding_widgets.dart';
+import 'package:edutask/widgets/custom_text_widgets.dart';
+import 'package:edutask/widgets/edutask_text_field_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+
+import '../widgets/string_choices_radio_widget.dart';
+
+class AddQuizScreen extends StatefulWidget {
+  const AddQuizScreen({super.key});
+
+  @override
+  State<AddQuizScreen> createState() => _AddQuizScreenState();
+}
+
+class _AddQuizScreenState extends State<AddQuizScreen> {
+  bool _isLoading = false;
+
+  int currentQuestion = 0;
+
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _questionController = TextEditingController();
+  final List<TextEditingController> _choicesControllers = [];
+  final List<String> choiceLetters = ['a', 'b', 'c', 'd'];
+  String? _correctChoiceString;
+  final GlobalKey<ChoicesRadioWidgetState> stringChoice = GlobalKey();
+  List<dynamic> easyQuestions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    for (int i = 0; i < 4; i++) {
+      _choicesControllers.add(TextEditingController());
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _titleController.dispose();
+    _questionController.dispose();
+    for (var choice in _choicesControllers) {
+      choice.dispose();
+    }
+  }
+
+  void previousQuestion() {
+    if (currentQuestion == 0) {
+      return;
+    }
+    setState(() {
+      currentQuestion--;
+
+      _questionController.text = easyQuestions[currentQuestion]['question'];
+      _choicesControllers[0].text =
+          easyQuestions[currentQuestion]['options']['a'];
+      _choicesControllers[1].text =
+          easyQuestions[currentQuestion]['options']['b'];
+      _choicesControllers[2].text =
+          easyQuestions[currentQuestion]['options']['c'];
+      _choicesControllers[3].text =
+          easyQuestions[currentQuestion]['options']['d'];
+      _correctChoiceString = easyQuestions[currentQuestion]['answer'];
+      stringChoice.currentState?.setChoice(_correctChoiceString!);
+    });
+  }
+
+  void nextQuestion() {
+    //  VALIDATION GUARDS
+    if (_titleController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Please provide a title for this quiz.')));
+      return;
+    }
+    if (_questionController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please provide a question.')));
+      return;
+    }
+    if (_correctChoiceString == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content:
+              Text('Please select a correct answer from the four choices.')));
+      return;
+    }
+    for (int i = 0; i < _choicesControllers.length; i++) {
+      if (_choicesControllers[i].text.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Please provide four choices to choose from.')));
+        return;
+      }
+    }
+
+    //  Create a custom map for this object
+
+    Map<String, dynamic> easyQuestionEntry = {
+      'question': _questionController.text.trim(),
+      'options': {
+        'a': _choicesControllers[0].text.trim(),
+        'b': _choicesControllers[1].text.trim(),
+        'c': _choicesControllers[2].text.trim(),
+        'd': _choicesControllers[3].text.trim()
+      },
+      'answer': _correctChoiceString
+    };
+    if (currentQuestion == easyQuestions.length) {
+      easyQuestions.add(easyQuestionEntry);
+    } else {
+      easyQuestions[currentQuestion] = easyQuestionEntry;
+    }
+
+    setState(() {
+      currentQuestion++;
+      if (currentQuestion == 10) {
+        //currentQuestion = 0;
+        //uploadCustomQuiz();
+        return;
+      }
+      if (currentQuestion <= easyQuestions.length - 1) {
+        Map<dynamic, dynamic> selectedQuestion = easyQuestions[currentQuestion];
+        _questionController.text = selectedQuestion['question'];
+        for (int i = 0; i < _choicesControllers.length; i++) {
+          _choicesControllers[i].text =
+              selectedQuestion['options'][choiceLetters[i]];
+        }
+        _correctChoiceString = selectedQuestion['answer'];
+        stringChoice.currentState?.setChoice(_correctChoiceString!);
+      } else {
+        _questionController.clear();
+
+        for (TextEditingController choice in _choicesControllers) {
+          choice.clear();
+        }
+        _correctChoiceString = null;
+        stringChoice.currentState?.resetChoice();
+      }
+    });
+  }
+
+  //  BUILD WIDGETS
+  //============================================================================
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: homeAppBarWidget(context),
+      body: stackedLoadingContainer(
+          context,
+          _isLoading,
+          SingleChildScrollView(
+            child: all20Pix(
+                child: Column(
+              children: [_quizTitle(), _quizInputContainer()],
+            )),
+          )),
+    );
+  }
+
+  Widget _quizTitle() {
+    return vertical10horizontal4(
+      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text('QUIZ TITLE',
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+        EduTaskTextField(
+            text: 'Quiz Title',
+            controller: _titleController,
+            textInputType: TextInputType.text,
+            displayPrefixIcon: null),
+      ]),
+    );
+  }
+
+  Widget _quizInputContainer() {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.grey.withOpacity(0.9),
+          border: Border.all(),
+          borderRadius: BorderRadius.circular(20)),
+      padding: EdgeInsets.all(10),
+      child: Column(
+        children: [
+          Row(children: [
+            interText('Question #${currentQuestion + 1}',
+                fontWeight: FontWeight.bold)
+          ]),
+          Gap(5),
+          EduTaskTextField(
+              text: 'Question',
+              controller: _questionController,
+              textInputType: TextInputType.text,
+              displayPrefixIcon: null),
+          const SizedBox(height: 15),
+          _easyQuestionInput(),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            ElevatedButton(
+                onPressed: previousQuestion,
+                child: interText('PREVIOUS', fontWeight: FontWeight.bold)),
+            ElevatedButton(
+                onPressed: nextQuestion,
+                child: interText(currentQuestion == 9 ? 'SUBMIT' : 'NEXT',
+                    fontWeight: FontWeight.bold))
+          ])
+        ],
+      ),
+    );
+  }
+
+  Widget _easyQuestionInput() {
+    return Column(
+      children: [
+        ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: _choicesControllers.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      interText(choiceLetters[index],
+                          fontWeight: FontWeight.bold),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.75,
+                        child: EduTaskTextField(
+                            text: 'Choice',
+                            controller: _choicesControllers[index],
+                            textInputType: TextInputType.text,
+                            displayPrefixIcon: null),
+                      )
+                    ]),
+              );
+            }),
+        vertical20Pix(
+          child: StringChoicesRadioWidget(
+              key: stringChoice,
+              initialString: _correctChoiceString,
+              choiceSelectCallback: (stringVal) {
+                if (stringVal != null) {
+                  setState(() {
+                    _correctChoiceString = stringVal;
+                  });
+                }
+              },
+              choiceLetters: choiceLetters),
+        ),
+      ],
+    );
+  }
+}

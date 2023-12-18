@@ -112,3 +112,90 @@ Widget sectionTeacherContainer(BuildContext context,
     ),
   );
 }
+
+Widget teacherMaterialEntry(BuildContext context,
+    {required DocumentSnapshot materialDoc,
+    required Function onEdit,
+    required Function onDelete}) {
+  final materialData = materialDoc.data() as Map<dynamic, dynamic>;
+  String title = materialData['title'];
+  return vertical10horizontal4(Container(
+    decoration: BoxDecoration(
+      color: Colors.grey,
+      border: Border.all(),
+      borderRadius: BorderRadius.circular(10),
+    ),
+    padding: EdgeInsets.all(10),
+    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      SizedBox(
+          width: MediaQuery.of(context).size.width * 0.5,
+          child: interText(title, fontSize: 15)),
+      Row(
+        children: [
+          IconButton(
+              onPressed: () => onEdit(),
+              icon: Icon(
+                Icons.edit,
+                color: Colors.black,
+              )),
+          IconButton(
+              onPressed: () => onDelete(),
+              icon: Icon(
+                Icons.delete,
+                color: Colors.black,
+              )),
+        ],
+      )
+    ]),
+  ));
+}
+
+Widget sectionMaterialEntry(BuildContext context,
+    {required DocumentSnapshot materialDoc,
+    required Function onEdit,
+    required Function onDelete}) {
+  final materialData = materialDoc.data() as Map<dynamic, dynamic>;
+  String title = materialData['title'];
+  return vertical10horizontal4(Container(
+    decoration: BoxDecoration(
+      color: Colors.grey,
+      border: Border.all(),
+      borderRadius: BorderRadius.circular(10),
+    ),
+    padding: EdgeInsets.all(10),
+    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      SizedBox(
+          width: MediaQuery.of(context).size.width * 0.5,
+          child: interText(title, fontSize: 15)),
+      IconButton(
+          onPressed: () => onDelete(),
+          icon: Icon(
+            Icons.remove,
+            color: Colors.black,
+          ))
+    ]),
+  ));
+}
+
+Widget studentEntry(BuildContext context,
+    {required DocumentSnapshot studentDoc}) {
+  final studentData = studentDoc.data() as Map<dynamic, dynamic>;
+  String profileImageURL = studentData['profileImageURL'];
+  String formattedName =
+      '${studentData['firstName']} ${studentData['lastName']}';
+  return vertical10horizontal4(Container(
+    decoration: BoxDecoration(
+      color: Colors.grey.withOpacity(0.5),
+      border: Border.all(),
+      borderRadius: BorderRadius.circular(10),
+    ),
+    padding: EdgeInsets.all(10),
+    child: Row(children: [
+      buildProfileImageWidget(profileImageURL: profileImageURL, radius: 20),
+      Gap(20),
+      SizedBox(
+          width: MediaQuery.of(context).size.width * 0.65,
+          child: interText(formattedName, fontSize: 15)),
+    ]),
+  ));
+}

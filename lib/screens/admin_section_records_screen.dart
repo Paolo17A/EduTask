@@ -92,7 +92,7 @@ class _AdminSectionRecordsScreenState extends State<AdminSectionRecordsScreen> {
               sectionDocs[index].data() as Map<dynamic, dynamic>;
           String name = sectionData['name'];
           return GestureDetector(
-              onTap: () => NavigatorRoutes.selectedSection(context,
+              onTap: () => NavigatorRoutes.adminSelectedSection(context,
                   sectionDoc: sectionDocs[index]),
               child: Container(
                 color: index % 2 == 0

@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
-import 'package:edutask/widgets/custom_button_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 
 import '../widgets/custom_miscellaneous_widgets.dart';
 import '../widgets/custom_text_widgets.dart';
@@ -116,6 +114,8 @@ class _AdminSelectedSectionScreenState
     }
   }
 
+  //  BUILD WIDGETS
+  //============================================================================
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,14 +128,16 @@ class _AdminSelectedSectionScreenState
                   children: [
                     selectedSectionHeader(),
                     if (!_isLoading) _sectionTeachersContainer(),
-                    Gap(20),
-                    ovalButton('EDIT SECTION', onPress: () {})
+                    if (!_isLoading) _expandableStudents(),
+                    //ovalButton('EDIT SECTION', onPress: () {})
                   ],
                 ),
               ),
             )));
   }
 
+  //  TEACHER WIDGETS
+  //============================================================================
   Widget selectedSectionHeader() {
     return interText(sectionName,
         fontSize: 40, textAlign: TextAlign.center, color: Colors.black);
@@ -291,5 +293,35 @@ class _AdminSelectedSectionScreenState
 
     return sectionTeacherContainer(context,
         subjectLabel: 'MAPEH TEACHER', formattedName: formattedName);
+  }
+
+  //  STUDENT WIDGETS
+  //============================================================================
+  Widget _expandableStudents() {
+    return vertical20Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: Colors.grey.withOpacity(0.5),
+        backgroundColor: Colors.grey.withOpacity(0.5),
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('ENROLLED STUDENTS'),
+        children: [
+          associatedStudentDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: associatedStudentDocs.length,
+                      itemBuilder: (context, index) => studentEntry(context,
+                          studentDoc: associatedStudentDocs[index])),
+                )
+              : interText('NO ENROLLED STUDENTS', fontSize: 20)
+        ],
+      ),
+    );
   }
 }

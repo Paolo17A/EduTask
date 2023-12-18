@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../util/navigator_util.dart';
 import '../widgets/custom_miscellaneous_widgets.dart';
 import '../widgets/custom_text_widgets.dart';
 
@@ -165,41 +166,48 @@ class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        final FocusScopeNode currentScope = FocusScope.of(context);
-        if (!currentScope.hasPrimaryFocus && currentScope.hasFocus) {
-          FocusManager.instance.primaryFocus!.unfocus();
-        }
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context).pop();
+        Navigator.of(context).pushReplacementNamed(NavigatorRoutes.teacherHome);
+        return false;
       },
-      child: Scaffold(
-        appBar: homeAppBarWidget(context, mayGoBack: true),
-        drawer: appDrawer(context, userType: userType),
-        body: stackedLoadingContainer(
-            context,
-            _isLoading,
-            SingleChildScrollView(
-              child: all20Pix(
-                  child: Column(
-                children: [
-                  _basicTeacherData(),
-                  const Gap(30),
-                  if (_editMode)
-                    ovalButton('CANCEL CHANGES',
-                        onPress: () => getAdminProfile()),
-                  ovalButton(_editMode ? 'SAVE CHANGES' : 'EDIT PROFILE',
-                      onPress: () {
-                    if (_editMode) {
-                      editProfile();
-                    } else {
-                      setState(() {
-                        _editMode = true;
-                      });
-                    }
-                  })
-                ],
+      child: GestureDetector(
+        onTap: () {
+          final FocusScopeNode currentScope = FocusScope.of(context);
+          if (!currentScope.hasPrimaryFocus && currentScope.hasFocus) {
+            FocusManager.instance.primaryFocus!.unfocus();
+          }
+        },
+        child: Scaffold(
+          appBar: homeAppBarWidget(context, mayGoBack: true),
+          drawer: appDrawer(context, userType: userType),
+          body: stackedLoadingContainer(
+              context,
+              _isLoading,
+              SingleChildScrollView(
+                child: all20Pix(
+                    child: Column(
+                  children: [
+                    _basicTeacherData(),
+                    const Gap(30),
+                    if (_editMode)
+                      ovalButton('CANCEL CHANGES',
+                          onPress: () => getAdminProfile()),
+                    ovalButton(_editMode ? 'SAVE CHANGES' : 'EDIT PROFILE',
+                        onPress: () {
+                      if (_editMode) {
+                        editProfile();
+                      } else {
+                        setState(() {
+                          _editMode = true;
+                        });
+                      }
+                    })
+                  ],
+                )),
               )),
-            )),
+        ),
       ),
     );
   }

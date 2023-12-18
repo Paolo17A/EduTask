@@ -1,4 +1,7 @@
 import 'package:edutask/firebase_options.dart';
+import 'package:edutask/screens/add_assignment_screen.dart';
+import 'package:edutask/screens/add_lesson_screen.dart';
+import 'package:edutask/screens/add_quiz_screen.dart';
 import 'package:edutask/screens/add_section_screen.dart';
 import 'package:edutask/screens/admin_home_screen.dart';
 import 'package:edutask/screens/admin_login_screen.dart';
@@ -7,11 +10,13 @@ import 'package:edutask/screens/admin_section_records_screen.dart';
 import 'package:edutask/screens/admin_student_records_screen.dart';
 import 'package:edutask/screens/admin_teacher_records_screen.dart';
 import 'package:edutask/screens/change_password_screen.dart';
+import 'package:edutask/screens/lesson_plan_screen.dart';
 import 'package:edutask/screens/reset_password_screen.dart';
 import 'package:edutask/screens/student_home_screen.dart';
 import 'package:edutask/screens/student_login_screen.dart';
 import 'package:edutask/screens/student_profile_screen.dart';
 import 'package:edutask/screens/student_register_screen.dart';
+import 'package:edutask/screens/teacher_handled_sections_screen.dart';
 import 'package:edutask/screens/teacher_home_screen.dart';
 import 'package:edutask/screens/teacher_login_screen.dart';
 import 'package:edutask/screens/teacher_profile_screen.dart';
@@ -40,6 +45,12 @@ final Map<String, WidgetBuilder> _routes = {
   NavigatorRoutes.teacherRegister: (context) => const TeacherRegisterScreen(),
   NavigatorRoutes.teacherHome: (context) => const TeacherHomeScreen(),
   NavigatorRoutes.teacherProfile: (context) => const TeacherProfileScreen(),
+  NavigatorRoutes.teacherHandledSections: (context) =>
+      TeacherHandledSectionsScreen(),
+  NavigatorRoutes.lessonPlan: (context) => const LessonPlanScreen(),
+  NavigatorRoutes.addLesson: (context) => const AddLessonScreen(),
+  NavigatorRoutes.addAssignment: (context) => const AddAssignmentScreen(),
+  NavigatorRoutes.addQuiz: (context) => const AddQuizScreen(),
 
   //  STUDENTS
   NavigatorRoutes.studentLogin: (context) => const StudentLoginScreen(),
