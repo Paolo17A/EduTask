@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
+import 'package:edutask/widgets/app_drawer_widget.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_miscellaneous_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
@@ -50,6 +51,7 @@ class _AdminStudentRecordsScreenState extends State<AdminStudentRecordsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: homeAppBarWidget(context, mayGoBack: true),
+      drawer: appDrawer(context, userType: 'ADMIN'),
       body: switchedLoadingContainer(
           _isLoading,
           SingleChildScrollView(

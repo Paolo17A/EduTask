@@ -8,16 +8,17 @@ class EduTaskTextField extends StatefulWidget {
   final bool enabled;
   final bool hasSearchButton;
   final Function? onSearchPress;
-  const EduTaskTextField({
-    super.key,
-    required this.text,
-    required this.controller,
-    required this.textInputType,
-    required this.displayPrefixIcon,
-    this.enabled = true,
-    this.hasSearchButton = false,
-    this.onSearchPress,
-  });
+  final int? maxLines;
+  const EduTaskTextField(
+      {super.key,
+      required this.text,
+      required this.controller,
+      required this.textInputType,
+      required this.displayPrefixIcon,
+      this.enabled = true,
+      this.hasSearchButton = false,
+      this.onSearchPress,
+      this.maxLines});
 
   @override
   State<EduTaskTextField> createState() => _EduTaskTextFieldState();
@@ -30,6 +31,16 @@ class _EduTaskTextFieldState extends State<EduTaskTextField> {
   void initState() {
     super.initState();
     isObscured = widget.textInputType == TextInputType.visiblePassword;
+  }
+
+  @override
+  void didUpdateWidget(covariant EduTaskTextField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.textInputType != oldWidget.textInputType) {
+      setState(() {
+        isObscured = widget.textInputType == TextInputType.visiblePassword;
+      });
+    }
   }
 
   @override
@@ -80,6 +91,10 @@ class _EduTaskTextFieldState extends State<EduTaskTextField> {
                         child: const Icon(Icons.search))
                     : null),
         keyboardType: widget.textInputType,
-        maxLines: widget.textInputType == TextInputType.multiline ? 6 : 1);
+        maxLines: widget.textInputType == TextInputType.multiline
+            ? widget.maxLines != null
+                ? widget.maxLines
+                : 6
+            : 1);
   }
 }

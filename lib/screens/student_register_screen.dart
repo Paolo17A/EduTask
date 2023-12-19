@@ -104,6 +104,8 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
 
       setState(() {
         _isLoading = false;
+      });
+      setState(() {
         currentState = RegistrastionStates.profile;
       });
     } catch (error) {
@@ -192,14 +194,10 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
                   const Gap(30),
                   interText('STUDENT REGISTER',
                       color: Colors.black, fontSize: 35),
-                  Container(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(30)),
-                      child: currentState == RegistrastionStates.register
-                          ? _registerFieldsContainer()
-                          : _profileFieldsContainer()),
+                  if (currentState == RegistrastionStates.register)
+                    _registerFieldsContainer()
+                  else if (currentState == RegistrastionStates.profile)
+                    _profileFieldsContainer()
                 ],
               )),
             )),
@@ -208,27 +206,39 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
   }
 
   Widget _registerFieldsContainer() {
-    return all20Pix(
-        child: Column(
-      children: [
-        _emailAddress(),
-        _password(),
-        _confirmPassword(),
-        _navigatorButtons()
-      ],
-    ));
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      decoration: BoxDecoration(
+          color: Colors.grey.withOpacity(0.5),
+          borderRadius: BorderRadius.circular(30)),
+      padding: EdgeInsets.all(20),
+      child: Column(
+        children: [
+          _emailAddress(),
+          _password(),
+          _confirmPassword(),
+          _navigatorButtons()
+        ],
+      ),
+    );
   }
 
   Widget _profileFieldsContainer() {
-    return all20Pix(
-        child: Column(
-      children: [
-        _studentNumber(),
-        _firstName(),
-        _lastName(),
-        _navigatorButtons()
-      ],
-    ));
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      decoration: BoxDecoration(
+          color: Colors.grey.withOpacity(0.5),
+          borderRadius: BorderRadius.circular(30)),
+      padding: EdgeInsets.all(20),
+      child: Column(
+        children: [
+          _studentNumber(),
+          _firstName(),
+          _lastName(),
+          _navigatorButtons()
+        ],
+      ),
+    );
   }
 
   Widget _emailAddress() {

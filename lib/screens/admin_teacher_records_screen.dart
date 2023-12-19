@@ -8,6 +8,8 @@ import 'package:edutask/widgets/custom_text_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../widgets/app_drawer_widget.dart';
+
 class AdminTeacherRecordsScreen extends StatefulWidget {
   const AdminTeacherRecordsScreen({super.key});
 
@@ -50,6 +52,7 @@ class _AdminTeacherRecordsScreenState extends State<AdminTeacherRecordsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: homeAppBarWidget(context, mayGoBack: true),
+      drawer: appDrawer(context, userType: 'ADMIN'),
       body: switchedLoadingContainer(
           _isLoading,
           SingleChildScrollView(

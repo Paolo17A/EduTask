@@ -66,22 +66,22 @@ class _AddLessonScreenState extends State<AddLessonScreen> {
         });
       }
 
+      final user = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+      final userData = user.data() as Map<dynamic, dynamic>;
+      String subject = userData['subject'];
+
       //  1. Create Lesson Document and indicate it's associated sections
       await FirebaseFirestore.instance.collection('lessons').doc(lessonID).set({
+        'teacherID': FirebaseAuth.instance.currentUser!.uid,
+        'subject': subject,
         'title': titleController.text,
         'content': contentController.text,
-        'teacherID': FirebaseAuth.instance.currentUser!.uid,
         'additionalResources': additionalResources,
         'associatedSections': []
       });
-
-      // //  2. Attach this Lesson to the section's lessons field
-      // await FirebaseFirestore.instance
-      //     .collection('sections')
-      //     .doc(widget.sectionID)
-      //     .update({
-      //   'lessons': FieldValue.arrayUnion([lessonID])
-      // });
 
       scaffoldMessenger.showSnackBar(
           const SnackBar(content: Text('Successfully added new lesson.')));

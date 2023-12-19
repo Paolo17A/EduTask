@@ -47,6 +47,12 @@ Widget userBottomNavBar(BuildContext context,
           case 0:
             Navigator.of(context).pushNamed(NavigatorRoutes.studentHome);
             break;
+          case 1:
+            Navigator.of(context).pushNamed(NavigatorRoutes.studentLessons);
+            break;
+          case 3:
+            Navigator.of(context)
+                .pushNamed(NavigatorRoutes.studentSubmittables);
         }
       }
     },

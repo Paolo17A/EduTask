@@ -13,9 +13,11 @@ import 'package:edutask/screens/change_password_screen.dart';
 import 'package:edutask/screens/lesson_plan_screen.dart';
 import 'package:edutask/screens/reset_password_screen.dart';
 import 'package:edutask/screens/student_home_screen.dart';
+import 'package:edutask/screens/student_lessons_screen.dart';
 import 'package:edutask/screens/student_login_screen.dart';
 import 'package:edutask/screens/student_profile_screen.dart';
 import 'package:edutask/screens/student_register_screen.dart';
+import 'package:edutask/screens/student_submittables_screen.dart';
 import 'package:edutask/screens/teacher_handled_sections_screen.dart';
 import 'package:edutask/screens/teacher_home_screen.dart';
 import 'package:edutask/screens/teacher_login_screen.dart';
@@ -57,6 +59,9 @@ final Map<String, WidgetBuilder> _routes = {
   NavigatorRoutes.studentRegister: (context) => const StudentRegisterScreen(),
   NavigatorRoutes.studentHome: (context) => const StudentHomeScreen(),
   NavigatorRoutes.studentProfile: (context) => const StudentProfileScreen(),
+  NavigatorRoutes.studentLessons: (context) => const StudentLessonsScreen(),
+  NavigatorRoutes.studentSubmittables: (context) =>
+      const StudentSubmittablesScreen(),
 
   //ADMIN
   NavigatorRoutes.adminLogin: (context) => const AdminLoginScreen(),

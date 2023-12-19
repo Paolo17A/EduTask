@@ -168,12 +168,19 @@ class _AddQuizScreenState extends State<AddQuizScreen> {
         return;
       }
       String encodedQuiz = jsonEncode(quizQuestions);
+      final user = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+      final userData = user.data() as Map<dynamic, dynamic>;
+      String subject = userData['subject'];
 
       String quizID = DateTime.now().millisecondsSinceEpoch.toString();
       await FirebaseFirestore.instance.collection('quizzes').doc(quizID).set({
+        'teacherID': FirebaseAuth.instance.currentUser!.uid,
+        'subject': subject,
         'title': _titleController.text.trim(),
         'quizContent': encodedQuiz,
-        'teacherID': FirebaseAuth.instance.currentUser!.uid,
         'associatedSections': []
       });
 

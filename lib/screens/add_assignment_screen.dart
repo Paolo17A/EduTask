@@ -43,15 +43,23 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
       setState(() {
         _isLoading = true;
       });
+      final user = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+      final userData = user.data() as Map<dynamic, dynamic>;
+      String subject = userData['subject'];
+
       String assignmentID = DateTime.now().millisecondsSinceEpoch.toString();
       await FirebaseFirestore.instance
           .collection('assignments')
           .doc(assignmentID)
           .set({
+        'teacherID': FirebaseAuth.instance.currentUser!.uid,
+        'subject': subject,
         'title': titleController.text,
         'directions': directionsController.text,
         'assignmentType': assignmentType,
-        'teacherID': FirebaseAuth.instance.currentUser!.uid,
         'deadline': deadline,
         'associatedSections': []
       });

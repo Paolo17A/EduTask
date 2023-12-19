@@ -57,7 +57,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
         appBar: homeAppBarWidget(context, mayGoBack: true),
         drawer: appDrawer(context, userType: userType),
         bottomNavigationBar:
-            userBottomNavBar(context, index: 1, userType: 'STUDENT'),
+            userBottomNavBar(context, index: 0, userType: 'STUDENT'),
         body: switchedLoadingContainer(
             _isLoading,
             SingleChildScrollView(
