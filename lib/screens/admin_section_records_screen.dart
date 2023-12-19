@@ -95,9 +95,11 @@ class _AdminSectionRecordsScreenState extends State<AdminSectionRecordsScreen> {
               onTap: () => NavigatorRoutes.adminSelectedSection(context,
                   sectionDoc: sectionDocs[index]),
               child: Container(
-                color: index % 2 == 0
-                    ? Colors.grey.withOpacity(0.9)
-                    : Colors.white,
+                decoration: BoxDecoration(
+                    color: index % 2 == 0
+                        ? Colors.grey.withOpacity(0.9)
+                        : Colors.white,
+                    border: Border.all()),
                 height: 50,
                 child: all10Pix(
                   child: Row(

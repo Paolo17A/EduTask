@@ -39,6 +39,7 @@ Widget userDocumentSnapshotDropdownWidget(
   return DropdownButton<String>(
     value: selectedOption,
     items: dropdownDocuments.map((doc) {
+      print(doc.id);
       final docData = doc.data() as Map<dynamic, dynamic>;
       String formattedName = '${docData['firstName']} ${docData['lastName']}';
       return DropdownMenuItem<String>(

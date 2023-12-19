@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/screens/admin_edit_section_screen.dart';
 import 'package:edutask/screens/admin_selected_section_screen.dart';
 import 'package:edutask/screens/answer_assignment_screen.dart';
 import 'package:edutask/screens/answer_quiz_screen.dart';
@@ -113,9 +114,21 @@ class NavigatorRoutes {
   }
 
   static void adminSelectedSection(BuildContext context,
-      {required DocumentSnapshot sectionDoc}) {
+      {required DocumentSnapshot sectionDoc, bool isReplacing = false}) {
+    if (isReplacing) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) =>
+              AdminSelectedSectionScreen(sectionDoc: sectionDoc)));
+    } else {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) =>
+              AdminSelectedSectionScreen(sectionDoc: sectionDoc)));
+    }
+  }
+
+  static void adminEditSection(BuildContext context,
+      {required String sectionID}) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) =>
-            AdminSelectedSectionScreen(sectionDoc: sectionDoc)));
+        builder: (context) => AdminEditSection(sectionID: sectionID)));
   }
 }

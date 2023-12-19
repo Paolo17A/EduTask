@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/custom_button_widgets.dart';
 import '../widgets/custom_miscellaneous_widgets.dart';
 import '../widgets/custom_text_widgets.dart';
 
@@ -81,15 +83,11 @@ class _AdminSelectedSectionScreenState
     try {
       //  GET ASSOCIATED TEACHERS
       if (teacherIDs.isNotEmpty) {
-        print('teacher IDs: $teacherIDs');
-        print('teacher count: ${teacherIDs.length}');
         final teachers = await FirebaseFirestore.instance
             .collection('users')
             .where(FieldPath.documentId, whereIn: teacherIDs)
             .get();
-        print('done getting teachers');
         associatedTeacherDocs = teachers.docs;
-        print('associated teachers found: ${associatedTeacherDocs.length}');
       }
 
       //  GET ASSOCIATED STUDENTS
@@ -118,22 +116,33 @@ class _AdminSelectedSectionScreenState
   //============================================================================
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: homeAppBarWidget(context, mayGoBack: true),
-        body: switchedLoadingContainer(
-            _isLoading,
-            SingleChildScrollView(
-              child: all20Pix(
-                child: Column(
-                  children: [
-                    selectedSectionHeader(),
-                    if (!_isLoading) _sectionTeachersContainer(),
-                    if (!_isLoading) _expandableStudents(),
-                    //ovalButton('EDIT SECTION', onPress: () {})
-                  ],
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context).pop();
+        Navigator.of(context)
+            .pushReplacementNamed(NavigatorRoutes.adminSectionRecords);
+        return false;
+      },
+      child: Scaffold(
+          appBar: homeAppBarWidget(context, mayGoBack: true),
+          body: switchedLoadingContainer(
+              _isLoading,
+              SingleChildScrollView(
+                child: all20Pix(
+                  child: Column(
+                    children: [
+                      selectedSectionHeader(),
+                      if (!_isLoading) _sectionTeachersContainer(),
+                      if (!_isLoading) _expandableStudents(),
+                      ovalButton('EDIT SECTION',
+                          onPress: () => NavigatorRoutes.adminEditSection(
+                              context,
+                              sectionID: widget.sectionDoc.id))
+                    ],
+                  ),
                 ),
-              ),
-            )));
+              ))),
+    );
   }
 
   //  TEACHER WIDGETS
