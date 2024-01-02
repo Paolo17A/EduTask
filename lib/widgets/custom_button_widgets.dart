@@ -8,11 +8,14 @@ Widget welcomeButton(BuildContext context,
     required String label}) {
   return all20Pix(
     child: SizedBox(
-      width: MediaQuery.of(context).size.width * 0.45,
+      width: MediaQuery.of(context).size.width * 0.65,
       height: 150,
       child: ElevatedButton(
         onPressed: () => onPress(),
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
+        style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.grey,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20))),
         child: Column(
           children: [
             Expanded(

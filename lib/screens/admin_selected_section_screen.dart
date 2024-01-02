@@ -196,7 +196,7 @@ class _AdminSelectedSectionScreenState
       DocumentSnapshot teacherDoc = associatedTeacherDocs.where((teacher) {
         return teacher.id == scienceTeacherID;
       }).first;
-      final teacherData = teacherDoc.data as Map<dynamic, dynamic>;
+      final teacherData = teacherDoc.data() as Map<dynamic, dynamic>;
       formattedName = '${teacherData['firstName']} ${teacherData['lastName']}';
     }
 

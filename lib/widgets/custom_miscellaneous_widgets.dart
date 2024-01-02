@@ -106,7 +106,8 @@ Widget sectionTeacherContainer(BuildContext context,
             padding: EdgeInsets.all(10),
             child: Center(
               child: Row(children: [
-                interText(formattedName.isNotEmpty ? formattedName : 'N/A')
+                interText(formattedName.isNotEmpty ? formattedName : 'N/A',
+                    fontSize: 12)
               ]),
             ))
       ],
