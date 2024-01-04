@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutask/util/navigator_util.dart';
-import 'package:edutask/util/quit_dialogue_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/app_drawer_widget.dart';
 import 'package:edutask/widgets/custom_button_widgets.dart';
@@ -9,6 +8,8 @@ import 'package:edutask/widgets/custom_miscellaneous_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../util/color_util.dart';
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({super.key});
@@ -53,17 +54,22 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () => displayQuitDialogue(context),
+    return PopScope(
+      canPop: false,
+      //onPopInvoked: (value) => displayQuitDialogue(context),
       child: Scaffold(
-        appBar: homeAppBarWidget(context, mayGoBack: true),
-        drawer: appDrawer(context, userType: userType),
+        appBar: homeAppBarWidget(context,
+            backgroundColor: CustomColors.verySoftCyan, mayGoBack: true),
+        drawer: appDrawer(context,
+            backgroundColor: CustomColors.verySoftCyan, userType: userType),
         body: switchedLoadingContainer(
             _isLoading,
             Column(
               children: [
                 welcomeWidgets(
-                    userType: 'ADMIN', profileImageURL: profileImageURL),
+                    userType: 'ADMIN',
+                    profileImageURL: profileImageURL,
+                    containerColor: CustomColors.verySoftCyan),
                 _homeButtons()
               ],
             )),
@@ -96,6 +102,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         child: ovalButton(label,
             onPress: onPress,
             width: MediaQuery.of(context).size.width * 0.75,
-            height: 125));
+            height: 125,
+            backgroundColor: CustomColors.moderateCyan));
   }
 }

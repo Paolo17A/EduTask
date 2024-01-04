@@ -11,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../util/color_util.dart';
 import '../widgets/string_choices_radio_widget.dart';
 
 class EditQuizScreen extends StatefulWidget {
@@ -241,7 +242,8 @@ class _EditQuizScreenState extends State<EditQuizScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: homeAppBarWidget(context),
+        appBar: homeAppBarWidget(context,
+            backgroundColor: CustomColors.lightGreyishLimeGreen),
         body: stackedLoadingContainer(
             context,
             _isLoading,
@@ -272,7 +274,7 @@ class _EditQuizScreenState extends State<EditQuizScreen> {
   Widget _quizInputContainer() {
     return Container(
       decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.9),
+          color: CustomColors.lightGreyishLimeGreen.withOpacity(0.9),
           border: Border.all(),
           borderRadius: BorderRadius.circular(20)),
       padding: EdgeInsets.all(10),

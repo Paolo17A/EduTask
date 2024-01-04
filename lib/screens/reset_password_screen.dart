@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../util/color_util.dart';
 import '../widgets/custom_text_widgets.dart';
 import '../widgets/edutask_text_field_widget.dart';
 
@@ -118,7 +119,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     Container(
                       width: MediaQuery.of(context).size.width * 0.8,
                       decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.5),
+                          color: CustomColors.softOrange.withOpacity(0.5),
                           borderRadius: BorderRadius.circular(30)),
                       padding: const EdgeInsets.all(10),
                       child: Column(
@@ -126,7 +127,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           _studentNumber(),
                           _emailAddress(),
                           ovalButton('RESET PASSWORD',
-                              onPress: sendPasswordResetEmail)
+                              onPress: sendPasswordResetEmail,
+                              backgroundColor: CustomColors.softOrange)
                         ],
                       ),
                     ),

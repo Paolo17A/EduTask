@@ -3,28 +3,30 @@ import 'package:flutter/material.dart';
 import '../util/navigator_util.dart';
 
 Widget userBottomNavBar(BuildContext context,
-    {required int index, required String userType}) {
+    {required int index,
+    required String userType,
+    required Color backgroundColor}) {
   return BottomNavigationBar(
     currentIndex: index,
     items: [
       BottomNavigationBarItem(
-          backgroundColor: Colors.grey,
+          backgroundColor: backgroundColor,
           icon: blackIcon(Icons.home),
           label: 'Home'),
       BottomNavigationBarItem(
-          backgroundColor: Colors.grey,
+          backgroundColor: backgroundColor,
           icon: blackIcon(Icons.class_sharp),
           label: 'Sections'),
       BottomNavigationBarItem(
-          backgroundColor: Colors.grey,
+          backgroundColor: backgroundColor,
           icon: blackIcon(Icons.calendar_today),
           label: 'Calendar'),
       BottomNavigationBarItem(
-          backgroundColor: Colors.grey,
+          backgroundColor: backgroundColor,
           icon: blackIcon(Icons.auto_graph),
           label: 'Submissions'),
       BottomNavigationBarItem(
-          backgroundColor: Colors.grey,
+          backgroundColor: backgroundColor,
           icon: blackIcon(Icons.message),
           label: 'Messages')
     ],

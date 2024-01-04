@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_unnecessary_containers
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/util/color_util.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/custom_button_widgets.dart';
@@ -102,14 +103,15 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     return Container(
       width: MediaQuery.of(context).size.width * 0.8,
       decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.5),
+          color: CustomColors.softOrange.withOpacity(0.5),
           borderRadius: BorderRadius.circular(30)),
       child: all20Pix(
           child: Column(
         children: [
           _emailAddress(),
           _password(),
-          ovalButton('LOG-IN', onPress: loginAdminUser)
+          ovalButton('LOG-IN',
+              onPress: loginAdminUser, backgroundColor: CustomColors.softOrange)
         ],
       )),
     );

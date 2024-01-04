@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
+import '../util/color_util.dart';
 import '../widgets/custom_text_widgets.dart';
 import '../widgets/dropdown_widget.dart';
 import '../widgets/edutask_text_field_widget.dart';
@@ -109,7 +110,8 @@ class _EditAssignmentScreenState extends State<EditAssignmentScreen> {
         lastDate: DateTime(2100),
         builder: (context, child) => Theme(
             data: ThemeData().copyWith(
-                colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey)),
+                colorScheme: ColorScheme.fromSeed(
+                    seedColor: CustomColors.softLimeGreen)),
             child: child!));
     if (picked != null && picked != DateTime.now()) {
       if (picked.difference(DateTime.now()).inDays < 2) {
@@ -128,7 +130,8 @@ class _EditAssignmentScreenState extends State<EditAssignmentScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: homeAppBarWidget(context),
+        appBar: homeAppBarWidget(context,
+            backgroundColor: CustomColors.lightGreyishLimeGreen),
         body: stackedLoadingContainer(
             context,
             _isLoading,
@@ -143,7 +146,9 @@ class _EditAssignmentScreenState extends State<EditAssignmentScreen> {
                   _assignmentDirections(),
                   _dateSelectionContainer(),
                   Gap(30),
-                  ovalButton('EDIT ASSIGNMENT', onPress: editAssignment)
+                  ovalButton('EDIT ASSIGNMENT',
+                      onPress: editAssignment,
+                      backgroundColor: CustomColors.softLimeGreen)
                 ],
               )),
             )),

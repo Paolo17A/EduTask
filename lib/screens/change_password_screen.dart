@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:edutask/util/quit_dialogue_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/app_drawer_widget.dart';
 import 'package:edutask/widgets/custom_button_widgets.dart';
@@ -8,6 +7,7 @@ import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../util/color_util.dart';
 import '../widgets/custom_text_widgets.dart';
 import '../widgets/edutask_text_field_widget.dart';
 
@@ -115,39 +115,55 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () => displayQuitDialogue(context),
-      child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Scaffold(
-            appBar: homeAppBarWidget(context, mayGoBack: true),
-            drawer: appDrawer(context, userType: userType),
-            body: stackedLoadingContainer(
-                context,
-                _isLoading,
-                SingleChildScrollView(
-                  child: all20Pix(
-                      child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(30)),
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        _currentPassword(),
-                        _newPassword(),
-                        _confirmNewPassword(),
-                        vertical20Pix(
-                          child: ovalButton('CHANGE PASSWORD',
-                              onPress: () => changeUserPassword()),
-                        )
-                      ],
-                    ),
-                  )),
+    Color appBarColor;
+    if (userType == 'ADMIN') {
+      appBarColor = CustomColors.verySoftCyan;
+    } else if (userType == 'TEACHER') {
+      appBarColor = CustomColors.lightGreyishLimeGreen;
+    } else {
+      appBarColor = CustomColors.verySoftOrange;
+    }
+    Color buttonColor;
+    if (userType == 'ADMIN') {
+      buttonColor = CustomColors.moderateCyan;
+    } else if (userType == 'TEACHER') {
+      buttonColor = CustomColors.softLimeGreen;
+    } else {
+      buttonColor = CustomColors.softOrange;
+    }
+    return GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Scaffold(
+          appBar: homeAppBarWidget(context,
+              backgroundColor: appBarColor, mayGoBack: true),
+          drawer: appDrawer(context,
+              backgroundColor: appBarColor, userType: userType),
+          body: stackedLoadingContainer(
+              context,
+              _isLoading,
+              SingleChildScrollView(
+                child: all20Pix(
+                    child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: buttonColor.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(30)),
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      _currentPassword(),
+                      _newPassword(),
+                      _confirmNewPassword(),
+                      vertical20Pix(
+                        child: ovalButton('CHANGE PASSWORD',
+                            onPress: () => changeUserPassword(),
+                            backgroundColor: buttonColor),
+                      )
+                    ],
+                  ),
                 )),
-          )),
-    );
+              )),
+        ));
   }
 
   Widget _currentPassword() {

@@ -4,9 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-Drawer appDrawer(BuildContext context, {required String userType}) {
+Drawer appDrawer(BuildContext context,
+    {required String userType, required Color backgroundColor}) {
   return Drawer(
-    backgroundColor: Colors.grey,
+    backgroundColor: backgroundColor,
     child: Column(
       children: [
         Flexible(

@@ -9,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../util/color_util.dart';
 import '../widgets/custom_text_widgets.dart';
 
 class TeacherHandledSectionsScreen extends StatefulWidget {
@@ -69,10 +70,15 @@ class _TeacherHandledSectionsScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeAppBarWidget(context, mayGoBack: true),
-      drawer: appDrawer(context, userType: 'TEACHER'),
-      bottomNavigationBar:
-          userBottomNavBar(context, index: 1, userType: 'TEACHER'),
+      appBar: homeAppBarWidget(context,
+          backgroundColor: CustomColors.lightGreyishLimeGreen, mayGoBack: true),
+      drawer: appDrawer(context,
+          backgroundColor: CustomColors.lightGreyishLimeGreen,
+          userType: 'TEACHER'),
+      bottomNavigationBar: userBottomNavBar(context,
+          index: 1,
+          userType: 'TEACHER',
+          backgroundColor: CustomColors.lightGreyishLimeGreen),
       body: switchedLoadingContainer(
           _isLoading,
           SizedBox(

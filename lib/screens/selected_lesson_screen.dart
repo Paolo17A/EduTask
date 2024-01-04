@@ -6,6 +6,7 @@ import 'package:edutask/widgets/custom_text_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../util/color_util.dart';
 import '../util/url_util.dart';
 
 class SelectedLessonScreen extends StatefulWidget {
@@ -55,7 +56,8 @@ class _SelectedLessonScreenState extends State<SelectedLessonScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeAppBarWidget(context, mayGoBack: true),
+      appBar: homeAppBarWidget(context,
+          backgroundColor: CustomColors.verySoftOrange, mayGoBack: true),
       body: switchedLoadingContainer(
           _isLoading,
           SizedBox(
@@ -112,10 +114,12 @@ class _SelectedLessonScreenState extends State<SelectedLessonScreen> {
                       onPressed: () async =>
                           launchThisURL(externalResource['downloadLink']),
                       style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder()),
+                          shape: RoundedRectangleBorder(),
+                          backgroundColor: CustomColors.softOrange),
                       child: interText(externalResource['fileName'],
                           textAlign: TextAlign.center,
                           fontWeight: FontWeight.bold,
+                          color: Colors.black,
                           fontSize: 15)));
             }),
       ),

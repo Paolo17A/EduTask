@@ -9,6 +9,8 @@ import 'package:edutask/widgets/custom_text_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../util/color_util.dart';
+
 class AdminStudentRecordsScreen extends StatefulWidget {
   const AdminStudentRecordsScreen({super.key});
 
@@ -50,8 +52,10 @@ class _AdminStudentRecordsScreenState extends State<AdminStudentRecordsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeAppBarWidget(context, mayGoBack: true),
-      drawer: appDrawer(context, userType: 'ADMIN'),
+      appBar: homeAppBarWidget(context,
+          backgroundColor: CustomColors.verySoftCyan, mayGoBack: true),
+      drawer: appDrawer(context,
+          backgroundColor: CustomColors.verySoftCyan, userType: 'ADMIN'),
       body: switchedLoadingContainer(
           _isLoading,
           SingleChildScrollView(
@@ -76,17 +80,21 @@ class _AdminStudentRecordsScreenState extends State<AdminStudentRecordsScreen> {
   }
 
   Widget _studentEntries() {
-    return ListView.builder(
-        shrinkWrap: true,
-        itemCount: studentDocs.length,
-        itemBuilder: (context, index) {
-          Color backgroundColor =
-              index % 2 == 0 ? Colors.grey.withOpacity(0.5) : Colors.white;
-          return userRecordEntry(
-              userDoc: studentDocs[index],
-              color: backgroundColor,
-              onTap: () => NavigatorRoutes.selectedUserRecord(context,
-                  userDoc: studentDocs[index]));
-        });
+    return Container(
+      decoration: BoxDecoration(border: Border.all()),
+      child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: studentDocs.length,
+          itemBuilder: (context, index) {
+            Color backgroundColor = index % 2 == 0
+                ? CustomColors.moderateCyan.withOpacity(0.5)
+                : Colors.white;
+            return userRecordEntry(
+                userDoc: studentDocs[index],
+                color: backgroundColor,
+                onTap: () => NavigatorRoutes.selectedUserRecord(context,
+                    userDoc: studentDocs[index]));
+          }),
+    );
   }
 }

@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../util/color_util.dart';
 import '../widgets/custom_text_widgets.dart';
 import '../widgets/edutask_text_field_widget.dart';
 
@@ -136,7 +137,9 @@ class _EditLessonScreenState extends State<EditLessonScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: homeAppBarWidget(context, mayGoBack: true),
+        appBar: homeAppBarWidget(context,
+            backgroundColor: CustomColors.lightGreyishLimeGreen,
+            mayGoBack: true),
         body: stackedLoadingContainer(
             context,
             _isLoading,
@@ -149,7 +152,9 @@ class _EditLessonScreenState extends State<EditLessonScreen> {
                   _lessonTitle(),
                   _lessonContent(),
                   _additionalResources(),
-                  ovalButton('EDIT LESSON', onPress: editLesson)
+                  ovalButton('EDIT LESSON',
+                      onPress: editLesson,
+                      backgroundColor: CustomColors.softLimeGreen)
                 ],
               )),
             )),

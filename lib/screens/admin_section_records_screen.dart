@@ -9,6 +9,8 @@ import 'package:edutask/widgets/custom_text_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../util/color_util.dart';
+
 class AdminSectionRecordsScreen extends StatefulWidget {
   const AdminSectionRecordsScreen({super.key});
 
@@ -48,8 +50,10 @@ class _AdminSectionRecordsScreenState extends State<AdminSectionRecordsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: homeAppBarWidget(context, mayGoBack: true),
-        drawer: appDrawer(context, userType: 'ADMIN'),
+        appBar: homeAppBarWidget(context,
+            backgroundColor: CustomColors.verySoftCyan, mayGoBack: true),
+        drawer: appDrawer(context,
+            backgroundColor: CustomColors.verySoftCyan, userType: 'ADMIN'),
         body: switchedLoadingContainer(
             _isLoading,
             SingleChildScrollView(
@@ -61,7 +65,8 @@ class _AdminSectionRecordsScreenState extends State<AdminSectionRecordsScreen> {
                   const Gap(20),
                   ovalButton('ADD SECTION',
                       onPress: () => Navigator.of(context)
-                          .pushNamed(NavigatorRoutes.addSection))
+                          .pushNamed(NavigatorRoutes.addSection),
+                      backgroundColor: CustomColors.moderateCyan)
                 ],
               )),
             )));
@@ -97,7 +102,7 @@ class _AdminSectionRecordsScreenState extends State<AdminSectionRecordsScreen> {
               child: Container(
                 decoration: BoxDecoration(
                     color: index % 2 == 0
-                        ? Colors.grey.withOpacity(0.9)
+                        ? CustomColors.moderateCyan.withOpacity(0.5)
                         : Colors.white,
                     border: Border.all()),
                 height: 50,

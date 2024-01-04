@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../util/color_util.dart';
 import '../util/delete_entry_dialog_util.dart';
 import '../util/navigator_util.dart';
 import '../widgets/app_drawer_widget.dart';
@@ -183,8 +184,12 @@ class _LessonPlanScreenState extends State<LessonPlanScreen> {
         return false;
       },
       child: Scaffold(
-        appBar: homeAppBarWidget(context, mayGoBack: true),
-        drawer: appDrawer(context, userType: 'TEACHER'),
+        appBar: homeAppBarWidget(context,
+            backgroundColor: CustomColors.lightGreyishLimeGreen,
+            mayGoBack: true),
+        drawer: appDrawer(context,
+            backgroundColor: CustomColors.lightGreyishLimeGreen,
+            userType: 'TEACHER'),
         body: switchedLoadingContainer(
             _isLoading,
             SingleChildScrollView(
@@ -211,8 +216,8 @@ class _LessonPlanScreenState extends State<LessonPlanScreen> {
   Widget _expandableLessons() {
     return vertical20Pix(
       child: ExpansionTile(
-        collapsedBackgroundColor: Colors.grey.withOpacity(0.5),
-        backgroundColor: Colors.grey.withOpacity(0.5),
+        collapsedBackgroundColor: CustomColors.softLimeGreen.withOpacity(0.5),
+        backgroundColor: CustomColors.softLimeGreen.withOpacity(0.5),
         textColor: Colors.black,
         iconColor: Colors.black,
         collapsedShape: RoundedRectangleBorder(
@@ -223,7 +228,8 @@ class _LessonPlanScreenState extends State<LessonPlanScreen> {
         children: [
           ovalButton('CREATE LESSON',
               onPress: () =>
-                  Navigator.of(context).pushNamed(NavigatorRoutes.addLesson)),
+                  Navigator.of(context).pushNamed(NavigatorRoutes.addLesson),
+              backgroundColor: CustomColors.softLimeGreen),
           Gap(15),
           lessonDocs.isNotEmpty
               ? SizedBox(
@@ -252,8 +258,10 @@ class _LessonPlanScreenState extends State<LessonPlanScreen> {
   Widget _expandableAssignments() {
     return vertical20Pix(
       child: ExpansionTile(
-        collapsedBackgroundColor: Colors.grey.withOpacity(0.5),
-        backgroundColor: Colors.grey.withOpacity(0.5),
+        collapsedBackgroundColor:
+            CustomColors.softLimeGreen.withOpacity(0.5).withOpacity(0.5),
+        backgroundColor:
+            CustomColors.softLimeGreen.withOpacity(0.5).withOpacity(0.5),
         textColor: Colors.black,
         iconColor: Colors.black,
         collapsedShape: RoundedRectangleBorder(
@@ -264,7 +272,8 @@ class _LessonPlanScreenState extends State<LessonPlanScreen> {
         children: [
           ovalButton('CREATE ASSIGNMENT',
               onPress: () => Navigator.of(context)
-                  .pushNamed(NavigatorRoutes.addAssignment)),
+                  .pushNamed(NavigatorRoutes.addAssignment),
+              backgroundColor: CustomColors.softLimeGreen),
           Gap(15),
           assignmentDocs.isNotEmpty
               ? SizedBox(
@@ -293,8 +302,10 @@ class _LessonPlanScreenState extends State<LessonPlanScreen> {
   Widget _expandableQuizzes() {
     return vertical20Pix(
       child: ExpansionTile(
-        collapsedBackgroundColor: Colors.grey.withOpacity(0.5),
-        backgroundColor: Colors.grey.withOpacity(0.5),
+        collapsedBackgroundColor:
+            CustomColors.softLimeGreen.withOpacity(0.5).withOpacity(0.5),
+        backgroundColor:
+            CustomColors.softLimeGreen.withOpacity(0.5).withOpacity(0.5),
         textColor: Colors.black,
         iconColor: Colors.black,
         collapsedShape: RoundedRectangleBorder(
@@ -305,7 +316,8 @@ class _LessonPlanScreenState extends State<LessonPlanScreen> {
         children: [
           ovalButton('CREATE QUIZ',
               onPress: () =>
-                  Navigator.of(context).pushNamed(NavigatorRoutes.addQuiz)),
+                  Navigator.of(context).pushNamed(NavigatorRoutes.addQuiz),
+              backgroundColor: CustomColors.softLimeGreen),
           Gap(15),
           quizDocs.isNotEmpty
               ? SizedBox(

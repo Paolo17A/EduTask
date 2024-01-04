@@ -9,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../util/color_util.dart';
 import '../widgets/custom_text_widgets.dart';
 
 class StudentLessonsScreen extends StatefulWidget {
@@ -66,10 +67,14 @@ class _StudentLessonsScreenState extends State<StudentLessonsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeAppBarWidget(context, mayGoBack: true),
-      drawer: appDrawer(context, userType: 'STUDENT'),
-      bottomNavigationBar:
-          userBottomNavBar(context, index: 1, userType: 'STUDENT'),
+      appBar: homeAppBarWidget(context,
+          backgroundColor: CustomColors.verySoftOrange, mayGoBack: true),
+      drawer: appDrawer(context,
+          backgroundColor: CustomColors.verySoftOrange, userType: 'STUDENT'),
+      bottomNavigationBar: userBottomNavBar(context,
+          index: 1,
+          userType: 'STUDENT',
+          backgroundColor: CustomColors.verySoftOrange),
       body: switchedLoadingContainer(
           _isLoading,
           SingleChildScrollView(
@@ -102,7 +107,10 @@ class _StudentLessonsScreenState extends State<StudentLessonsScreen> {
               return ElevatedButton(
                   onPressed: () => NavigatorRoutes.selectedLesson(context,
                       lessonID: lessonDocs[index].id),
-                  child: interText(title, fontWeight: FontWeight.bold));
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: CustomColors.softOrange),
+                  child: interText(title,
+                      fontWeight: FontWeight.bold, color: Colors.black));
             },
           )
         : interText('NO ASSIGNED LESSONS AVAILABLE',

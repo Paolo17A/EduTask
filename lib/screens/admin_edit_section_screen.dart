@@ -6,6 +6,7 @@ import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../util/color_util.dart';
 import '../widgets/custom_padding_widgets.dart';
 import '../widgets/custom_text_widgets.dart';
 import '../widgets/dropdown_widget.dart';
@@ -376,7 +377,8 @@ class _AdminEditSectionState extends State<AdminEditSection> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: homeAppBarWidget(context, mayGoBack: true),
+        appBar: homeAppBarWidget(context,
+            backgroundColor: CustomColors.verySoftCyan, mayGoBack: true),
         body: switchedLoadingContainer(
             _isLoading,
             SingleChildScrollView(
@@ -386,7 +388,9 @@ class _AdminEditSectionState extends State<AdminEditSection> {
                   _sectionName(),
                   Gap(20),
                   _sectionTeachersContainer(),
-                  ovalButton('SAVE CHANGES', onPress: editThisSection)
+                  ovalButton('SAVE CHANGES',
+                      onPress: editThisSection,
+                      backgroundColor: CustomColors.moderateCyan)
                 ],
               )),
             )),

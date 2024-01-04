@@ -13,6 +13,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
+import '../util/color_util.dart';
+
 class AnswerAssignmentScreen extends StatefulWidget {
   final String assignmentID;
   const AnswerAssignmentScreen({super.key, required this.assignmentID});
@@ -172,7 +174,8 @@ class _AnswerAssignmentScreenState extends State<AnswerAssignmentScreen> {
     return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
-          appBar: homeAppBarWidget(context, mayGoBack: true),
+          appBar: homeAppBarWidget(context,
+              backgroundColor: CustomColors.verySoftOrange, mayGoBack: true),
           body: stackedLoadingContainer(
             context,
             _isLoading,
@@ -220,13 +223,16 @@ class _AnswerAssignmentScreenState extends State<AnswerAssignmentScreen> {
     return Column(children: [
       if (selectedFileName != null)
         Text(selectedFileName!, style: const TextStyle(color: Colors.black)),
-      ovalButton('SELECT FILE', onPress: () => pickFormFile()),
+      ovalButton('SELECT FILE',
+          onPress: () => pickFormFile(),
+          backgroundColor: CustomColors.softOrange),
     ]);
   }
 
   Widget _submitAssignment() {
     return vertical20Pix(
-        child:
-            ovalButton('SUBMIT ASSIGNMENT', onPress: () => submitAssignment()));
+        child: ovalButton('SUBMIT ASSIGNMENT',
+            onPress: () => submitAssignment(),
+            backgroundColor: CustomColors.softOrange));
   }
 }

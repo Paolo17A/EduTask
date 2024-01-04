@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../util/color_util.dart';
 import '../widgets/custom_miscellaneous_widgets.dart';
 import '../widgets/custom_text_widgets.dart';
 
@@ -314,7 +315,8 @@ class _TeacherSelectedSectionScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeAppBarWidget(context, mayGoBack: true),
+      appBar: homeAppBarWidget(context,
+          backgroundColor: CustomColors.lightGreyishLimeGreen, mayGoBack: true),
       body: switchedLoadingContainer(
           _isLoading,
           SingleChildScrollView(
@@ -364,7 +366,8 @@ class _TeacherSelectedSectionScreenState
         children: [
           if (availableLessons.isNotEmpty)
             ovalButton('ASSIGN LESSON',
-                onPress: () => showAvailableLessonsDialog(availableLessons)),
+                onPress: () => showAvailableLessonsDialog(availableLessons),
+                backgroundColor: CustomColors.softLimeGreen),
           Gap(15),
           assignedLessonDocs.isNotEmpty
               ? SizedBox(
@@ -432,7 +435,8 @@ class _TeacherSelectedSectionScreenState
           if (availableAssignments.isNotEmpty)
             ovalButton('ASSIGN ASSIGNMENT',
                 onPress: () =>
-                    showAvailableAssignmentsDialog(availableAssignments)),
+                    showAvailableAssignmentsDialog(availableAssignments),
+                backgroundColor: CustomColors.softLimeGreen),
           Gap(15),
           assignedAssignmentDocs.isNotEmpty
               ? SizedBox(
@@ -501,7 +505,8 @@ class _TeacherSelectedSectionScreenState
         children: [
           if (availableQuizzes.isNotEmpty)
             ovalButton('ASSIGN QUIZ',
-                onPress: () => showAvailableQuizzesDialog(availableQuizzes)),
+                onPress: () => showAvailableQuizzesDialog(availableQuizzes),
+                backgroundColor: CustomColors.softLimeGreen),
           Gap(15),
           assignedQuizDocs.isNotEmpty
               ? SizedBox(

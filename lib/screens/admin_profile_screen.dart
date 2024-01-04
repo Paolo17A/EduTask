@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../util/color_util.dart';
 import '../widgets/custom_miscellaneous_widgets.dart';
 import '../widgets/custom_text_widgets.dart';
 
@@ -171,8 +172,10 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
         }
       },
       child: Scaffold(
-        appBar: homeAppBarWidget(context, mayGoBack: true),
-        drawer: appDrawer(context, userType: userType),
+        appBar: homeAppBarWidget(context,
+            backgroundColor: CustomColors.verySoftCyan, mayGoBack: true),
+        drawer: appDrawer(context,
+            backgroundColor: CustomColors.verySoftCyan, userType: userType),
         body: stackedLoadingContainer(
             context,
             _isLoading,
@@ -184,7 +187,8 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                   const Gap(30),
                   if (_editMode)
                     ovalButton('CANCEL CHANGES',
-                        onPress: () => getAdminProfile()),
+                        onPress: () => getAdminProfile(),
+                        backgroundColor: CustomColors.moderateCyan),
                   ovalButton(_editMode ? 'SAVE CHANGES' : 'EDIT PROFILE',
                       onPress: () {
                     if (_editMode) {
@@ -194,7 +198,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                         _editMode = true;
                       });
                     }
-                  })
+                  }, backgroundColor: CustomColors.moderateCyan)
                 ],
               )),
             )),
@@ -216,9 +220,13 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                     profileImageURL: profileImageURL,
                     radius: MediaQuery.of(context).size.width * 0.2),
                 if (_editMode)
-                  ovalButton('UPLOAD PHOTO', onPress: _pickProfileImage),
+                  ovalButton('UPLOAD PHOTO',
+                      onPress: _pickProfileImage,
+                      backgroundColor: CustomColors.moderateCyan),
                 if (_editMode && profileImageURL.isNotEmpty)
-                  ovalButton('DELETE PHOTO', onPress: _removeProfileImage)
+                  ovalButton('DELETE PHOTO',
+                      onPress: _removeProfileImage,
+                      backgroundColor: CustomColors.moderateCyan)
               ],
             ),
           ),

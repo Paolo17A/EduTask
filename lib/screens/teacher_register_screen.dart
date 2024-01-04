@@ -12,6 +12,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../util/color_util.dart';
+
 class TeacherRegisterScreen extends StatefulWidget {
   const TeacherRegisterScreen({super.key});
 
@@ -199,7 +201,7 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
                       Container(
                           width: MediaQuery.of(context).size.width * 0.8,
                           decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.5),
+                              color: CustomColors.softOrange.withOpacity(0.5),
                               borderRadius: BorderRadius.circular(30)),
                           child: currentState == RegistrastionStates.register
                               ? _registerFieldsContainer()
@@ -353,8 +355,10 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        ovalButton('< BACK', onPress: goPreviousState),
-        ovalButton('NEXT >', onPress: goNextState)
+        ovalButton('< BACK',
+            onPress: goPreviousState, backgroundColor: CustomColors.softOrange),
+        ovalButton('NEXT >',
+            onPress: goNextState, backgroundColor: CustomColors.softOrange)
       ],
     );
   }

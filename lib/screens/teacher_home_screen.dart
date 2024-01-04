@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:edutask/util/quit_dialogue_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/app_drawer_widget.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
@@ -9,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../util/color_util.dart';
 import '../widgets/app_bottom_nav_bar_widget.dart';
 import '../widgets/custom_miscellaneous_widgets.dart';
 
@@ -55,20 +55,28 @@ class _TeacherHomeScreenState extends State<TeacherHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () => displayQuitDialogue(context),
+    return PopScope(
+      canPop: false,
       child: Scaffold(
-        appBar: homeAppBarWidget(context, mayGoBack: true),
-        drawer: appDrawer(context, userType: userType),
-        bottomNavigationBar:
-            userBottomNavBar(context, index: 0, userType: 'TEACHER'),
+        appBar: homeAppBarWidget(context,
+            backgroundColor: CustomColors.lightGreyishLimeGreen,
+            mayGoBack: true),
+        drawer: appDrawer(context,
+            backgroundColor: CustomColors.lightGreyishLimeGreen,
+            userType: userType),
+        bottomNavigationBar: userBottomNavBar(context,
+            index: 0,
+            userType: 'TEACHER',
+            backgroundColor: CustomColors.lightGreyishLimeGreen),
         body: switchedLoadingContainer(
             _isLoading,
             SingleChildScrollView(
               child: Column(
                 children: [
                   welcomeWidgets(
-                      userType: 'TEACHER', profileImageURL: profileImageURL),
+                      userType: 'TEACHER',
+                      profileImageURL: profileImageURL,
+                      containerColor: CustomColors.lightGreyishLimeGreen),
                   all20Pix(
                       child: Column(
                     children: [_pendingSubmissions(), _teacherSchedule()],
@@ -85,7 +93,7 @@ class _TeacherHomeScreenState extends State<TeacherHomeScreen> {
       child: Container(
         width: double.infinity,
         height: 200,
-        color: Colors.grey,
+        color: CustomColors.softLimeGreen.withOpacity(0.5),
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
@@ -104,7 +112,7 @@ class _TeacherHomeScreenState extends State<TeacherHomeScreen> {
       child: Container(
         width: double.infinity,
         height: 200,
-        color: Colors.grey,
+        color: CustomColors.softLimeGreen.withOpacity(0.5),
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [

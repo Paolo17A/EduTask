@@ -7,6 +7,8 @@ import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:edutask/widgets/custom_text_widgets.dart';
 import 'package:flutter/material.dart';
 
+import '../util/color_util.dart';
+
 class SelectedSubmissionScreen extends StatefulWidget {
   final String submissionID;
   const SelectedSubmissionScreen({super.key, required this.submissionID});
@@ -71,7 +73,8 @@ class _SelectedSubmissionScreenState extends State<SelectedSubmissionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeAppBarWidget(context, mayGoBack: true),
+      appBar: homeAppBarWidget(context,
+          backgroundColor: CustomColors.verySoftOrange, mayGoBack: true),
       body: switchedLoadingContainer(
           _isLoading,
           SizedBox(
@@ -133,6 +136,7 @@ class _SelectedSubmissionScreenState extends State<SelectedSubmissionScreen> {
   Widget _fileUploadSubmission() {
     return ovalButton('DOWNLOAD SUBMISSION',
         onPress: () => launchThisURL(submission),
-        width: MediaQuery.of(context).size.width * 0.6);
+        width: MediaQuery.of(context).size.width * 0.6,
+        backgroundColor: CustomColors.softOrange);
   }
 }

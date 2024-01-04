@@ -7,6 +7,7 @@ import 'package:edutask/widgets/custom_text_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../util/color_util.dart';
 import '../util/navigator_util.dart';
 import '../widgets/dropdown_widget.dart';
 import '../widgets/edutask_text_field_widget.dart';
@@ -257,7 +258,8 @@ class _AddSectionScreenState extends State<AddSectionScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: homeAppBarWidget(context),
+        appBar: homeAppBarWidget(context,
+            backgroundColor: CustomColors.verySoftCyan),
         body: stackedLoadingContainer(
             context,
             _isLoading,
@@ -273,7 +275,9 @@ class _AddSectionScreenState extends State<AddSectionScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [_teacher1stColumn(), _teacher2ndColumn()]),
                   const Gap(15),
-                  ovalButton('ADD NEW SECTION', onPress: addNewSection)
+                  ovalButton('ADD NEW SECTION',
+                      onPress: addNewSection,
+                      backgroundColor: CustomColors.moderateCyan)
                 ],
               )),
             )),

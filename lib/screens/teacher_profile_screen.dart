@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../util/color_util.dart';
 import '../util/navigator_util.dart';
 import '../widgets/custom_miscellaneous_widgets.dart';
 import '../widgets/custom_text_widgets.dart';
@@ -180,8 +181,12 @@ class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
           }
         },
         child: Scaffold(
-          appBar: homeAppBarWidget(context, mayGoBack: true),
-          drawer: appDrawer(context, userType: userType),
+          appBar: homeAppBarWidget(context,
+              backgroundColor: CustomColors.lightGreyishLimeGreen,
+              mayGoBack: true),
+          drawer: appDrawer(context,
+              backgroundColor: CustomColors.lightGreyishLimeGreen,
+              userType: userType),
           body: stackedLoadingContainer(
               context,
               _isLoading,
@@ -193,7 +198,8 @@ class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
                     const Gap(30),
                     if (_editMode)
                       ovalButton('CANCEL CHANGES',
-                          onPress: () => getAdminProfile()),
+                          onPress: () => getAdminProfile(),
+                          backgroundColor: CustomColors.softLimeGreen),
                     ovalButton(_editMode ? 'SAVE CHANGES' : 'EDIT PROFILE',
                         onPress: () {
                       if (_editMode) {
@@ -203,7 +209,7 @@ class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
                           _editMode = true;
                         });
                       }
-                    })
+                    }, backgroundColor: CustomColors.softLimeGreen)
                   ],
                 )),
               )),
@@ -230,9 +236,13 @@ class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
                         profileImageURL: profileImageURL,
                         radius: MediaQuery.of(context).size.width * 0.2),
                     if (_editMode)
-                      ovalButton('UPLOAD PHOTO', onPress: _pickProfileImage),
+                      ovalButton('UPLOAD PHOTO',
+                          onPress: _pickProfileImage,
+                          backgroundColor: CustomColors.softLimeGreen),
                     if (_editMode && profileImageURL.isNotEmpty)
-                      ovalButton('DELETE PHOTO', onPress: _removeProfileImage)
+                      ovalButton('DELETE PHOTO',
+                          onPress: _removeProfileImage,
+                          backgroundColor: CustomColors.softLimeGreen)
                   ],
                 ),
               ),

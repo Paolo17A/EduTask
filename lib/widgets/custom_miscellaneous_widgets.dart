@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/util/color_util.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/custom_button_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
@@ -12,7 +13,8 @@ Widget authenticationIcon(BuildContext context, {required IconData iconData}) {
       width: MediaQuery.of(context).size.width * 0.45,
       height: 150,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20), color: Colors.grey),
+          borderRadius: BorderRadius.circular(20),
+          color: CustomColors.verySoftOrange),
       child: Transform.scale(
           scale: 5, child: Icon(iconData, color: Colors.black)));
 }
@@ -53,7 +55,9 @@ Widget buildProfileImageWidget(
 }
 
 Widget welcomeWidgets(
-    {required String userType, required String profileImageURL}) {
+    {required String userType,
+    required String profileImageURL,
+    required containerColor}) {
   return SizedBox(
     width: double.infinity,
     child: Column(
@@ -65,7 +69,7 @@ Widget welcomeWidgets(
             buildProfileImageWidget(profileImageURL: profileImageURL)
           ]),
         ),
-        Container(height: 15, color: Colors.grey)
+        Container(height: 15, color: containerColor)
       ],
     ),
   );
@@ -102,7 +106,7 @@ Widget sectionTeacherContainer(BuildContext context,
         interText(subjectLabel),
         Container(
             width: MediaQuery.of(context).size.width * 0.4,
-            color: Colors.grey,
+            color: CustomColors.moderateCyan.withOpacity(0.75),
             padding: EdgeInsets.all(10),
             child: Center(
               child: Row(children: [
@@ -167,7 +171,9 @@ Widget sectionMaterialEntry(BuildContext context,
       SizedBox(
           width: MediaQuery.of(context).size.width * 0.5,
           child: interText(title, fontSize: 15)),
-      ovalButton('REMOVE', onPress: () => onRemove())
+      ovalButton('REMOVE',
+          onPress: () => onRemove(),
+          backgroundColor: CustomColors.softLimeGreen)
     ]),
   ));
 }
@@ -180,7 +186,7 @@ Widget studentEntry(BuildContext context,
       '${studentData['firstName']} ${studentData['lastName']}';
   return vertical10horizontal4(Container(
     decoration: BoxDecoration(
-      color: Colors.grey.withOpacity(0.5),
+      color: CustomColors.moderateCyan.withOpacity(0.75),
       border: Border.all(),
       borderRadius: BorderRadius.circular(10),
     ),

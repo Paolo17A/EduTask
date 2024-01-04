@@ -5,6 +5,7 @@ import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:flutter/material.dart';
 
+import '../util/color_util.dart';
 import '../widgets/custom_button_widgets.dart';
 import '../widgets/custom_miscellaneous_widgets.dart';
 import '../widgets/custom_text_widgets.dart';
@@ -102,7 +103,6 @@ class _AdminSelectedSectionScreenState
       setState(() {
         _isLoading = false;
       });
-      print('DONE GETTING SECTION USERS');
     } catch (error) {
       scaffoldMessenger.showSnackBar(
           SnackBar(content: Text('Error getting section data: $error')));
@@ -124,7 +124,8 @@ class _AdminSelectedSectionScreenState
         return false;
       },
       child: Scaffold(
-          appBar: homeAppBarWidget(context, mayGoBack: true),
+          appBar: homeAppBarWidget(context,
+              backgroundColor: CustomColors.verySoftCyan, mayGoBack: true),
           body: switchedLoadingContainer(
               _isLoading,
               SingleChildScrollView(
@@ -137,7 +138,8 @@ class _AdminSelectedSectionScreenState
                       ovalButton('EDIT SECTION',
                           onPress: () => NavigatorRoutes.adminEditSection(
                               context,
-                              sectionID: widget.sectionDoc.id))
+                              sectionID: widget.sectionDoc.id),
+                          backgroundColor: CustomColors.moderateCyan)
                     ],
                   ),
                 ),
@@ -309,8 +311,8 @@ class _AdminSelectedSectionScreenState
   Widget _expandableStudents() {
     return vertical20Pix(
       child: ExpansionTile(
-        collapsedBackgroundColor: Colors.grey.withOpacity(0.5),
-        backgroundColor: Colors.grey.withOpacity(0.5),
+        collapsedBackgroundColor: CustomColors.moderateCyan.withOpacity(0.5),
+        backgroundColor: CustomColors.moderateCyan.withOpacity(0.5),
         textColor: Colors.black,
         iconColor: Colors.black,
         collapsedShape: RoundedRectangleBorder(

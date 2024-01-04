@@ -10,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../util/color_util.dart';
 import '../widgets/custom_text_widgets.dart';
 
 class StudentSubmittablesScreen extends StatefulWidget {
@@ -94,10 +95,14 @@ class _StudentSubmittablesScreenState extends State<StudentSubmittablesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeAppBarWidget(context, mayGoBack: true),
-      drawer: appDrawer(context, userType: 'STUDENT'),
-      bottomNavigationBar:
-          userBottomNavBar(context, index: 3, userType: 'STUDENT'),
+      appBar: homeAppBarWidget(context,
+          backgroundColor: CustomColors.verySoftOrange, mayGoBack: true),
+      drawer: appDrawer(context,
+          backgroundColor: CustomColors.verySoftOrange, userType: 'STUDENT'),
+      bottomNavigationBar: userBottomNavBar(context,
+          index: 3,
+          userType: 'STUDENT',
+          backgroundColor: CustomColors.verySoftOrange),
       body: switchedLoadingContainer(
           _isLoading,
           SingleChildScrollView(
@@ -112,8 +117,8 @@ class _StudentSubmittablesScreenState extends State<StudentSubmittablesScreen> {
   Widget _assigments() {
     return vertical20Pix(
       child: ExpansionTile(
-        collapsedBackgroundColor: Colors.grey.withOpacity(0.5),
-        backgroundColor: Colors.grey.withOpacity(0.5),
+        collapsedBackgroundColor: CustomColors.softOrange.withOpacity(0.5),
+        backgroundColor: CustomColors.softOrange.withOpacity(0.5),
         textColor: Colors.black,
         iconColor: Colors.black,
         collapsedShape: RoundedRectangleBorder(
@@ -163,8 +168,8 @@ class _StudentSubmittablesScreenState extends State<StudentSubmittablesScreen> {
       formattedGrade = grade.toString();
     }
     return Container(
-      height: 70,
-      color: index % 2 == 0 ? Colors.grey.withOpacity(0.5) : Colors.white,
+      height: 80,
+      color: index % 2 == 0 ? Colors.grey.withOpacity(0.25) : Colors.white,
       padding: EdgeInsets.all(5),
       child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -190,11 +195,13 @@ class _StudentSubmittablesScreenState extends State<StudentSubmittablesScreen> {
             else if (matchingSubmissions.isNotEmpty && !isGraded)
               ovalButton('VIEW\nSUBMISSION',
                   onPress: () => NavigatorRoutes.selectedSubmission(context,
-                      submissionID: matchingSubmissions.first.id))
+                      submissionID: matchingSubmissions.first.id),
+                  backgroundColor: CustomColors.softOrange)
             else
               ovalButton('ANSWER\nASSIGNMENT',
                   onPress: () => NavigatorRoutes.answerAssignment(context,
-                      assignmentID: assignmentDoc.id))
+                      assignmentID: assignmentDoc.id),
+                  backgroundColor: CustomColors.softOrange)
           ]),
     );
   }
@@ -202,8 +209,8 @@ class _StudentSubmittablesScreenState extends State<StudentSubmittablesScreen> {
   Widget _quizzes() {
     return vertical20Pix(
       child: ExpansionTile(
-        collapsedBackgroundColor: Colors.grey.withOpacity(0.5),
-        backgroundColor: Colors.grey.withOpacity(0.5),
+        collapsedBackgroundColor: CustomColors.softOrange.withOpacity(0.5),
+        backgroundColor: CustomColors.softOrange.withOpacity(0.5),
         textColor: Colors.black,
         iconColor: Colors.black,
         collapsedShape: RoundedRectangleBorder(
@@ -242,7 +249,7 @@ class _StudentSubmittablesScreenState extends State<StudentSubmittablesScreen> {
 
     return Container(
       height: 70,
-      color: index % 2 == 0 ? Colors.grey.withOpacity(0.5) : Colors.white,
+      color: index % 2 == 0 ? Colors.grey.withOpacity(0.25) : Colors.white,
       padding: EdgeInsets.all(5),
       child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -263,11 +270,13 @@ class _StudentSubmittablesScreenState extends State<StudentSubmittablesScreen> {
             if (matchingQuizResults.isNotEmpty)
               ovalButton('VIEW\nRESULTS',
                   onPress: () => NavigatorRoutes.selectedQuizResult(context,
-                      quizResultID: matchingQuizResults.first.id))
+                      quizResultID: matchingQuizResults.first.id),
+                  backgroundColor: CustomColors.softOrange)
             else
               ovalButton('ANSWER\nQUIZ',
                   onPress: () =>
-                      NavigatorRoutes.answerQuiz(context, quizID: quizDoc.id))
+                      NavigatorRoutes.answerQuiz(context, quizID: quizDoc.id),
+                  backgroundColor: CustomColors.softOrange)
           ]),
     );
   }

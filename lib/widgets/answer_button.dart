@@ -1,3 +1,4 @@
+import 'package:edutask/util/color_util.dart';
 import 'package:edutask/widgets/custom_text_widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +37,7 @@ class _AnswerButtonState extends State<AnswerButton> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
                   foregroundColor: Colors.black,
-                  backgroundColor: Colors.white),
+                  backgroundColor: CustomColors.softOrange),
               child: interText(widget.answer,
                   textAlign: TextAlign.center, fontWeight: FontWeight.bold)),
         ),

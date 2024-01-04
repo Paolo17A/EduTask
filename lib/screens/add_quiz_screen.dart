@@ -11,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../util/color_util.dart';
 import '../widgets/string_choices_radio_widget.dart';
 
 class AddQuizScreen extends StatefulWidget {
@@ -204,7 +205,8 @@ class _AddQuizScreenState extends State<AddQuizScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: homeAppBarWidget(context),
+        appBar: homeAppBarWidget(context,
+            backgroundColor: CustomColors.lightGreyishLimeGreen),
         body: stackedLoadingContainer(
             context,
             _isLoading,

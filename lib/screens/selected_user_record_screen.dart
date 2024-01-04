@@ -8,6 +8,8 @@ import 'package:edutask/widgets/custom_text_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../util/color_util.dart';
+
 class SelectedUserRecordScreen extends StatefulWidget {
   final DocumentSnapshot userDoc;
   const SelectedUserRecordScreen({super.key, required this.userDoc});
@@ -161,7 +163,8 @@ class _SelectedUserRecordScreenState extends State<SelectedUserRecordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeAppBarWidget(context, mayGoBack: true),
+      appBar: homeAppBarWidget(context,
+          backgroundColor: CustomColors.verySoftCyan, mayGoBack: true),
       body: switchedLoadingContainer(
         _isLoading,
         SizedBox(
@@ -193,7 +196,7 @@ class _SelectedUserRecordScreenState extends State<SelectedUserRecordScreen> {
     return Container(
       width: double.infinity,
       height: 50,
-      color: Colors.grey.withOpacity(0.5),
+      color: CustomColors.moderateCyan.withOpacity(0.5),
       child: Center(
         child: all10Pix(
           child: Row(
@@ -222,7 +225,7 @@ class _SelectedUserRecordScreenState extends State<SelectedUserRecordScreen> {
                 Container(
                   width: double.infinity,
                   height: 30,
-                  color: Colors.grey.withOpacity(0.5),
+                  color: CustomColors.moderateCyan.withOpacity(0.5),
                   child: Center(
                       child: Row(
                     children: [
@@ -236,7 +239,7 @@ class _SelectedUserRecordScreenState extends State<SelectedUserRecordScreen> {
                 Container(
                   width: double.infinity,
                   height: 30,
-                  color: Colors.grey.withOpacity(0.5),
+                  color: CustomColors.moderateCyan.withOpacity(0.5),
                   child: Center(
                       child: Row(
                     children: [
@@ -266,7 +269,7 @@ class _SelectedUserRecordScreenState extends State<SelectedUserRecordScreen> {
         interText('Handled Sections', fontSize: 20),
         Container(
             width: double.infinity,
-            color: Colors.grey.withOpacity(0.5),
+            color: CustomColors.moderateCyan.withOpacity(0.5),
             padding: const EdgeInsets.all(10),
             child: handledSections.isNotEmpty
                 ? Column(
@@ -290,13 +293,15 @@ class _SelectedUserRecordScreenState extends State<SelectedUserRecordScreen> {
               interText('SECTION:', fontSize: 20),
               Container(
                 width: double.infinity,
-                color: Colors.grey.withOpacity(0.5),
+                color: CustomColors.moderateCyan.withOpacity(0.5),
                 padding: EdgeInsets.all(10),
                 child: Center(child: interText(sectionName)),
               ),
             ],
           )
-        : ovalButton('ASSIGN SECTION', onPress: showAvailableSectionsDialog);
+        : ovalButton('ASSIGN SECTION',
+            onPress: showAvailableSectionsDialog,
+            backgroundColor: CustomColors.moderateCyan);
   }
 
   void showAvailableSectionsDialog() {

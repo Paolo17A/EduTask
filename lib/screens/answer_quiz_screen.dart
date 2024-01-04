@@ -10,6 +10,7 @@ import 'package:edutask/widgets/custom_text_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../util/color_util.dart';
 import '../widgets/answer_button.dart';
 
 class AnswerQuizScreen extends StatefulWidget {
@@ -176,7 +177,8 @@ class _AnswerQuizScreenState extends State<AnswerQuizScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeAppBarWidget(context, mayGoBack: true),
+      appBar: homeAppBarWidget(context,
+          backgroundColor: CustomColors.verySoftOrange, mayGoBack: true),
       body: switchedLoadingContainer(
           _isLoading,
           SizedBox(
@@ -204,7 +206,8 @@ class _AnswerQuizScreenState extends State<AnswerQuizScreen> {
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-          color: Colors.grey, borderRadius: BorderRadius.circular(30)),
+          color: CustomColors.softOrange.withOpacity(0.75),
+          borderRadius: BorderRadius.circular(30)),
       padding: EdgeInsets.all(15),
       child: Column(
         children: [
@@ -239,8 +242,12 @@ class _AnswerQuizScreenState extends State<AnswerQuizScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              ovalButton('< PREV', onPress: _previousQuestion),
-              ovalButton('NEXT >', onPress: _nextQuestion)
+              ovalButton('< PREV',
+                  onPress: _previousQuestion,
+                  backgroundColor: CustomColors.softOrange),
+              ovalButton('NEXT >',
+                  onPress: _nextQuestion,
+                  backgroundColor: CustomColors.softOrange)
             ],
           ),
         ],

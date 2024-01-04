@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:edutask/util/quit_dialogue_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/app_bottom_nav_bar_widget.dart';
 import 'package:edutask/widgets/app_drawer_widget.dart';
@@ -7,6 +6,8 @@ import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_miscellaneous_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../util/color_util.dart';
 
 class StudentHomeScreen extends StatefulWidget {
   const StudentHomeScreen({super.key});
@@ -51,20 +52,26 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () => displayQuitDialogue(context),
+    return PopScope(
+      canPop: false,
       child: Scaffold(
-        appBar: homeAppBarWidget(context, mayGoBack: true),
-        drawer: appDrawer(context, userType: userType),
-        bottomNavigationBar:
-            userBottomNavBar(context, index: 0, userType: 'STUDENT'),
+        appBar: homeAppBarWidget(context,
+            backgroundColor: CustomColors.verySoftOrange, mayGoBack: true),
+        drawer: appDrawer(context,
+            backgroundColor: CustomColors.verySoftOrange, userType: userType),
+        bottomNavigationBar: userBottomNavBar(context,
+            index: 0,
+            userType: 'STUDENT',
+            backgroundColor: CustomColors.verySoftOrange),
         body: switchedLoadingContainer(
             _isLoading,
             SingleChildScrollView(
               child: Column(
                 children: [
                   welcomeWidgets(
-                      userType: 'STUDENT', profileImageURL: profileImageURL)
+                      userType: 'STUDENT',
+                      profileImageURL: profileImageURL,
+                      containerColor: CustomColors.verySoftOrange)
                 ],
               ),
             )),

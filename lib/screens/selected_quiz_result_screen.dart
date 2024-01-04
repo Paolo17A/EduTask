@@ -8,6 +8,8 @@ import 'package:edutask/widgets/custom_text_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../util/color_util.dart';
+
 class SelectedQuizResultScreen extends StatefulWidget {
   final String quizResultID;
   const SelectedQuizResultScreen({super.key, required this.quizResultID});
@@ -70,7 +72,8 @@ class _SelectedQuizResultScreenState extends State<SelectedQuizResultScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeAppBarWidget(context, mayGoBack: true),
+      appBar: homeAppBarWidget(context,
+          backgroundColor: CustomColors.verySoftOrange, mayGoBack: true),
       body: switchedLoadingContainer(
           _isLoading,
           SingleChildScrollView(
@@ -94,7 +97,8 @@ class _SelectedQuizResultScreenState extends State<SelectedQuizResultScreen> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-          color: Colors.grey, borderRadius: BorderRadius.circular(20)),
+          color: CustomColors.verySoftOrange,
+          borderRadius: BorderRadius.circular(20)),
       padding: EdgeInsets.all(15),
       child: interText(
           'You got ${grade.toString()} out of ${quizQuestions.length.toString()} items correct.',
@@ -108,7 +112,8 @@ class _SelectedQuizResultScreenState extends State<SelectedQuizResultScreen> {
     return vertical20Pix(
       child: Container(
         decoration: BoxDecoration(
-            color: Colors.grey, borderRadius: BorderRadius.circular(20)),
+            color: CustomColors.verySoftOrange,
+            borderRadius: BorderRadius.circular(20)),
         padding: EdgeInsets.all(15),
         child: ListView.builder(
             shrinkWrap: true,
@@ -123,7 +128,9 @@ class _SelectedQuizResultScreenState extends State<SelectedQuizResultScreen> {
                   'Correct Answer: ${quizQuestions[index]['answer']}) ${quizQuestions[index]['options'][quizQuestions[index]['answer']]}';
               return vertical10horizontal4(
                 Container(
-                  decoration: BoxDecoration(border: Border.all()),
+                  decoration: BoxDecoration(
+                      color: CustomColors.softOrange,
+                      borderRadius: BorderRadius.circular(10)),
                   padding: EdgeInsets.all(5),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

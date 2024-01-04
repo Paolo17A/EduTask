@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../util/color_util.dart';
 import '../widgets/custom_button_widgets.dart';
 import '../widgets/custom_miscellaneous_widgets.dart';
 import '../widgets/custom_text_widgets.dart';
@@ -209,7 +210,7 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
     return Container(
       width: MediaQuery.of(context).size.width * 0.8,
       decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.5),
+          color: CustomColors.softOrange.withOpacity(0.5),
           borderRadius: BorderRadius.circular(30)),
       padding: EdgeInsets.all(20),
       child: Column(
@@ -227,7 +228,7 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
     return Container(
       width: MediaQuery.of(context).size.width * 0.8,
       decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.5),
+          color: CustomColors.softOrange.withOpacity(0.5),
           borderRadius: BorderRadius.circular(30)),
       padding: EdgeInsets.all(20),
       child: Column(
@@ -331,8 +332,10 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        ovalButton('< BACK', onPress: goPreviousState),
-        ovalButton('NEXT >', onPress: goNextState)
+        ovalButton('< BACK',
+            onPress: goPreviousState, backgroundColor: CustomColors.softOrange),
+        ovalButton('NEXT >',
+            onPress: goNextState, backgroundColor: CustomColors.softOrange)
       ],
     );
   }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../util/color_util.dart';
+
 class StringChoicesRadioWidget extends StatefulWidget {
   final String? initialString;
   final void Function(String?) choiceSelectCallback;
@@ -62,7 +64,7 @@ class ChoicesRadioWidgetState extends State<StringChoicesRadioWidget> {
                     widget.choiceSelectCallback(_choice);
                   });
                 },
-                activeColor: const Color.fromARGB(255, 60, 19, 97),
+                activeColor: CustomColors.moderateCyan,
               )
             ]);
           }).toList()),

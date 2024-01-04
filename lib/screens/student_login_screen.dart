@@ -12,6 +12,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../util/color_util.dart';
 import '../widgets/custom_button_widgets.dart';
 
 class StudentLoginScreen extends StatefulWidget {
@@ -124,14 +125,16 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
     return Container(
       width: MediaQuery.of(context).size.width * 0.8,
       decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.5),
+          color: CustomColors.softOrange.withOpacity(0.5),
           borderRadius: BorderRadius.circular(30)),
       child: all20Pix(
           child: Column(
         children: [
           _emailAddress(),
           _password(),
-          ovalButton('LOG-IN', onPress: loginTeacherUser)
+          ovalButton('LOG-IN',
+              onPress: loginTeacherUser,
+              backgroundColor: CustomColors.softOrange)
         ],
       )),
     );

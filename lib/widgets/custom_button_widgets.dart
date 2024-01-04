@@ -1,3 +1,4 @@
+import 'package:edutask/util/color_util.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:edutask/widgets/custom_text_widgets.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ Widget welcomeButton(BuildContext context,
       child: ElevatedButton(
         onPressed: () => onPress(),
         style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.grey,
+            backgroundColor: CustomColors.softOrange,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20))),
         child: Column(
@@ -32,6 +33,7 @@ Widget welcomeButton(BuildContext context,
 
 Widget ovalButton(String label,
     {required Function onPress,
+    required Color backgroundColor,
     double? width,
     double? height,
     Color color = Colors.black}) {
@@ -41,6 +43,7 @@ Widget ovalButton(String label,
     child: ElevatedButton(
       onPressed: () => onPress(),
       style: ElevatedButton.styleFrom(
+          backgroundColor: backgroundColor,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
       child: interText(label,
