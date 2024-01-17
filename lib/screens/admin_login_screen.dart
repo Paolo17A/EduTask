@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_unnecessary_containers
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/providers/current_user_type_provider.dart';
 import 'package:edutask/util/color_util.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
@@ -12,16 +13,17 @@ import 'package:edutask/widgets/custom_text_widgets.dart';
 import 'package:edutask/widgets/edutask_text_field_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-class AdminLoginScreen extends StatefulWidget {
+class AdminLoginScreen extends ConsumerStatefulWidget {
   const AdminLoginScreen({super.key});
 
   @override
-  State<AdminLoginScreen> createState() => _AdminLoginScreenState();
+  ConsumerState<AdminLoginScreen> createState() => _AdminLoginScreenState();
 }
 
-class _AdminLoginScreenState extends State<AdminLoginScreen> {
+class _AdminLoginScreenState extends ConsumerState<AdminLoginScreen> {
   bool _isLoading = false;
 
   final emailController = TextEditingController();
@@ -61,6 +63,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
       setState(() {
         _isLoading = false;
       });
+      ref.read(currentUserTypeProvider.notifier).setCurrentUserType('ADMIN');
       navigator.pushReplacementNamed(NavigatorRoutes.adminHome);
     } catch (error) {
       scaffoldMessenger.showSnackBar(
@@ -86,10 +89,12 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                   child: all20Pix(
                       child: Column(
                     children: [
+                      interText('ADMIN LOG-IN',
+                          color: Colors.black,
+                          fontSize: 35,
+                          textAlign: TextAlign.center),
                       authenticationIcon(context, iconData: Icons.book),
                       const Gap(30),
-                      interText('ADMIN LOG-IN',
-                          color: Colors.black, fontSize: 35),
                       _fieldsContainer(),
                       _bottomRow()
                     ],
@@ -103,7 +108,11 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     return Container(
       width: MediaQuery.of(context).size.width * 0.8,
       decoration: BoxDecoration(
-          color: CustomColors.softOrange.withOpacity(0.5),
+          color: CustomColors.veryLightGrey,
+          image: DecorationImage(
+              image: AssetImage('assets/images/central_elem_logo.png'),
+              fit: BoxFit.contain,
+              opacity: 0.25),
           borderRadius: BorderRadius.circular(30)),
       child: all20Pix(
           child: Column(
@@ -111,7 +120,8 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
           _emailAddress(),
           _password(),
           ovalButton('LOG-IN',
-              onPress: loginAdminUser, backgroundColor: CustomColors.softOrange)
+              onPress: loginAdminUser,
+              backgroundColor: CustomColors.veryLightGrey)
         ],
       )),
     );

@@ -191,10 +191,12 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
               child: all20Pix(
                   child: Column(
                 children: [
+                  interText('STUDENT REGISTRATION',
+                      color: Colors.black,
+                      fontSize: 36,
+                      textAlign: TextAlign.center),
                   authenticationIcon(context, iconData: Icons.person),
                   const Gap(30),
-                  interText('STUDENT REGISTER',
-                      color: Colors.black, fontSize: 35),
                   if (currentState == RegistrastionStates.register)
                     _registerFieldsContainer()
                   else if (currentState == RegistrastionStates.profile)
@@ -210,7 +212,11 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
     return Container(
       width: MediaQuery.of(context).size.width * 0.8,
       decoration: BoxDecoration(
-          color: CustomColors.softOrange.withOpacity(0.5),
+          color: CustomColors.veryLightGrey,
+          image: DecorationImage(
+              image: AssetImage('assets/images/central_elem_logo.png'),
+              fit: BoxFit.contain,
+              opacity: 0.25),
           borderRadius: BorderRadius.circular(30)),
       padding: EdgeInsets.all(20),
       child: Column(
@@ -333,9 +339,10 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         ovalButton('< BACK',
-            onPress: goPreviousState, backgroundColor: CustomColors.softOrange),
+            onPress: goPreviousState,
+            backgroundColor: CustomColors.veryLightGrey),
         ovalButton('NEXT >',
-            onPress: goNextState, backgroundColor: CustomColors.softOrange)
+            onPress: goNextState, backgroundColor: CustomColors.veryLightGrey)
       ],
     );
   }

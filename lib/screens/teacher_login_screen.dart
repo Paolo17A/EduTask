@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_unnecessary_containers
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
@@ -10,19 +8,21 @@ import 'package:edutask/widgets/custom_text_widgets.dart';
 import 'package:edutask/widgets/edutask_text_field_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
+import '../providers/current_user_type_provider.dart';
 import '../util/color_util.dart';
 import '../widgets/custom_button_widgets.dart';
 
-class TeacherLoginScreen extends StatefulWidget {
+class TeacherLoginScreen extends ConsumerStatefulWidget {
   const TeacherLoginScreen({super.key});
 
   @override
-  State<TeacherLoginScreen> createState() => _TeacherLoginScreenState();
+  ConsumerState<TeacherLoginScreen> createState() => _TeacherLoginScreenState();
 }
 
-class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
+class _TeacherLoginScreenState extends ConsumerState<TeacherLoginScreen> {
   bool _isLoading = false;
 
   final emailController = TextEditingController();
@@ -64,6 +64,7 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
       setState(() {
         _isLoading = false;
       });
+      ref.read(currentUserTypeProvider.notifier).setCurrentUserType('TEACHER');
       navigator.pushNamed(NavigatorRoutes.teacherHome);
     } catch (error) {
       scaffoldMessenger.showSnackBar(
@@ -89,10 +90,12 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
                   child: all20Pix(
                       child: Column(
                     children: [
+                      interText('TEACHER\nLOG-IN',
+                          color: Colors.black,
+                          fontSize: 36,
+                          textAlign: TextAlign.center),
                       authenticationIcon(context, iconData: Icons.people),
                       const Gap(30),
-                      interText('TEACHER LOG-IN',
-                          color: Colors.black, fontSize: 35),
                       _fieldsContainer(),
                       logInBottomRow(context,
                           onRegister: () => Navigator.of(context)
@@ -108,7 +111,11 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
     return Container(
       width: MediaQuery.of(context).size.width * 0.8,
       decoration: BoxDecoration(
-          color: CustomColors.softOrange.withOpacity(0.5),
+          color: CustomColors.veryLightGrey,
+          image: DecorationImage(
+              image: AssetImage('assets/images/central_elem_logo.png'),
+              fit: BoxFit.contain,
+              opacity: 0.25),
           borderRadius: BorderRadius.circular(30)),
       child: all20Pix(
           child: Column(
@@ -117,7 +124,7 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
           _password(),
           ovalButton('LOG-IN',
               onPress: loginTeacherUser,
-              backgroundColor: CustomColors.softOrange)
+              backgroundColor: CustomColors.veryLightGrey)
         ],
       )),
     );

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/providers/profile_image_provider.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/app_drawer_widget.dart';
@@ -7,19 +8,21 @@ import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:edutask/widgets/custom_text_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
 import '../util/color_util.dart';
 
-class AdminSectionRecordsScreen extends StatefulWidget {
+class AdminSectionRecordsScreen extends ConsumerStatefulWidget {
   const AdminSectionRecordsScreen({super.key});
 
   @override
-  State<AdminSectionRecordsScreen> createState() =>
+  ConsumerState<AdminSectionRecordsScreen> createState() =>
       _AdminSectionRecordsScreenState();
 }
 
-class _AdminSectionRecordsScreenState extends State<AdminSectionRecordsScreen> {
+class _AdminSectionRecordsScreenState
+    extends ConsumerState<AdminSectionRecordsScreen> {
   bool _isLoading = true;
   List<DocumentSnapshot> sectionDocs = [];
 
@@ -53,7 +56,9 @@ class _AdminSectionRecordsScreenState extends State<AdminSectionRecordsScreen> {
         appBar: homeAppBarWidget(context,
             backgroundColor: CustomColors.verySoftCyan, mayGoBack: true),
         drawer: appDrawer(context,
-            backgroundColor: CustomColors.verySoftCyan, userType: 'ADMIN'),
+            backgroundColor: CustomColors.verySoftCyan,
+            userType: 'ADMIN',
+            profileImageURL: ref.read(profileImageProvider)),
         body: switchedLoadingContainer(
             _isLoading,
             SingleChildScrollView(

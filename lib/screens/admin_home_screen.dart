@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/providers/profile_image_provider.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
+import 'package:edutask/widgets/app_bottom_nav_bar_widget.dart';
 import 'package:edutask/widgets/app_drawer_widget.dart';
 import 'package:edutask/widgets/custom_button_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
@@ -8,17 +10,18 @@ import 'package:edutask/widgets/custom_miscellaneous_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../util/color_util.dart';
 
-class AdminHomeScreen extends StatefulWidget {
+class AdminHomeScreen extends ConsumerStatefulWidget {
   const AdminHomeScreen({super.key});
 
   @override
-  State<AdminHomeScreen> createState() => _AdminHomeScreenState();
+  ConsumerState<AdminHomeScreen> createState() => _AdminHomeScreenState();
 }
 
-class _AdminHomeScreenState extends State<AdminHomeScreen> {
+class _AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
   bool _isLoading = false;
   String userType = '';
   String profileImageURL = '';
@@ -39,7 +42,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       final userData = user.data() as Map<dynamic, dynamic>;
       userType = userData['userType'];
       profileImageURL = userData['profileImageURL'];
-
+      ref.read(profileImageProvider.notifier).setProfileImage(profileImageURL);
       setState(() {
         _isLoading = false;
       });
@@ -61,7 +64,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         appBar: homeAppBarWidget(context,
             backgroundColor: CustomColors.verySoftCyan, mayGoBack: true),
         drawer: appDrawer(context,
-            backgroundColor: CustomColors.verySoftCyan, userType: userType),
+            backgroundColor: CustomColors.verySoftCyan,
+            userType: userType,
+            profileImageURL: ref.read(profileImageProvider)),
+        bottomNavigationBar: adminBottomNavBar(context, index: 0),
         body: switchedLoadingContainer(
             _isLoading,
             Column(
@@ -81,28 +87,19 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     return all20Pix(
         child: Column(
       children: [
-        _homeButton(
-            'STUDENT RECORDS',
-            () => Navigator.of(context)
+        homeButton(context,
+            label: 'STUDENT RECORDS',
+            onPress: () => Navigator.of(context)
                 .pushNamed(NavigatorRoutes.adminStudentRecords)),
-        _homeButton(
-            'TEACHER RECORDS',
-            () => Navigator.of(context)
+        homeButton(context,
+            label: 'TEACHER RECORDS',
+            onPress: () => Navigator.of(context)
                 .pushNamed(NavigatorRoutes.adminTeacherRecords)),
-        _homeButton(
-            'SECTION RECORDS',
-            () => Navigator.of(context)
+        homeButton(context,
+            label: 'SECTION RECORDS',
+            onPress: () => Navigator.of(context)
                 .pushNamed(NavigatorRoutes.adminSectionRecords))
       ],
     ));
-  }
-
-  Widget _homeButton(String label, Function onPress) {
-    return all10Pix(
-        child: ovalButton(label,
-            onPress: onPress,
-            width: MediaQuery.of(context).size.width * 0.75,
-            height: 125,
-            backgroundColor: CustomColors.moderateCyan));
   }
 }

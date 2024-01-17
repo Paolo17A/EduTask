@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:edutask/widgets/custom_text_widgets.dart';
 import 'package:flutter/material.dart';
 
 Widget dropdownWidget(
@@ -32,6 +33,7 @@ Widget dropdownWidget(
 }
 
 Widget userDocumentSnapshotDropdownWidget(
+  BuildContext context,
   String selectedOption,
   Function(String?) onDropdownValueChanged,
   List<DocumentSnapshot> dropdownDocuments,
@@ -43,8 +45,36 @@ Widget userDocumentSnapshotDropdownWidget(
       final docData = doc.data() as Map<dynamic, dynamic>;
       String formattedName = '${docData['firstName']} ${docData['lastName']}';
       return DropdownMenuItem<String>(
-          value: doc.id, child: Text(formattedName));
+          value: doc.id, child: interText(formattedName, fontSize: 12));
     }).toList(),
     onChanged: onDropdownValueChanged,
+  );
+}
+
+Widget sectionDocumentSnapshotDropdownWidget(
+  String selectedOption,
+  Function(String?) onDropdownValueChanged,
+  List<DocumentSnapshot> dropdownDocuments,
+) {
+  return Container(
+    width: double.infinity,
+    decoration: BoxDecoration(
+        border: Border.all(), borderRadius: BorderRadius.circular(10)),
+    child: DropdownButton<String>(
+      isExpanded: true,
+      value: selectedOption,
+      items: dropdownDocuments.map((doc) {
+        print(doc.id);
+        final docData = doc.data() as Map<dynamic, dynamic>;
+        String sectionName = docData['name'];
+        return DropdownMenuItem<String>(
+            value: doc.id,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: interText(sectionName),
+            ));
+      }).toList(),
+      onChanged: onDropdownValueChanged,
+    ),
   );
 }

@@ -1,3 +1,4 @@
+import 'package:edutask/util/color_util.dart';
 import 'package:flutter/material.dart';
 
 import '../util/navigator_util.dart';
@@ -56,6 +57,29 @@ Widget userBottomNavBar(BuildContext context,
             Navigator.of(context)
                 .pushNamed(NavigatorRoutes.studentSubmittables);
         }
+      }
+    },
+  );
+}
+
+Widget adminBottomNavBar(BuildContext context, {required int index}) {
+  return BottomNavigationBar(
+    backgroundColor: CustomColors.moderateCyan,
+    currentIndex: index,
+    items: [
+      BottomNavigationBarItem(icon: blackIcon(Icons.home), label: 'Home'),
+      BottomNavigationBarItem(
+          icon: blackIcon(Icons.calendar_today), label: 'Calendar'),
+      BottomNavigationBarItem(icon: blackIcon(Icons.edit), label: 'Materials')
+    ],
+    onTap: (tappedIndex) {
+      if (tappedIndex == index) {
+        return;
+      }
+      if (tappedIndex == 0) {
+        Navigator.of(context).pushNamed(NavigatorRoutes.adminHome);
+      } else if (tappedIndex == 2) {
+        Navigator.of(context).pushNamed(NavigatorRoutes.adminMaterials);
       }
     },
   );

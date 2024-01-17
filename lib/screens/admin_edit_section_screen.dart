@@ -461,9 +461,10 @@ class _AdminEditSectionState extends State<AdminEditSection> {
           Container(
             height: 40,
             decoration: BoxDecoration(
-                border: Border.all(), borderRadius: BorderRadius.circular(20)),
+                border: Border.all(), borderRadius: BorderRadius.circular(10)),
             padding: EdgeInsets.all(5),
             child: userDocumentSnapshotDropdownWidget(
+                context,
                 selectedScienceTeacherID.isNotEmpty
                     ? selectedScienceTeacherID
                     : scienceTeachers.first.id, (newVal) {
@@ -488,9 +489,10 @@ class _AdminEditSectionState extends State<AdminEditSection> {
           Container(
             height: 40,
             decoration: BoxDecoration(
-                border: Border.all(), borderRadius: BorderRadius.circular(20)),
+                border: Border.all(), borderRadius: BorderRadius.circular(10)),
             padding: EdgeInsets.all(5),
             child: userDocumentSnapshotDropdownWidget(
+                context,
                 selectedMathTeacherID.isNotEmpty
                     ? selectedMathTeacherID
                     : mathTeachers.first.id, (newVal) {
@@ -514,9 +516,10 @@ class _AdminEditSectionState extends State<AdminEditSection> {
           Container(
             height: 40,
             decoration: BoxDecoration(
-                border: Border.all(), borderRadius: BorderRadius.circular(20)),
+                border: Border.all(), borderRadius: BorderRadius.circular(10)),
             padding: EdgeInsets.all(5),
             child: userDocumentSnapshotDropdownWidget(
+                context,
                 selectedEnglishTeacherID.isNotEmpty
                     ? selectedEnglishTeacherID
                     : englishTeachers.first.id, (newVal) {
@@ -541,9 +544,10 @@ class _AdminEditSectionState extends State<AdminEditSection> {
           Container(
             height: 40,
             decoration: BoxDecoration(
-                border: Border.all(), borderRadius: BorderRadius.circular(20)),
+                border: Border.all(), borderRadius: BorderRadius.circular(10)),
             padding: EdgeInsets.all(5),
             child: userDocumentSnapshotDropdownWidget(
+                context,
                 selectedAPTeacherID.isNotEmpty
                     ? selectedAPTeacherID
                     : apTeachers.first.id, (newVal) {
@@ -567,9 +571,10 @@ class _AdminEditSectionState extends State<AdminEditSection> {
           Container(
             height: 40,
             decoration: BoxDecoration(
-                border: Border.all(), borderRadius: BorderRadius.circular(20)),
+                border: Border.all(), borderRadius: BorderRadius.circular(10)),
             padding: EdgeInsets.all(5),
             child: userDocumentSnapshotDropdownWidget(
+                context,
                 selectedFilipinoTeacherID.isNotEmpty
                     ? selectedFilipinoTeacherID
                     : filipinoTeachers.first.id, (newVal) {
@@ -594,9 +599,10 @@ class _AdminEditSectionState extends State<AdminEditSection> {
           Container(
             height: 40,
             decoration: BoxDecoration(
-                border: Border.all(), borderRadius: BorderRadius.circular(20)),
+                border: Border.all(), borderRadius: BorderRadius.circular(10)),
             padding: EdgeInsets.all(5),
             child: userDocumentSnapshotDropdownWidget(
+                context,
                 selectedEPPTeacherID.isNotEmpty
                     ? selectedEPPTeacherID
                     : eppTeachers.first.id, (newVal) {
@@ -620,9 +626,10 @@ class _AdminEditSectionState extends State<AdminEditSection> {
           Container(
             height: 40,
             decoration: BoxDecoration(
-                border: Border.all(), borderRadius: BorderRadius.circular(20)),
+                border: Border.all(), borderRadius: BorderRadius.circular(10)),
             padding: EdgeInsets.all(5),
             child: userDocumentSnapshotDropdownWidget(
+                context,
                 selectedESPTeacherID.isNotEmpty
                     ? selectedESPTeacherID
                     : espTeachers.first.id, (newVal) {
@@ -646,9 +653,10 @@ class _AdminEditSectionState extends State<AdminEditSection> {
           Container(
             height: 40,
             decoration: BoxDecoration(
-                border: Border.all(), borderRadius: BorderRadius.circular(20)),
+                border: Border.all(), borderRadius: BorderRadius.circular(10)),
             padding: EdgeInsets.all(5),
             child: userDocumentSnapshotDropdownWidget(
+                context,
                 selectedMAPEHTeacherID.isNotEmpty
                     ? selectedMAPEHTeacherID
                     : mapehTeachers.first.id, (newVal) {

@@ -64,9 +64,9 @@ class _EduTaskTextFieldState extends State<EduTaskTextField> {
                 fontStyle: FontStyle.italic),
             filled: true,
             floatingLabelBehavior: FloatingLabelBehavior.never,
-            fillColor: Colors.white.withOpacity(0.4),
+            fillColor: Colors.white,
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(10),
                 borderSide: const BorderSide(color: Colors.black, width: 3.0)),
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 10, horizontal: 10),

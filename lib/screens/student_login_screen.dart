@@ -10,19 +10,21 @@ import 'package:edutask/widgets/custom_text_widgets.dart';
 import 'package:edutask/widgets/edutask_text_field_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
+import '../providers/current_user_type_provider.dart';
 import '../util/color_util.dart';
 import '../widgets/custom_button_widgets.dart';
 
-class StudentLoginScreen extends StatefulWidget {
+class StudentLoginScreen extends ConsumerStatefulWidget {
   const StudentLoginScreen({super.key});
 
   @override
-  State<StudentLoginScreen> createState() => _StudentLoginScreenState();
+  ConsumerState<StudentLoginScreen> createState() => _StudentLoginScreenState();
 }
 
-class _StudentLoginScreenState extends State<StudentLoginScreen> {
+class _StudentLoginScreenState extends ConsumerState<StudentLoginScreen> {
   bool _isLoading = false;
 
   final emailController = TextEditingController();
@@ -81,6 +83,7 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
       setState(() {
         _isLoading = false;
       });
+      ref.read(currentUserTypeProvider.notifier).setCurrentUserType('STUDENT');
       navigator.pushNamed(NavigatorRoutes.studentHome);
     } catch (error) {
       scaffoldMessenger.showSnackBar(
@@ -106,10 +109,12 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
                   child: all20Pix(
                       child: Column(
                     children: [
+                      interText('STUDENT\nLOG-IN',
+                          textAlign: TextAlign.center,
+                          color: Colors.black,
+                          fontSize: 35),
                       authenticationIcon(context, iconData: Icons.person),
                       const Gap(30),
-                      interText('STUDENT LOG-IN',
-                          color: Colors.black, fontSize: 35),
                       _fieldsContainer(),
                       logInBottomRow(context,
                           onRegister: () => Navigator.of(context)
@@ -125,16 +130,20 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
     return Container(
       width: MediaQuery.of(context).size.width * 0.8,
       decoration: BoxDecoration(
-          color: CustomColors.softOrange.withOpacity(0.5),
+          color: CustomColors.veryLightGrey,
+          image: DecorationImage(
+              image: AssetImage('assets/images/central_elem_logo.png'),
+              fit: BoxFit.contain,
+              opacity: 0.25),
           borderRadius: BorderRadius.circular(30)),
       child: all20Pix(
           child: Column(
         children: [
           _emailAddress(),
           _password(),
-          ovalButton('LOG-IN',
+          ovalButton('LOG-IN >',
               onPress: loginTeacherUser,
-              backgroundColor: CustomColors.softOrange)
+              backgroundColor: CustomColors.veryLightGrey)
         ],
       )),
     );

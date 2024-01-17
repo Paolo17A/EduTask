@@ -1,15 +1,27 @@
 import 'package:edutask/util/navigator_util.dart';
+import 'package:edutask/widgets/custom_miscellaneous_widgets.dart';
 import 'package:edutask/widgets/custom_text_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 Drawer appDrawer(BuildContext context,
-    {required String userType, required Color backgroundColor}) {
+    {required String userType,
+    required Color backgroundColor,
+    String profileImageURL = ''}) {
   return Drawer(
     backgroundColor: backgroundColor,
     child: Column(
       children: [
+        DrawerHeader(
+          child: Row(
+            children: [
+              buildProfileImageWidget(
+                  profileImageURL: profileImageURL, radius: 65),
+            ],
+          ),
+          decoration: BoxDecoration(color: backgroundColor),
+        ),
         Flexible(
           flex: 1,
           child: ListView(

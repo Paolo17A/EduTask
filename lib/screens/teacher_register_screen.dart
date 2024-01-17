@@ -194,14 +194,21 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
                   child: all20Pix(
                       child: Column(
                     children: [
+                      interText('TEACHER REGISTER',
+                          color: Colors.black,
+                          fontSize: 35,
+                          textAlign: TextAlign.center),
                       authenticationIcon(context, iconData: Icons.people),
                       const Gap(30),
-                      interText('TEACHER REGISTER',
-                          color: Colors.black, fontSize: 35),
                       Container(
                           width: MediaQuery.of(context).size.width * 0.8,
                           decoration: BoxDecoration(
-                              color: CustomColors.softOrange.withOpacity(0.5),
+                              color: CustomColors.veryLightGrey,
+                              image: DecorationImage(
+                                  image: AssetImage(
+                                      'assets/images/central_elem_logo.png'),
+                                  fit: BoxFit.contain,
+                                  opacity: 0.25),
                               borderRadius: BorderRadius.circular(30)),
                           child: currentState == RegistrastionStates.register
                               ? _registerFieldsContainer()
@@ -356,9 +363,10 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         ovalButton('< BACK',
-            onPress: goPreviousState, backgroundColor: CustomColors.softOrange),
+            onPress: goPreviousState,
+            backgroundColor: CustomColors.veryLightGrey),
         ovalButton('NEXT >',
-            onPress: goNextState, backgroundColor: CustomColors.softOrange)
+            onPress: goNextState, backgroundColor: CustomColors.veryLightGrey)
       ],
     );
   }

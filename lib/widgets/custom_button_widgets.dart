@@ -8,20 +8,29 @@ Widget welcomeButton(BuildContext context,
     required IconData iconData,
     required String label}) {
   return all20Pix(
-    child: SizedBox(
-      width: MediaQuery.of(context).size.width * 0.65,
-      height: 150,
+    child: Container(
+      width: MediaQuery.of(context).size.width * 0.5,
+      height: 120,
+      decoration:
+          BoxDecoration(borderRadius: BorderRadius.circular(20), boxShadow: [
+        BoxShadow(
+            color: CustomColors.veryDarkGrey,
+            blurRadius: 4,
+            spreadRadius: 1,
+            offset: Offset(1, 2))
+      ]),
       child: ElevatedButton(
         onPressed: () => onPress(),
         style: ElevatedButton.styleFrom(
-            backgroundColor: CustomColors.softOrange,
+            backgroundColor: CustomColors.veryLightGrey,
+            shadowColor: CustomColors.veryDarkGrey,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20))),
         child: Column(
           children: [
             Expanded(
                 child: Transform.scale(
-                    scale: 5, child: Icon(iconData, color: Colors.black))),
+                    scale: 4, child: Icon(iconData, color: Colors.black))),
             interText(label,
                 fontWeight: FontWeight.bold, color: Colors.black, fontSize: 15)
           ],
@@ -43,6 +52,7 @@ Widget ovalButton(String label,
     child: ElevatedButton(
       onPressed: () => onPress(),
       style: ElevatedButton.styleFrom(
+          elevation: 4,
           backgroundColor: backgroundColor,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
@@ -52,4 +62,14 @@ Widget ovalButton(String label,
           textAlign: TextAlign.center),
     ),
   );
+}
+
+Widget homeButton(BuildContext context,
+    {required String label, required Function onPress}) {
+  return all10Pix(
+      child: ovalButton(label,
+          onPress: onPress,
+          width: MediaQuery.of(context).size.width * 0.75,
+          height: 125,
+          backgroundColor: CustomColors.moderateCyan));
 }

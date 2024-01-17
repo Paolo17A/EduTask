@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 class CustomColors {
   //  Auth and Student Colors
+  static const Color veryDarkGrey = Color.fromARGB(255, 30, 30, 30);
+  static const Color veryLightGrey = Color.fromARGB(255, 217, 217, 217);
   static const Color verySoftOrange = Color.fromARGB(255, 233, 194, 137);
   static const Color softOrange = Color.fromARGB(255, 221, 136, 73);
 

@@ -6,17 +6,19 @@ import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_miscellaneous_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../providers/profile_image_provider.dart';
 import '../util/color_util.dart';
 
-class StudentHomeScreen extends StatefulWidget {
+class StudentHomeScreen extends ConsumerStatefulWidget {
   const StudentHomeScreen({super.key});
 
   @override
-  State<StudentHomeScreen> createState() => _StudentHomeScreenState();
+  ConsumerState<StudentHomeScreen> createState() => _StudentHomeScreenState();
 }
 
-class _StudentHomeScreenState extends State<StudentHomeScreen> {
+class _StudentHomeScreenState extends ConsumerState<StudentHomeScreen> {
   bool _isLoading = true;
   String userType = '';
   String profileImageURL = '';
@@ -37,7 +39,8 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
       final userData = user.data() as Map<dynamic, dynamic>;
       userType = userData['userType'];
       profileImageURL = userData['profileImageURL'];
-
+      ref.read(profileImageProvider.notifier).setProfileImage(profileImageURL);
+      print('PROFILE URL ${ref.read(profileImageProvider)}');
       setState(() {
         _isLoading = false;
       });
@@ -58,7 +61,9 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
         appBar: homeAppBarWidget(context,
             backgroundColor: CustomColors.verySoftOrange, mayGoBack: true),
         drawer: appDrawer(context,
-            backgroundColor: CustomColors.verySoftOrange, userType: userType),
+            backgroundColor: CustomColors.verySoftOrange,
+            userType: userType,
+            profileImageURL: ref.read(profileImageProvider)),
         bottomNavigationBar: userBottomNavBar(context,
             index: 0,
             userType: 'STUDENT',

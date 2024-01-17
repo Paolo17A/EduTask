@@ -3,8 +3,14 @@ import 'package:edutask/screens/add_assignment_screen.dart';
 import 'package:edutask/screens/add_lesson_screen.dart';
 import 'package:edutask/screens/add_quiz_screen.dart';
 import 'package:edutask/screens/add_section_screen.dart';
+import 'package:edutask/screens/admin_add_student_screen.dart';
+import 'package:edutask/screens/admin_add_teacher_screen.dart';
+import 'package:edutask/screens/admin_all_assignments_screen.dart';
+import 'package:edutask/screens/admin_all_lessons_screen.dart';
+import 'package:edutask/screens/admin_all_quizzes_screen.dart';
 import 'package:edutask/screens/admin_home_screen.dart';
 import 'package:edutask/screens/admin_login_screen.dart';
+import 'package:edutask/screens/admin_materials_screen.dart';
 import 'package:edutask/screens/admin_profile_screen.dart';
 import 'package:edutask/screens/admin_section_records_screen.dart';
 import 'package:edutask/screens/admin_student_records_screen.dart';
@@ -28,13 +34,14 @@ import 'package:edutask/util/navigator_util.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(const MyApp());
+  runApp(ProviderScope(child: const MyApp()));
 }
 
 final Map<String, WidgetBuilder> _routes = {
@@ -68,12 +75,19 @@ final Map<String, WidgetBuilder> _routes = {
   NavigatorRoutes.adminHome: (context) => const AdminHomeScreen(),
   NavigatorRoutes.adminStudentRecords: (context) =>
       const AdminStudentRecordsScreen(),
+  NavigatorRoutes.adminAddStudent: (context) => const AdminAddStudentScreen(),
   NavigatorRoutes.adminTeacherRecords: (context) =>
       const AdminTeacherRecordsScreen(),
+  NavigatorRoutes.adminAddTeacher: (context) => const AdminAddTeacherScreen(),
   NavigatorRoutes.adminSectionRecords: (context) =>
       const AdminSectionRecordsScreen(),
   NavigatorRoutes.addSection: (context) => const AddSectionScreen(),
-  NavigatorRoutes.adminProfile: (context) => const AdminProfileScreen()
+  NavigatorRoutes.adminProfile: (context) => const AdminProfileScreen(),
+  NavigatorRoutes.adminMaterials: (context) => const AdminMaterialsScreen(),
+  NavigatorRoutes.adminAllLessons: (context) => const AdminAllLessonsScreen(),
+  NavigatorRoutes.adminAllAssignments: (context) =>
+      const AdminAllAssignmentsScreen(),
+  NavigatorRoutes.adminAllQuizzes: (context) => const AdminAllQuizzesScreen()
 };
 
 final ThemeData _themeData = ThemeData(

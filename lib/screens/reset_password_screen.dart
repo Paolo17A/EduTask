@@ -111,15 +111,20 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 child: all20Pix(
                     child: Column(
                   children: [
+                    interText('PASSWORD RESET',
+                        color: Colors.black, fontSize: 35),
                     authenticationIcon(context,
                         iconData: Icons.lock_reset_rounded),
                     const Gap(30),
-                    interText('PASSWORD RESET',
-                        color: Colors.black, fontSize: 35),
                     Container(
                       width: MediaQuery.of(context).size.width * 0.8,
                       decoration: BoxDecoration(
-                          color: CustomColors.softOrange.withOpacity(0.5),
+                          color: CustomColors.veryLightGrey,
+                          image: DecorationImage(
+                              image: AssetImage(
+                                  'assets/images/central_elem_logo.png'),
+                              fit: BoxFit.contain,
+                              opacity: 0.25),
                           borderRadius: BorderRadius.circular(30)),
                       padding: const EdgeInsets.all(10),
                       child: Column(
@@ -128,7 +133,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           _emailAddress(),
                           ovalButton('RESET PASSWORD',
                               onPress: sendPasswordResetEmail,
-                              backgroundColor: CustomColors.softOrange)
+                              backgroundColor: CustomColors.veryLightGrey)
                         ],
                       ),
                     ),

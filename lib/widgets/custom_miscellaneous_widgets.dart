@@ -6,6 +6,7 @@ import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../util/future_util.dart';
 import 'custom_text_widgets.dart';
 
 Widget authenticationIcon(BuildContext context, {required IconData iconData}) {
@@ -14,7 +15,7 @@ Widget authenticationIcon(BuildContext context, {required IconData iconData}) {
       height: 150,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: CustomColors.verySoftOrange),
+          color: CustomColors.veryLightGrey),
       child: Transform.scale(
           scale: 5, child: Icon(iconData, color: Colors.black)));
 }
@@ -156,6 +157,44 @@ Widget teacherMaterialEntry(BuildContext context,
   ));
 }
 
+Widget adminMaterialEntry(BuildContext context,
+    {required DocumentSnapshot materialDoc,
+    required Color color,
+    required Function onView,
+    required Function onDelete}) {
+  final materialData = materialDoc.data() as Map<dynamic, dynamic>;
+  String title = materialData['title'];
+  return vertical10horizontal4(Container(
+    decoration: BoxDecoration(
+      color: color,
+      border: Border.all(),
+      borderRadius: BorderRadius.circular(10),
+    ),
+    padding: EdgeInsets.all(10),
+    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      SizedBox(
+          width: MediaQuery.of(context).size.width * 0.5,
+          child: interText(title, fontSize: 15)),
+      Row(
+        children: [
+          IconButton(
+              onPressed: () => onView(),
+              icon: Icon(
+                Icons.visibility,
+                color: Colors.black,
+              )),
+          IconButton(
+              onPressed: () => onDelete(),
+              icon: Icon(
+                Icons.delete,
+                color: Colors.black,
+              )),
+        ],
+      )
+    ]),
+  ));
+}
+
 Widget sectionMaterialEntry(BuildContext context,
     {required DocumentSnapshot materialDoc, required Function onRemove}) {
   final materialData = materialDoc.data() as Map<dynamic, dynamic>;
@@ -199,4 +238,60 @@ Widget studentEntry(BuildContext context,
           child: interText(formattedName, fontSize: 15)),
     ]),
   ));
+}
+
+Widget teacherName(String teacherID) {
+  return FutureBuilder(
+      future: getTeacherName(teacherID),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return interText('-');
+        } else {
+          return interText('Created By: ${snapshot.data}', fontSize: 20);
+        }
+      });
+}
+
+Widget assignedSections(List<dynamic> associatedSections) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      interText('Assigned Sections', fontWeight: FontWeight.bold, fontSize: 20),
+      associatedSections.isNotEmpty
+          ? FutureBuilder(
+              future: getSectionNames(associatedSections),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return interText('-');
+                } else {
+                  return Column(
+                    children: [
+                      ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(width: 0.5),
+                                  color: CustomColors.moderateCyan
+                                      .withOpacity(0.5),
+                                ),
+                                padding: EdgeInsets.all(4),
+                                child: interText(snapshot.data![index],
+                                    fontSize: 16));
+                          })
+                    ],
+                  );
+                }
+              })
+          : interText('THIS LESSON IS NOT ASSIGNED TO ANY SECTION',
+              fontWeight: FontWeight.bold, fontSize: 36),
+      Gap(8),
+      Divider(thickness: 4),
+    ],
+  );
 }

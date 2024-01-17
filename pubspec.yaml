@@ -47,6 +47,7 @@ dependencies:
   intl: ^0.19.0
   url_launcher: ^6.2.2
   file_picker: ^6.1.1
+  flutter_riverpod: ^2.4.9
 
 dev_dependencies:
   flutter_test:
@@ -54,7 +55,7 @@ dev_dependencies:
 
 flutter_launcher_icons:
   android: true
-  image_path_android: "assets/images/central_elem_logo.png"
+  image_path_android: "assets/images/App Logo_EduTask Bottom- White.png"
   min_sdk_android: 21
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -78,6 +79,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
    - assets/images/central_elem_logo.png
+   - assets/images/App Logo_EduTask Bottom- White.png
+   - assets/images/App Logo_EduTask Side-White.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

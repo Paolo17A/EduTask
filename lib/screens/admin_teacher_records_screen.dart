@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/providers/profile_image_provider.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
@@ -6,20 +7,22 @@ import 'package:edutask/widgets/custom_miscellaneous_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:edutask/widgets/custom_text_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
 import '../util/color_util.dart';
 import '../widgets/app_drawer_widget.dart';
 
-class AdminTeacherRecordsScreen extends StatefulWidget {
+class AdminTeacherRecordsScreen extends ConsumerStatefulWidget {
   const AdminTeacherRecordsScreen({super.key});
 
   @override
-  State<AdminTeacherRecordsScreen> createState() =>
+  ConsumerState<AdminTeacherRecordsScreen> createState() =>
       _AdminTeacherRecordsScreenState();
 }
 
-class _AdminTeacherRecordsScreenState extends State<AdminTeacherRecordsScreen> {
+class _AdminTeacherRecordsScreenState
+    extends ConsumerState<AdminTeacherRecordsScreen> {
   bool _isLoading = true;
   List<DocumentSnapshot> teacherDocs = [];
 
@@ -53,9 +56,21 @@ class _AdminTeacherRecordsScreenState extends State<AdminTeacherRecordsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: homeAppBarWidget(context,
-          backgroundColor: CustomColors.verySoftCyan, mayGoBack: true),
+          backgroundColor: CustomColors.verySoftCyan,
+          mayGoBack: true,
+          actions: [
+            ElevatedButton(
+                onPressed: () => Navigator.of(context)
+                    .pushNamed(NavigatorRoutes.adminAddTeacher),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: CustomColors.moderateCyan),
+                child: interText('ADD\nTEACHER',
+                    textAlign: TextAlign.center, color: Colors.white))
+          ]),
       drawer: appDrawer(context,
-          backgroundColor: CustomColors.verySoftCyan, userType: 'ADMIN'),
+          backgroundColor: CustomColors.verySoftCyan,
+          userType: 'ADMIN',
+          profileImageURL: ref.read(profileImageProvider)),
       body: switchedLoadingContainer(
           _isLoading,
           SingleChildScrollView(

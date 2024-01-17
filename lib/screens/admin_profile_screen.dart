@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/providers/profile_image_provider.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/app_drawer_widget.dart';
 import 'package:edutask/widgets/custom_button_widgets.dart';
@@ -10,6 +11,7 @@ import 'package:edutask/widgets/edutask_text_field_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -17,14 +19,14 @@ import '../util/color_util.dart';
 import '../widgets/custom_miscellaneous_widgets.dart';
 import '../widgets/custom_text_widgets.dart';
 
-class AdminProfileScreen extends StatefulWidget {
+class AdminProfileScreen extends ConsumerStatefulWidget {
   const AdminProfileScreen({super.key});
 
   @override
-  State<AdminProfileScreen> createState() => _AdminProfileScreenState();
+  ConsumerState<AdminProfileScreen> createState() => _AdminProfileScreenState();
 }
 
-class _AdminProfileScreenState extends State<AdminProfileScreen> {
+class _AdminProfileScreenState extends ConsumerState<AdminProfileScreen> {
   bool _isLoading = true;
   bool _isInitialized = false;
   bool _editMode = false;
@@ -89,6 +91,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
           .collection('users')
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .update({'profileImageURL': downloadURL});
+      ref.read(profileImageProvider.notifier).setProfileImage(downloadURL);
       scaffoldMessenger.showSnackBar(const SnackBar(
           content: Text('Successfully changed profile picture.')));
       setState(() {
@@ -120,6 +123,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
           .collection('users')
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .update({'profileImageURL': ''});
+      ref.read(profileImageProvider.notifier).setProfileImage('');
       scaffoldMessenger.showSnackBar(const SnackBar(
           content: Text('Successfully removed profile picture.')));
       setState(() {
@@ -175,7 +179,9 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
         appBar: homeAppBarWidget(context,
             backgroundColor: CustomColors.verySoftCyan, mayGoBack: true),
         drawer: appDrawer(context,
-            backgroundColor: CustomColors.verySoftCyan, userType: userType),
+            backgroundColor: CustomColors.verySoftCyan,
+            userType: userType,
+            profileImageURL: ref.read(profileImageProvider)),
         body: stackedLoadingContainer(
             context,
             _isLoading,
