@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/widgets/app_bottom_nav_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
-import '../util/color_util.dart';
 import '../widgets/app_bar_widgets.dart';
 import '../widgets/custom_miscellaneous_widgets.dart';
 import '../widgets/custom_padding_widgets.dart';
@@ -44,8 +44,8 @@ class _AdminSelectedAssignmentScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeAppBarWidget(context,
-          backgroundColor: CustomColors.verySoftCyan, mayGoBack: true),
+      appBar: homeAppBarWidget(context, mayGoBack: true),
+      drawer: adminBottomNavBar(context, index: 2),
       body: SizedBox(
         width: double.infinity,
         child: SingleChildScrollView(

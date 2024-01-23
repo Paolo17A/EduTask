@@ -99,16 +99,14 @@ class _StudentSubmittablesScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeAppBarWidget(context,
-          backgroundColor: CustomColors.verySoftOrange, mayGoBack: true),
+      appBar: homeAppBarWidget(context, mayGoBack: true),
       drawer: appDrawer(context,
-          backgroundColor: CustomColors.verySoftOrange,
           userType: ref.read(currentUserTypeProvider),
           profileImageURL: ref.read(profileImageProvider)),
-      bottomNavigationBar: userBottomNavBar(context,
-          index: 3,
-          userType: 'STUDENT',
-          backgroundColor: CustomColors.verySoftOrange),
+      bottomNavigationBar: clientBottomNavBar(context, index: -1),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: studentSubmittablesButton(context,
+          backgroundColor: Colors.yellow, doNothing: true),
       body: switchedLoadingContainer(
           _isLoading,
           SingleChildScrollView(

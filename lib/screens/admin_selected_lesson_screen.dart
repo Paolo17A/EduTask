@@ -40,8 +40,7 @@ class _AdminSelectedLessonScreenState extends State<AdminSelectedLessonScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeAppBarWidget(context,
-          backgroundColor: CustomColors.verySoftCyan, mayGoBack: true),
+      appBar: homeAppBarWidget(context, mayGoBack: true),
       body: SizedBox(
         width: double.infinity,
         child: SingleChildScrollView(

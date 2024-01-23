@@ -181,30 +181,4 @@ class _TeacherHomeScreenState extends ConsumerState<TeacherHomeScreen> {
           ),
         ));
   }
-
-  Widget _teacherSchedule() {
-    return vertical20Pix(
-      child: Container(
-        width: double.infinity,
-        height: 200,
-        color: CustomColors.softLimeGreen.withOpacity(0.5),
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            interText('SCHEDULE', fontWeight: FontWeight.bold, fontSize: 15),
-            const Gap(16),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: List.generate(
-                    5,
-                    (index) => Container(
-                          height: 120,
-                          width: 50,
-                          color: Colors.white,
-                        )))
-          ],
-        ),
-      ),
-    );
-  }
 }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
+import 'package:edutask/widgets/app_bottom_nav_bar_widget.dart';
 import 'package:edutask/widgets/custom_button_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:flutter/material.dart';
@@ -377,8 +378,8 @@ class _AdminEditSectionState extends State<AdminEditSection> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: homeAppBarWidget(context,
-            backgroundColor: CustomColors.verySoftCyan, mayGoBack: true),
+        appBar: homeAppBarWidget(context, mayGoBack: true),
+        bottomNavigationBar: adminBottomNavBar(context, index: 0),
         body: switchedLoadingContainer(
             _isLoading,
             SingleChildScrollView(

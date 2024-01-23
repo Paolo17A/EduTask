@@ -11,8 +11,8 @@ import '../widgets/app_bottom_nav_bar_widget.dart';
 import '../widgets/app_drawer_widget.dart';
 import '../widgets/custom_button_widgets.dart';
 
-class StudentProgressSubjectSelectScreen extends ConsumerWidget {
-  const StudentProgressSubjectSelectScreen({super.key});
+class StudentMaterialsSubjectSelectScreen extends ConsumerWidget {
+  const StudentMaterialsSubjectSelectScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,14 +21,14 @@ class StudentProgressSubjectSelectScreen extends ConsumerWidget {
       drawer: appDrawer(context,
           userType: ref.read(currentUserTypeProvider),
           profileImageURL: ref.read(profileImageProvider)),
-      bottomNavigationBar: clientBottomNavBar(context, index: 2),
+      bottomNavigationBar: clientBottomNavBar(context, index: 1),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: studentSubmittablesButton(context),
       body: SingleChildScrollView(
         child: all20Pix(
             child: Column(
           children: [
-            interText('GRADES OVERVIEW',
+            interText('SUBJECT MATERIALS',
                 fontSize: 36,
                 fontWeight: FontWeight.bold,
                 textAlign: TextAlign.center),

@@ -8,6 +8,7 @@ import 'package:edutask/widgets/custom_text_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../widgets/app_bottom_nav_bar_widget.dart';
 import '../widgets/dropdown_widget.dart';
 import '../widgets/edutask_text_field_widget.dart';
 
@@ -83,17 +84,15 @@ class _AdminEditStudentScreenState
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: homeAppBarWidget(context,
-            backgroundColor: CustomColors.verySoftCyan,
-            mayGoBack: true,
-            actions: [
-              ElevatedButton(
-                  onPressed: saveStudentData,
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: CustomColors.moderateCyan),
-                  child: interText('SAVE\nSTUDENT',
-                      color: Colors.white, textAlign: TextAlign.center))
-            ]),
+        appBar: homeAppBarWidget(context, mayGoBack: true, actions: [
+          ElevatedButton(
+              onPressed: saveStudentData,
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: CustomColors.veryLightGrey),
+              child: interText('SAVE\nSTUDENT',
+                  color: Colors.black, textAlign: TextAlign.center))
+        ]),
+        bottomNavigationBar: adminBottomNavBar(context, index: 0),
         body: stackedLoadingContainer(
             context,
             _isLoading,

@@ -95,6 +95,9 @@ class NavigatorRoutes {
   static const studentHome = '/studentHome';
   static const studentProfile = '/studentProfile';
   static const studentLessons = '/studentLessons';
+  static const studentMaterialsSubjectSelect =
+      '/studentMaterialszSubjectSelect';
+  static const studentProgressSubjectSelect = '/studentProgressSubjectSelect';
   static const studentSubmittables = '/studentSubmittables';
   static void answerAssignment(BuildContext context,
       {required String assignmentID, bool fromHomeScreen = false}) {

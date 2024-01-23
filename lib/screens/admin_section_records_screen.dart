@@ -12,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
 import '../util/color_util.dart';
+import '../widgets/app_bottom_nav_bar_widget.dart';
 
 class AdminSectionRecordsScreen extends ConsumerStatefulWidget {
   const AdminSectionRecordsScreen({super.key});
@@ -53,12 +54,10 @@ class _AdminSectionRecordsScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: homeAppBarWidget(context,
-            backgroundColor: CustomColors.verySoftCyan, mayGoBack: true),
+        appBar: homeAppBarWidget(context, mayGoBack: true),
         drawer: appDrawer(context,
-            backgroundColor: CustomColors.verySoftCyan,
-            userType: 'ADMIN',
-            profileImageURL: ref.read(profileImageProvider)),
+            userType: 'ADMIN', profileImageURL: ref.read(profileImageProvider)),
+        bottomNavigationBar: adminBottomNavBar(context, index: 0),
         body: switchedLoadingContainer(
             _isLoading,
             SingleChildScrollView(

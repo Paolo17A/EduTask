@@ -98,12 +98,9 @@ class _AdminAllQuizzesScreenState extends ConsumerState<AdminAllQuizzesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeAppBarWidget(context,
-          backgroundColor: CustomColors.verySoftCyan, mayGoBack: true),
+      appBar: homeAppBarWidget(context, mayGoBack: true),
       drawer: appDrawer(context,
-          backgroundColor: CustomColors.verySoftCyan,
-          userType: 'ADMIN',
-          profileImageURL: ref.read(profileImageProvider)),
+          userType: 'ADMIN', profileImageURL: ref.read(profileImageProvider)),
       bottomNavigationBar: adminBottomNavBar(context, index: 2),
       body: switchedLoadingContainer(
           _isLoading,

@@ -6,6 +6,7 @@ import 'package:edutask/util/future_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/app_bottom_nav_bar_widget.dart';
 import 'package:edutask/widgets/app_drawer_widget.dart';
+import 'package:edutask/widgets/custom_button_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_miscellaneous_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
@@ -69,15 +70,13 @@ class _StudentHomeScreenState extends ConsumerState<StudentHomeScreen> {
       canPop: false,
       child: Scaffold(
         appBar: homeAppBarWidget(context,
-            backgroundColor: CustomColors.verySoftOrange, mayGoBack: true),
+            backgroundColor: CustomColors.veryDarkGrey, mayGoBack: true),
         drawer: appDrawer(context,
-            backgroundColor: CustomColors.verySoftOrange,
             userType: ref.read(currentUserTypeProvider),
             profileImageURL: ref.read(profileImageProvider)),
-        bottomNavigationBar: userBottomNavBar(context,
-            index: 0,
-            userType: 'STUDENT',
-            backgroundColor: CustomColors.verySoftOrange),
+        bottomNavigationBar: clientBottomNavBar(context, index: 0),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: studentSubmittablesButton(context),
         body: switchedLoadingContainer(
             _isLoading,
             SingleChildScrollView(

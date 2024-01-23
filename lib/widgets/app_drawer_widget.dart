@@ -5,9 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../util/color_util.dart';
+
 Drawer appDrawer(BuildContext context,
     {required String userType,
-    required Color backgroundColor,
+    Color backgroundColor = CustomColors.veryDarkGrey,
     String profileImageURL = '',
     String subject = ''}) {
   return Drawer(
@@ -24,7 +26,9 @@ Drawer appDrawer(BuildContext context,
               ]),
               Gap(8),
               if (userType == 'TEACHER')
-                interText('Subject: $subject', fontWeight: FontWeight.bold)
+                interText('Subject: $subject',
+                    fontWeight: FontWeight.bold,
+                    color: CustomColors.veryLightGrey)
             ],
           ),
           decoration: BoxDecoration(color: backgroundColor),
@@ -52,11 +56,8 @@ Widget _home(BuildContext context, {required String userType}) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 10),
     child: ListTile(
-      leading: const Icon(
-        Icons.home,
-        color: Colors.black,
-      ),
-      title: interText('HOME', color: Colors.black),
+      leading: const Icon(Icons.home, color: CustomColors.veryLightGrey),
+      title: interText('HOME', color: CustomColors.veryLightGrey),
       onTap: () {
         Navigator.of(context).pop();
         if (userType == 'ADMIN') {
@@ -77,11 +78,8 @@ Widget _profile(BuildContext context, {required String userType}) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 10),
     child: ListTile(
-      leading: const Icon(
-        Icons.person,
-        color: Colors.black,
-      ),
-      title: interText('PROFILE', color: Colors.black),
+      leading: const Icon(Icons.person, color: CustomColors.veryLightGrey),
+      title: interText('PROFILE', color: CustomColors.veryLightGrey),
       onTap: () {
         Navigator.of(context).pop();
         if (userType == 'ADMIN') {
@@ -100,11 +98,9 @@ Widget _lessonMaterials(BuildContext context) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 10),
     child: ListTile(
-      leading: const Icon(
-        Icons.star_rounded,
-        color: Colors.black,
-      ),
-      title: interText('LESSON MATERIALS', color: Colors.black),
+      leading:
+          const Icon(Icons.star_rounded, color: CustomColors.veryLightGrey),
+      title: interText('LESSON MATERIALS', color: CustomColors.veryLightGrey),
       onTap: () {
         Navigator.of(context).pop();
         Navigator.of(context).pushNamed(NavigatorRoutes.lessonPlan);
@@ -117,11 +113,8 @@ Widget _settings(BuildContext context) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 10),
     child: ListTile(
-      leading: const Icon(
-        Icons.settings,
-        color: Colors.black,
-      ),
-      title: interText('SETTINGS', color: Colors.black),
+      leading: const Icon(Icons.settings, color: CustomColors.veryLightGrey),
+      title: interText('SETTINGS', color: CustomColors.veryLightGrey),
       onTap: () {
         Navigator.of(context).pop();
         Navigator.of(context).pushNamed(NavigatorRoutes.changePassword);
@@ -135,10 +128,11 @@ Widget _logOutButton(BuildContext context) {
     padding: const EdgeInsets.all(20),
     child: Container(
       decoration: BoxDecoration(
-          color: Colors.black, borderRadius: BorderRadius.circular(50)),
+          color: CustomColors.veryLightGrey,
+          borderRadius: BorderRadius.circular(50)),
       child: ListTile(
-        leading: const Icon(Icons.logout),
-        title: interText('LOG-OUT', color: Colors.white),
+        leading: const Icon(Icons.logout, color: Colors.black),
+        title: Center(child: interText('LOG-OUT', color: Colors.black)),
         onTap: () {
           FirebaseAuth.instance.signOut().then((value) {
             Navigator.popUntil(context, (route) => route.isFirst);

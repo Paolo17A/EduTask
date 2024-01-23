@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
 import '../providers/profile_image_provider.dart';
-import '../util/color_util.dart';
 import '../widgets/app_bar_widgets.dart';
 import '../widgets/app_bottom_nav_bar_widget.dart';
 import '../widgets/app_drawer_widget.dart';
@@ -18,12 +17,9 @@ class AdminMaterialsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, Ref) {
     return Scaffold(
-      appBar: homeAppBarWidget(context,
-          backgroundColor: CustomColors.verySoftCyan, mayGoBack: true),
+      appBar: homeAppBarWidget(context, mayGoBack: true),
       drawer: appDrawer(context,
-          backgroundColor: CustomColors.verySoftCyan,
-          userType: 'ADMIN',
-          profileImageURL: Ref.read(profileImageProvider)),
+          userType: 'ADMIN', profileImageURL: Ref.read(profileImageProvider)),
       bottomNavigationBar: adminBottomNavBar(context, index: 2),
       body: SizedBox(
         width: double.infinity,

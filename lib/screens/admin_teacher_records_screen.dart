@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutask/providers/profile_image_provider.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
+import 'package:edutask/widgets/app_bottom_nav_bar_widget.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_miscellaneous_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
@@ -55,22 +56,18 @@ class _AdminTeacherRecordsScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeAppBarWidget(context,
-          backgroundColor: CustomColors.verySoftCyan,
-          mayGoBack: true,
-          actions: [
-            ElevatedButton(
-                onPressed: () => Navigator.of(context)
-                    .pushNamed(NavigatorRoutes.adminAddTeacher),
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: CustomColors.moderateCyan),
-                child: interText('ADD\nTEACHER',
-                    textAlign: TextAlign.center, color: Colors.white))
-          ]),
+      appBar: homeAppBarWidget(context, mayGoBack: true, actions: [
+        ElevatedButton(
+            onPressed: () => Navigator.of(context)
+                .pushNamed(NavigatorRoutes.adminAddTeacher),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: CustomColors.veryLightGrey),
+            child: interText('ADD\nTEACHER',
+                textAlign: TextAlign.center, color: Colors.black))
+      ]),
       drawer: appDrawer(context,
-          backgroundColor: CustomColors.verySoftCyan,
-          userType: 'ADMIN',
-          profileImageURL: ref.read(profileImageProvider)),
+          userType: 'ADMIN', profileImageURL: ref.read(profileImageProvider)),
+      bottomNavigationBar: adminBottomNavBar(context, index: 0),
       body: switchedLoadingContainer(
           _isLoading,
           SingleChildScrollView(

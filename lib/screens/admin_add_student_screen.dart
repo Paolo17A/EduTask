@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutask/util/color_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
+import 'package:edutask/widgets/app_bottom_nav_bar_widget.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:edutask/widgets/dropdown_widget.dart';
@@ -166,17 +167,15 @@ class _AdminAddStudentScreenState extends State<AdminAddStudentScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: homeAppBarWidget(context,
-            backgroundColor: CustomColors.verySoftCyan,
-            mayGoBack: true,
-            actions: [
-              ElevatedButton(
-                  onPressed: finishStudentRegistration,
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: CustomColors.moderateCyan),
-                  child: interText('SAVE\nSTUDENT',
-                      color: Colors.white, textAlign: TextAlign.center))
-            ]),
+        appBar: homeAppBarWidget(context, mayGoBack: true, actions: [
+          ElevatedButton(
+              onPressed: finishStudentRegistration,
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: CustomColors.veryLightGrey),
+              child: interText('SAVE\nSTUDENT',
+                  color: Colors.black, textAlign: TextAlign.center))
+        ]),
+        bottomNavigationBar: adminBottomNavBar(context, index: 0),
         body: stackedLoadingContainer(
             context,
             _isLoading,

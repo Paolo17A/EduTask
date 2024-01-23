@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/widgets/app_bottom_nav_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -41,8 +42,8 @@ class _AdminSelectedQuizScreenState extends State<AdminSelectedQuizScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeAppBarWidget(context,
-          backgroundColor: CustomColors.verySoftCyan, mayGoBack: true),
+      appBar: homeAppBarWidget(context, mayGoBack: true),
+      bottomNavigationBar: adminBottomNavBar(context, index: 2),
       body: SingleChildScrollView(
         child: all20Pix(
             child: Column(

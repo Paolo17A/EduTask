@@ -176,10 +176,8 @@ class _AdminProfileScreenState extends ConsumerState<AdminProfileScreen> {
         }
       },
       child: Scaffold(
-        appBar: homeAppBarWidget(context,
-            backgroundColor: CustomColors.verySoftCyan, mayGoBack: true),
+        appBar: homeAppBarWidget(context, mayGoBack: true),
         drawer: appDrawer(context,
-            backgroundColor: CustomColors.verySoftCyan,
             userType: userType,
             profileImageURL: ref.read(profileImageProvider)),
         body: stackedLoadingContainer(

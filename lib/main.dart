@@ -21,7 +21,9 @@ import 'package:edutask/screens/reset_password_screen.dart';
 import 'package:edutask/screens/student_home_screen.dart';
 import 'package:edutask/screens/student_lessons_screen.dart';
 import 'package:edutask/screens/student_login_screen.dart';
+import 'package:edutask/screens/student_materials_subject_select_screen.dart';
 import 'package:edutask/screens/student_profile_screen.dart';
+import 'package:edutask/screens/student_progress_subject_select_screen.dart';
 import 'package:edutask/screens/student_register_screen.dart';
 import 'package:edutask/screens/student_submittables_screen.dart';
 import 'package:edutask/screens/teacher_handled_sections_screen.dart';
@@ -30,6 +32,7 @@ import 'package:edutask/screens/teacher_login_screen.dart';
 import 'package:edutask/screens/teacher_profile_screen.dart';
 import 'package:edutask/screens/teacher_register_screen.dart';
 import 'package:edutask/screens/welcome_screen.dart';
+import 'package:edutask/util/color_util.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -67,8 +70,12 @@ final Map<String, WidgetBuilder> _routes = {
   NavigatorRoutes.studentHome: (context) => const StudentHomeScreen(),
   NavigatorRoutes.studentProfile: (context) => const StudentProfileScreen(),
   NavigatorRoutes.studentLessons: (context) => const StudentLessonsScreen(),
+  NavigatorRoutes.studentMaterialsSubjectSelect: (context) =>
+      const StudentMaterialsSubjectSelectScreen(),
   NavigatorRoutes.studentSubmittables: (context) =>
       const StudentSubmittablesScreen(),
+  NavigatorRoutes.studentProgressSubjectSelect: (context) =>
+      const StudentProgressSubjectSelectScreen(),
 
   //ADMIN
   NavigatorRoutes.adminLogin: (context) => const AdminLoginScreen(),
@@ -101,8 +108,8 @@ final ThemeData _themeData = ThemeData(
         showSelectedLabels: false,
         showUnselectedLabels: false),
     appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.grey,
-        iconTheme: IconThemeData(color: Colors.black)),
+        backgroundColor: CustomColors.veryDarkGrey,
+        iconTheme: IconThemeData(color: Colors.white)),
     listTileTheme: const ListTileThemeData(
         iconColor: Colors.white,
         shape: RoundedRectangleBorder(

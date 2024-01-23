@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutask/providers/profile_image_provider.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
+import 'package:edutask/widgets/app_bottom_nav_bar_widget.dart';
 import 'package:edutask/widgets/app_drawer_widget.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_miscellaneous_widgets.dart';
@@ -55,22 +56,22 @@ class _AdminStudentRecordsScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeAppBarWidget(context,
-          backgroundColor: CustomColors.verySoftCyan,
-          mayGoBack: true,
-          actions: [
-            ElevatedButton(
-                onPressed: () => Navigator.of(context)
-                    .pushNamed(NavigatorRoutes.adminAddStudent),
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: CustomColors.moderateCyan),
-                child: interText('ADD\nSTUDENT',
-                    textAlign: TextAlign.center, color: Colors.white))
-          ]),
+      appBar: homeAppBarWidget(context, mayGoBack: true, actions: [
+        ElevatedButton(
+            onPressed: () => Navigator.of(context)
+                .pushNamed(NavigatorRoutes.adminAddStudent),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: CustomColors.veryLightGrey),
+            child: interText('ADD\nSTUDENT',
+                textAlign: TextAlign.center,
+                color: Colors.black,
+                fontWeight: FontWeight.bold))
+      ]),
       drawer: appDrawer(context,
           backgroundColor: CustomColors.verySoftCyan,
           userType: 'ADMIN',
           profileImageURL: ref.read(profileImageProvider)),
+      bottomNavigationBar: adminBottomNavBar(context, index: 0),
       body: switchedLoadingContainer(
           _isLoading,
           SingleChildScrollView(
@@ -97,6 +98,7 @@ class _AdminStudentRecordsScreenState
   Widget _studentEntries() {
     return Container(
       decoration: BoxDecoration(border: Border.all()),
+      height: MediaQuery.of(context).size.height * 0.6,
       child: ListView.builder(
           shrinkWrap: true,
           itemCount: studentDocs.length,

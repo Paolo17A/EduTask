@@ -59,12 +59,9 @@ class _AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      //onPopInvoked: (value) => displayQuitDialogue(context),
       child: Scaffold(
-        appBar: homeAppBarWidget(context,
-            backgroundColor: CustomColors.verySoftCyan, mayGoBack: true),
+        appBar: homeAppBarWidget(context, mayGoBack: true),
         drawer: appDrawer(context,
-            backgroundColor: CustomColors.verySoftCyan,
             userType: userType,
             profileImageURL: ref.read(profileImageProvider)),
         bottomNavigationBar: adminBottomNavBar(context, index: 0),

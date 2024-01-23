@@ -3,6 +3,8 @@ import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:edutask/widgets/custom_text_widgets.dart';
 import 'package:flutter/material.dart';
 
+import '../util/navigator_util.dart';
+
 Widget welcomeButton(BuildContext context,
     {required Function onPress,
     required IconData iconData,
@@ -72,4 +74,29 @@ Widget homeButton(BuildContext context,
           width: MediaQuery.of(context).size.width * 0.75,
           height: 125,
           backgroundColor: CustomColors.moderateCyan));
+}
+
+Widget studentSubmittablesButton(BuildContext context,
+    {Color backgroundColor = CustomColors.veryLightGrey,
+    bool doNothing = false}) {
+  return SizedBox(
+    width: 70,
+    height: 70,
+    child: ElevatedButton(
+        onPressed: () => doNothing == true
+            ? null
+            : Navigator.of(context)
+                .pushNamed(NavigatorRoutes.studentSubmittables),
+        style: ElevatedButton.styleFrom(
+            shape: CircleBorder(
+                side: BorderSide(color: CustomColors.veryDarkGrey, width: 4)),
+            backgroundColor: backgroundColor),
+        child: Transform.scale(
+          scale: 1.5,
+          child: Icon(
+            Icons.upload,
+            color: CustomColors.veryDarkGrey,
+          ),
+        )),
+  );
 }

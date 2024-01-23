@@ -9,6 +9,7 @@ import 'package:gap/gap.dart';
 
 import '../util/color_util.dart';
 import '../util/navigator_util.dart';
+import '../widgets/app_bottom_nav_bar_widget.dart';
 import '../widgets/dropdown_widget.dart';
 import '../widgets/edutask_text_field_widget.dart';
 
@@ -258,8 +259,8 @@ class _AddSectionScreenState extends State<AddSectionScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: homeAppBarWidget(context,
-            backgroundColor: CustomColors.verySoftCyan),
+        appBar: homeAppBarWidget(context),
+        bottomNavigationBar: adminBottomNavBar(context, index: 0),
         body: stackedLoadingContainer(
             context,
             _isLoading,
