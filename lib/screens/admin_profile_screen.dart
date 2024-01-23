@@ -202,7 +202,7 @@ class _AdminProfileScreenState extends ConsumerState<AdminProfileScreen> {
                         _editMode = true;
                       });
                     }
-                  }, backgroundColor: CustomColors.moderateCyan)
+                  }, backgroundColor: CustomColors.veryLightGrey)
                 ],
               )),
             )),

@@ -9,6 +9,7 @@ import '../util/color_util.dart';
 
 Drawer appDrawer(BuildContext context,
     {required String userType,
+    bool isHome = false,
     Color backgroundColor = CustomColors.veryDarkGrey,
     String profileImageURL = '',
     String subject = ''}) {
@@ -39,7 +40,7 @@ Drawer appDrawer(BuildContext context,
             padding: EdgeInsets.zero,
             children: [
               Gap(20),
-              _home(context, userType: userType),
+              _home(context, userType: userType, isHome: isHome),
               _profile(context, userType: userType),
               if (userType == 'TEACHER') _lessonMaterials(context),
               _settings(context)
@@ -52,7 +53,8 @@ Drawer appDrawer(BuildContext context,
   );
 }
 
-Widget _home(BuildContext context, {required String userType}) {
+Widget _home(BuildContext context,
+    {required String userType, required bool isHome}) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 10),
     child: ListTile(
@@ -60,6 +62,9 @@ Widget _home(BuildContext context, {required String userType}) {
       title: interText('HOME', color: CustomColors.veryLightGrey),
       onTap: () {
         Navigator.of(context).pop();
+        if (isHome) {
+          return;
+        }
         if (userType == 'ADMIN') {
           Navigator.of(context).pushReplacementNamed(NavigatorRoutes.adminHome);
         } else if (userType == 'TEACHER') {
@@ -82,6 +87,7 @@ Widget _profile(BuildContext context, {required String userType}) {
       title: interText('PROFILE', color: CustomColors.veryLightGrey),
       onTap: () {
         Navigator.of(context).pop();
+
         if (userType == 'ADMIN') {
           Navigator.of(context).pushNamed(NavigatorRoutes.adminProfile);
         } else if (userType == 'TEACHER') {

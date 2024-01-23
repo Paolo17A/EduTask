@@ -315,8 +315,7 @@ class _TeacherSelectedSectionScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeAppBarWidget(context,
-          backgroundColor: CustomColors.lightGreyishLimeGreen, mayGoBack: true),
+      appBar: homeAppBarWidget(context, mayGoBack: true),
       body: switchedLoadingContainer(
           _isLoading,
           SingleChildScrollView(
@@ -574,8 +573,10 @@ class _TeacherSelectedSectionScreenState
                   child: ListView.builder(
                       shrinkWrap: false,
                       itemCount: associatedStudentDocs.length,
-                      itemBuilder: (context, index) => studentEntry(context,
-                          studentDoc: associatedStudentDocs[index])),
+                      itemBuilder: (context, index) => InkWell(
+                          onTap: () {},
+                          child: studentEntry(context,
+                              studentDoc: associatedStudentDocs[index]))),
                 )
               : interText('NO ENROLLED STUDENTS', fontSize: 20)
         ],

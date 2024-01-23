@@ -70,11 +70,8 @@ class _TeacherHandledSectionsScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeAppBarWidget(context,
-          backgroundColor: CustomColors.lightGreyishLimeGreen, mayGoBack: true),
-      drawer: appDrawer(context,
-          backgroundColor: CustomColors.lightGreyishLimeGreen,
-          userType: 'TEACHER'),
+      appBar: homeAppBarWidget(context, mayGoBack: true),
+      drawer: appDrawer(context, userType: 'TEACHER'),
       bottomNavigationBar: userBottomNavBar(context,
           index: 1,
           userType: 'TEACHER',

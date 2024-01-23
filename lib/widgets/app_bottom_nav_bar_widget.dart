@@ -36,28 +36,14 @@ Widget userBottomNavBar(BuildContext context,
       if (tappedIndex == index) {
         return;
       }
-      if (userType == 'TEACHER') {
-        switch (tappedIndex) {
-          case 0:
-            Navigator.of(context).pushNamed(NavigatorRoutes.teacherHome);
-            break;
-          case 1:
-            Navigator.of(context)
-                .pushNamed(NavigatorRoutes.teacherHandledSections);
-            break;
-        }
-      } else if (userType == 'STUDENT') {
-        switch (tappedIndex) {
-          case 0:
-            Navigator.of(context).pushNamed(NavigatorRoutes.studentHome);
-            break;
-          case 1:
-            Navigator.of(context).pushNamed(NavigatorRoutes.studentLessons);
-            break;
-          case 3:
-            Navigator.of(context)
-                .pushNamed(NavigatorRoutes.studentSubmittables);
-        }
+      switch (tappedIndex) {
+        case 0:
+          Navigator.of(context).pushNamed(NavigatorRoutes.teacherHome);
+          break;
+        case 1:
+          Navigator.of(context)
+              .pushNamed(NavigatorRoutes.teacherHandledSections);
+          break;
       }
     },
   );

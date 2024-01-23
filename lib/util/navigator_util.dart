@@ -94,7 +94,6 @@ class NavigatorRoutes {
   static const studentRegister = '/studentRegister';
   static const studentHome = '/studentHome';
   static const studentProfile = '/studentProfile';
-  static const studentLessons = '/studentLessons';
   static const studentMaterialsSubjectSelect =
       '/studentMaterialszSubjectSelect';
   static const studentProgressSubjectSelect = '/studentProgressSubjectSelect';

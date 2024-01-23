@@ -186,12 +186,8 @@ class _LessonPlanScreenState extends State<LessonPlanScreen> {
         return false;
       },
       child: Scaffold(
-        appBar: homeAppBarWidget(context,
-            backgroundColor: CustomColors.lightGreyishLimeGreen,
-            mayGoBack: true),
-        drawer: appDrawer(context,
-            backgroundColor: CustomColors.lightGreyishLimeGreen,
-            userType: 'TEACHER'),
+        appBar: homeAppBarWidget(context, mayGoBack: true),
+        drawer: appDrawer(context, userType: 'TEACHER'),
         body: switchedLoadingContainer(
             _isLoading,
             SingleChildScrollView(
@@ -218,8 +214,8 @@ class _LessonPlanScreenState extends State<LessonPlanScreen> {
   Widget _expandableLessons() {
     return vertical20Pix(
       child: ExpansionTile(
-        collapsedBackgroundColor: CustomColors.softLimeGreen.withOpacity(0.5),
-        backgroundColor: CustomColors.softLimeGreen.withOpacity(0.5),
+        collapsedBackgroundColor: CustomColors.veryLightGrey,
+        backgroundColor: CustomColors.veryLightGrey,
         textColor: Colors.black,
         iconColor: Colors.black,
         collapsedShape: RoundedRectangleBorder(
@@ -231,7 +227,7 @@ class _LessonPlanScreenState extends State<LessonPlanScreen> {
           ovalButton('CREATE LESSON',
               onPress: () =>
                   Navigator.of(context).pushNamed(NavigatorRoutes.addLesson),
-              backgroundColor: CustomColors.softLimeGreen),
+              backgroundColor: CustomColors.veryLightGrey),
           Gap(15),
           lessonDocs.isNotEmpty
               ? SizedBox(
@@ -260,10 +256,8 @@ class _LessonPlanScreenState extends State<LessonPlanScreen> {
   Widget _expandableAssignments() {
     return vertical20Pix(
       child: ExpansionTile(
-        collapsedBackgroundColor:
-            CustomColors.softLimeGreen.withOpacity(0.5).withOpacity(0.5),
-        backgroundColor:
-            CustomColors.softLimeGreen.withOpacity(0.5).withOpacity(0.5),
+        collapsedBackgroundColor: CustomColors.veryLightGrey,
+        backgroundColor: CustomColors.veryLightGrey,
         textColor: Colors.black,
         iconColor: Colors.black,
         collapsedShape: RoundedRectangleBorder(
@@ -275,7 +269,7 @@ class _LessonPlanScreenState extends State<LessonPlanScreen> {
           ovalButton('CREATE ASSIGNMENT',
               onPress: () => Navigator.of(context)
                   .pushNamed(NavigatorRoutes.addAssignment),
-              backgroundColor: CustomColors.softLimeGreen),
+              backgroundColor: CustomColors.veryLightGrey),
           Gap(15),
           assignmentDocs.isNotEmpty
               ? SizedBox(
@@ -304,10 +298,8 @@ class _LessonPlanScreenState extends State<LessonPlanScreen> {
   Widget _expandableQuizzes() {
     return vertical20Pix(
       child: ExpansionTile(
-        collapsedBackgroundColor:
-            CustomColors.softLimeGreen.withOpacity(0.5).withOpacity(0.5),
-        backgroundColor:
-            CustomColors.softLimeGreen.withOpacity(0.5).withOpacity(0.5),
+        collapsedBackgroundColor: CustomColors.veryLightGrey,
+        backgroundColor: CustomColors.veryLightGrey,
         textColor: Colors.black,
         iconColor: Colors.black,
         collapsedShape: RoundedRectangleBorder(
@@ -319,7 +311,7 @@ class _LessonPlanScreenState extends State<LessonPlanScreen> {
           ovalButton('CREATE QUIZ',
               onPress: () =>
                   Navigator.of(context).pushNamed(NavigatorRoutes.addQuiz),
-              backgroundColor: CustomColors.softLimeGreen),
+              backgroundColor: CustomColors.veryLightGrey),
           Gap(15),
           quizDocs.isNotEmpty
               ? SizedBox(

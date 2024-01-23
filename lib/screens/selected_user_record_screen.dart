@@ -373,25 +373,22 @@ class _SelectedUserRecordScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeAppBarWidget(context,
-          backgroundColor: CustomColors.verySoftCyan,
-          mayGoBack: true,
-          actions: [
-            ElevatedButton(
-                onPressed: () {
-                  if (userType == 'STUDENT') {
-                    NavigatorRoutes.adminEditStudent(context,
-                        studentDoc: widget.userDoc);
-                  } else if (userType == 'TEACHER') {
-                    NavigatorRoutes.adminEditTeacher(context,
-                        teacherDoc: widget.userDoc);
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: CustomColors.moderateCyan),
-                child: interText('EDIT\nUSER',
-                    color: Colors.white, textAlign: TextAlign.center))
-          ]),
+      appBar: homeAppBarWidget(context, mayGoBack: true, actions: [
+        ElevatedButton(
+            onPressed: () {
+              if (userType == 'STUDENT') {
+                NavigatorRoutes.adminEditStudent(context,
+                    studentDoc: widget.userDoc);
+              } else if (userType == 'TEACHER') {
+                NavigatorRoutes.adminEditTeacher(context,
+                    teacherDoc: widget.userDoc);
+              }
+            },
+            style: ElevatedButton.styleFrom(
+                backgroundColor: CustomColors.veryLightGrey),
+            child: interText('EDIT\nUSER',
+                color: Colors.black, textAlign: TextAlign.center))
+      ]),
       floatingActionButton: ref.read(currentUserTypeProvider) == 'ADMIN'
           ? ElevatedButton(
               onPressed: () => displayDeleteEntryDialog(context,
@@ -438,7 +435,7 @@ class _SelectedUserRecordScreenState
     return Container(
       width: double.infinity,
       height: 50,
-      color: CustomColors.moderateCyan.withOpacity(0.5),
+      color: CustomColors.veryLightGrey,
       child: Center(
         child: all10Pix(
           child: Row(
@@ -466,7 +463,7 @@ class _SelectedUserRecordScreenState
                 interText('ID Number', fontSize: 20),
                 Container(
                   width: double.infinity,
-                  color: CustomColors.moderateCyan.withOpacity(0.5),
+                  color: CustomColors.veryLightGrey,
                   child: Center(
                       child: Row(
                     children: [
@@ -480,7 +477,7 @@ class _SelectedUserRecordScreenState
                 Container(
                   width: double.infinity,
                   //height: 30,
-                  color: CustomColors.moderateCyan.withOpacity(0.5),
+                  color: CustomColors.veryLightGrey,
                   child: Center(
                       child: Row(
                     children: [
@@ -500,7 +497,7 @@ class _SelectedUserRecordScreenState
                       Container(
                         width: double.infinity,
                         //height: 30,
-                        color: CustomColors.moderateCyan.withOpacity(0.5),
+                        color: CustomColors.veryLightGrey,
                         child: Center(
                             child: Row(
                           children: [
@@ -536,7 +533,7 @@ class _SelectedUserRecordScreenState
         interText('Handled Sections', fontSize: 20),
         Container(
             width: double.infinity,
-            color: CustomColors.moderateCyan.withOpacity(0.5),
+            color: CustomColors.veryLightGrey,
             padding: const EdgeInsets.all(10),
             child: handledSections.isNotEmpty
                 ? Column(
@@ -560,7 +557,7 @@ class _SelectedUserRecordScreenState
               interText('SECTION:', fontSize: 20),
               Container(
                 width: double.infinity,
-                color: CustomColors.moderateCyan.withOpacity(0.5),
+                color: CustomColors.veryLightGrey,
                 padding: EdgeInsets.all(10),
                 child: Center(child: interText(sectionName)),
               ),

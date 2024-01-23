@@ -183,12 +183,8 @@ class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
           }
         },
         child: Scaffold(
-          appBar: homeAppBarWidget(context,
-              backgroundColor: CustomColors.lightGreyishLimeGreen,
-              mayGoBack: true),
-          drawer: appDrawer(context,
-              backgroundColor: CustomColors.lightGreyishLimeGreen,
-              userType: userType),
+          appBar: homeAppBarWidget(context, mayGoBack: true),
+          drawer: appDrawer(context, userType: userType),
           body: stackedLoadingContainer(
               context,
               _isLoading,
@@ -201,7 +197,7 @@ class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
                     if (_editMode)
                       ovalButton('CANCEL CHANGES',
                           onPress: () => getAdminProfile(),
-                          backgroundColor: CustomColors.softLimeGreen),
+                          backgroundColor: CustomColors.veryLightGrey),
                     ovalButton(_editMode ? 'SAVE CHANGES' : 'EDIT PROFILE',
                         onPress: () {
                       if (_editMode) {
@@ -211,7 +207,7 @@ class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
                           _editMode = true;
                         });
                       }
-                    }, backgroundColor: CustomColors.softLimeGreen)
+                    }, backgroundColor: CustomColors.veryLightGrey)
                   ],
                 )),
               )),
@@ -240,11 +236,11 @@ class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
                     if (_editMode)
                       ovalButton('UPLOAD PHOTO',
                           onPress: _pickProfileImage,
-                          backgroundColor: CustomColors.softLimeGreen),
+                          backgroundColor: CustomColors.veryLightGrey),
                     if (_editMode && profileImageURL.isNotEmpty)
                       ovalButton('DELETE PHOTO',
                           onPress: _removeProfileImage,
-                          backgroundColor: CustomColors.softLimeGreen)
+                          backgroundColor: CustomColors.veryLightGrey)
                   ],
                 ),
               ),

@@ -67,13 +67,11 @@ class _TeacherHomeScreenState extends ConsumerState<TeacherHomeScreen> {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        appBar: homeAppBarWidget(context,
-            backgroundColor: CustomColors.lightGreyishLimeGreen,
-            mayGoBack: true),
+        appBar: homeAppBarWidget(context, mayGoBack: true),
         drawer: appDrawer(context,
-            backgroundColor: CustomColors.lightGreyishLimeGreen,
             profileImageURL: ref.read(profileImageProvider),
             userType: ref.read(currentUserTypeProvider),
+            isHome: true,
             subject: subject),
         bottomNavigationBar: userBottomNavBar(context,
             index: 0,

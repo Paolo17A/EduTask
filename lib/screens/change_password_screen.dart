@@ -91,29 +91,11 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Color appBarColor;
-    if (ref.read(currentUserTypeProvider) == 'ADMIN') {
-      appBarColor = CustomColors.verySoftCyan;
-    } else if (ref.read(currentUserTypeProvider) == 'TEACHER') {
-      appBarColor = CustomColors.lightGreyishLimeGreen;
-    } else {
-      appBarColor = CustomColors.verySoftOrange;
-    }
-    Color buttonColor;
-    if (ref.read(currentUserTypeProvider) == 'ADMIN') {
-      buttonColor = CustomColors.moderateCyan;
-    } else if (ref.read(currentUserTypeProvider) == 'TEACHER') {
-      buttonColor = CustomColors.softLimeGreen;
-    } else {
-      buttonColor = CustomColors.softOrange;
-    }
     return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
-          appBar: homeAppBarWidget(context,
-              backgroundColor: appBarColor, mayGoBack: true),
+          appBar: homeAppBarWidget(context, mayGoBack: true),
           drawer: appDrawer(context,
-              backgroundColor: appBarColor,
               profileImageURL: ref.read(profileImageProvider),
               userType: ref.read(currentUserTypeProvider)),
           body: stackedLoadingContainer(
@@ -124,7 +106,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                     child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                      color: buttonColor.withOpacity(0.5),
+                      color: CustomColors.veryLightGrey.withOpacity(0.5),
                       borderRadius: BorderRadius.circular(30)),
                   padding: const EdgeInsets.all(10),
                   child: Column(
@@ -135,7 +117,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                       vertical20Pix(
                         child: ovalButton('CHANGE PASSWORD',
                             onPress: () => changeUserPassword(),
-                            backgroundColor: buttonColor),
+                            backgroundColor: CustomColors.veryLightGrey),
                       )
                     ],
                   ),
