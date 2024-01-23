@@ -124,10 +124,13 @@ class _TeacherHandledSectionsScreenState
     final sectionData = sectionDoc.data() as Map<dynamic, dynamic>;
     String name = sectionData['name'];
     return vertical10horizontal4(SizedBox(
-        height: 150,
-        child: ElevatedButton(
-            onPressed: () => NavigatorRoutes.teacherSelectedSection(context,
-                sectionID: sectionDoc.id),
-            child: interText(name, fontSize: 16))));
+      height: 60,
+      child: ElevatedButton(
+          onPressed: () => NavigatorRoutes.teacherSelectedSection(context,
+              sectionID: sectionDoc.id),
+          style: ElevatedButton.styleFrom(
+              backgroundColor: CustomColors.softLimeGreen.withOpacity(0.5)),
+          child: interText(name, fontSize: 28, color: Colors.white)),
+    ));
   }
 }

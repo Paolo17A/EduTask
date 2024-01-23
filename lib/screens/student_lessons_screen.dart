@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/providers/profile_image_provider.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/app_bottom_nav_bar_widget.dart';
@@ -7,19 +8,21 @@ import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
 import '../util/color_util.dart';
 import '../widgets/custom_text_widgets.dart';
 
-class StudentLessonsScreen extends StatefulWidget {
+class StudentLessonsScreen extends ConsumerStatefulWidget {
   const StudentLessonsScreen({super.key});
 
   @override
-  State<StudentLessonsScreen> createState() => _StudentLessonsScreenState();
+  ConsumerState<StudentLessonsScreen> createState() =>
+      _StudentLessonsScreenState();
 }
 
-class _StudentLessonsScreenState extends State<StudentLessonsScreen> {
+class _StudentLessonsScreenState extends ConsumerState<StudentLessonsScreen> {
   bool _isLoading = true;
   List<DocumentSnapshot> lessonDocs = [];
 
@@ -70,7 +73,9 @@ class _StudentLessonsScreenState extends State<StudentLessonsScreen> {
       appBar: homeAppBarWidget(context,
           backgroundColor: CustomColors.verySoftOrange, mayGoBack: true),
       drawer: appDrawer(context,
-          backgroundColor: CustomColors.verySoftOrange, userType: 'STUDENT'),
+          backgroundColor: CustomColors.verySoftOrange,
+          userType: 'STUDENT',
+          profileImageURL: ref.read(profileImageProvider)),
       bottomNavigationBar: userBottomNavBar(context,
           index: 1,
           userType: 'STUDENT',

@@ -26,3 +26,30 @@ Future<bool> displayQuitDialogue(BuildContext context) async {
 
   return shouldQuit;
 }
+
+Future<bool> displayExitDialogue(BuildContext context) async {
+  final shouldQuit = await showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Confirm Quit'),
+      content: const Text(
+          'Are you sure you want to exit? Your progress will not be saved.'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(true),
+          child: const Text('Quit'),
+        ),
+      ],
+    ),
+  );
+
+  if (shouldQuit == true) {
+    Navigator.of(context).pop();
+  }
+
+  return shouldQuit;
+}

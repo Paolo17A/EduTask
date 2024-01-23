@@ -1,7 +1,10 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutask/util/navigator_util.dart';
+import 'package:edutask/util/quit_dialogue_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/custom_button_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
@@ -176,22 +179,25 @@ class _AnswerQuizScreenState extends State<AnswerQuizScreen> {
   //============================================================================
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: homeAppBarWidget(context,
-          backgroundColor: CustomColors.verySoftOrange, mayGoBack: true),
-      body: switchedLoadingContainer(
-          _isLoading,
-          SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: all20Pix(
-                child: Column(
-              children: [
-                _quizTitle(),
-                if (!_isLoading) _quizQuestionWidgets(),
-                Expanded(child: _bottomNavigatorButtons())
-              ],
+    return WillPopScope(
+      onWillPop: () async => displayExitDialogue(context),
+      child: Scaffold(
+        appBar: homeAppBarWidget(context,
+            backgroundColor: CustomColors.verySoftOrange, mayGoBack: true),
+        body: switchedLoadingContainer(
+            _isLoading,
+            SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: all20Pix(
+                  child: Column(
+                children: [
+                  _quizTitle(),
+                  if (!_isLoading) _quizQuestionWidgets(),
+                  Expanded(child: _bottomNavigatorButtons())
+                ],
+              )),
             )),
-          )),
+      ),
     );
   }
 

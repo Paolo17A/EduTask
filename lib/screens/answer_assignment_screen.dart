@@ -1,7 +1,10 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutask/util/navigator_util.dart';
+import 'package:edutask/util/quit_dialogue_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/custom_button_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
@@ -17,7 +20,9 @@ import '../util/color_util.dart';
 
 class AnswerAssignmentScreen extends StatefulWidget {
   final String assignmentID;
-  const AnswerAssignmentScreen({super.key, required this.assignmentID});
+  final bool fromHomeScreen;
+  const AnswerAssignmentScreen(
+      {super.key, required this.assignmentID, this.fromHomeScreen = false});
 
   @override
   State<AnswerAssignmentScreen> createState() => _AnswerAssignmentScreenState();
@@ -124,7 +129,8 @@ class _AnswerAssignmentScreenState extends State<AnswerAssignmentScreen> {
           'submission': essayController.text,
           'isGraded': false,
           'grade': 0,
-          'remarks': ''
+          'remarks': '',
+          'dateSubmitted': DateTime.now()
         });
       }
 
@@ -157,7 +163,11 @@ class _AnswerAssignmentScreenState extends State<AnswerAssignmentScreen> {
       scaffoldMessenger.showSnackBar(SnackBar(
           content: Text('Successfully submitted this essay assignment.')));
       navigator.pop();
-      navigator.pushReplacementNamed(NavigatorRoutes.studentSubmittables);
+      if (widget.fromHomeScreen) {
+        navigator.pushReplacementNamed(NavigatorRoutes.studentHome);
+      } else {
+        navigator.pushReplacementNamed(NavigatorRoutes.studentSubmittables);
+      }
     } catch (error) {
       scaffoldMessenger.showSnackBar(
           SnackBar(content: Text('Error submitting essay assignment: $error')));
@@ -171,31 +181,34 @@ class _AnswerAssignmentScreenState extends State<AnswerAssignmentScreen> {
   //============================================================================
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Scaffold(
-          appBar: homeAppBarWidget(context,
-              backgroundColor: CustomColors.verySoftOrange, mayGoBack: true),
-          body: stackedLoadingContainer(
-            context,
-            _isLoading,
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: SingleChildScrollView(
-                child: all20Pix(
-                    child: Column(children: [
-                  interText(title, fontWeight: FontWeight.bold, fontSize: 27),
-                  _directions(),
-                  if (assignmentType == 'ESSAY')
-                    _essayFields()
-                  else if (assignmentType == 'FILE UPLOAD')
-                    _fileUploadFields(),
-                  _submitAssignment()
-                ])),
+    return WillPopScope(
+      onWillPop: () async => displayExitDialogue(context),
+      child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Scaffold(
+            appBar: homeAppBarWidget(context,
+                backgroundColor: CustomColors.verySoftOrange, mayGoBack: true),
+            body: stackedLoadingContainer(
+              context,
+              _isLoading,
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: SingleChildScrollView(
+                  child: all20Pix(
+                      child: Column(children: [
+                    interText(title, fontWeight: FontWeight.bold, fontSize: 27),
+                    _directions(),
+                    if (assignmentType == 'ESSAY')
+                      _essayFields()
+                    else if (assignmentType == 'FILE UPLOAD')
+                      _fileUploadFields(),
+                    _submitAssignment()
+                  ])),
+                ),
               ),
             ),
-          ),
-        ));
+          )),
+    );
   }
 
   Widget _directions() {

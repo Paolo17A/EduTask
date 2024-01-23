@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/providers/current_user_type_provider.dart';
+import 'package:edutask/providers/profile_image_provider.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/app_drawer_widget.dart';
 import 'package:edutask/widgets/custom_button_widgets.dart';
@@ -6,52 +8,26 @@ import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../util/color_util.dart';
 import '../widgets/custom_text_widgets.dart';
 import '../widgets/edutask_text_field_widget.dart';
 
-class ChangePasswordScreen extends StatefulWidget {
+class ChangePasswordScreen extends ConsumerStatefulWidget {
   const ChangePasswordScreen({super.key});
 
   @override
-  State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
+  ConsumerState<ChangePasswordScreen> createState() =>
+      _ChangePasswordScreenState();
 }
 
-class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
-  bool _isLoading = true;
-  String userType = '';
+class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
+  bool _isLoading = false;
 
   final currentPasswordController = TextEditingController();
   final newPasswordController = TextEditingController();
   final confirmNewPasswordController = TextEditingController();
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    getUserType();
-  }
-
-  void getUserType() async {
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
-    try {
-      final user = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .get();
-      final userData = user.data() as Map<dynamic, dynamic>;
-      userType = userData['userType'];
-      setState(() {
-        _isLoading = false;
-      });
-    } catch (error) {
-      scaffoldMessenger.showSnackBar(
-          SnackBar(content: Text('Error getting user type: $error')));
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
 
   void changeUserPassword() async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
@@ -116,17 +92,17 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   @override
   Widget build(BuildContext context) {
     Color appBarColor;
-    if (userType == 'ADMIN') {
+    if (ref.read(currentUserTypeProvider) == 'ADMIN') {
       appBarColor = CustomColors.verySoftCyan;
-    } else if (userType == 'TEACHER') {
+    } else if (ref.read(currentUserTypeProvider) == 'TEACHER') {
       appBarColor = CustomColors.lightGreyishLimeGreen;
     } else {
       appBarColor = CustomColors.verySoftOrange;
     }
     Color buttonColor;
-    if (userType == 'ADMIN') {
+    if (ref.read(currentUserTypeProvider) == 'ADMIN') {
       buttonColor = CustomColors.moderateCyan;
-    } else if (userType == 'TEACHER') {
+    } else if (ref.read(currentUserTypeProvider) == 'TEACHER') {
       buttonColor = CustomColors.softLimeGreen;
     } else {
       buttonColor = CustomColors.softOrange;
@@ -137,7 +113,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           appBar: homeAppBarWidget(context,
               backgroundColor: appBarColor, mayGoBack: true),
           drawer: appDrawer(context,
-              backgroundColor: appBarColor, userType: userType),
+              backgroundColor: appBarColor,
+              profileImageURL: ref.read(profileImageProvider),
+              userType: ref.read(currentUserTypeProvider)),
           body: stackedLoadingContainer(
               context,
               _isLoading,

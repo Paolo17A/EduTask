@@ -97,10 +97,10 @@ class NavigatorRoutes {
   static const studentLessons = '/studentLessons';
   static const studentSubmittables = '/studentSubmittables';
   static void answerAssignment(BuildContext context,
-      {required String assignmentID}) {
+      {required String assignmentID, bool fromHomeScreen = false}) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) =>
-            AnswerAssignmentScreen(assignmentID: assignmentID)));
+        builder: (context) => AnswerAssignmentScreen(
+            assignmentID: assignmentID, fromHomeScreen: fromHomeScreen)));
   }
 
   //  ADMIN

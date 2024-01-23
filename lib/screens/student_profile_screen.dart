@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/providers/profile_image_provider.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/app_drawer_widget.dart';
 import 'package:edutask/widgets/custom_button_widgets.dart';
@@ -10,6 +11,7 @@ import 'package:edutask/widgets/edutask_text_field_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -17,14 +19,15 @@ import '../util/color_util.dart';
 import '../widgets/custom_miscellaneous_widgets.dart';
 import '../widgets/custom_text_widgets.dart';
 
-class StudentProfileScreen extends StatefulWidget {
+class StudentProfileScreen extends ConsumerStatefulWidget {
   const StudentProfileScreen({super.key});
 
   @override
-  State<StudentProfileScreen> createState() => _StudentProfileScreenState();
+  ConsumerState<StudentProfileScreen> createState() =>
+      _StudentProfileScreenState();
 }
 
-class _StudentProfileScreenState extends State<StudentProfileScreen> {
+class _StudentProfileScreenState extends ConsumerState<StudentProfileScreen> {
   bool _isLoading = true;
   bool _isInitialized = false;
   bool _editMode = false;
@@ -91,6 +94,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
           .collection('users')
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .update({'profileImageURL': downloadURL});
+      ref.read(profileImageProvider.notifier).setProfileImage(downloadURL);
       scaffoldMessenger.showSnackBar(const SnackBar(
           content: Text('Successfully changed profile picture.')));
       setState(() {
@@ -122,6 +126,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
           .collection('users')
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .update({'profileImageURL': ''});
+      ref.read(profileImageProvider.notifier).setProfileImage('');
       scaffoldMessenger.showSnackBar(const SnackBar(
           content: Text('Successfully removed profile picture.')));
       setState(() {
@@ -177,7 +182,9 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
         appBar: homeAppBarWidget(context,
             backgroundColor: CustomColors.verySoftOrange, mayGoBack: true),
         drawer: appDrawer(context,
-            backgroundColor: CustomColors.verySoftOrange, userType: userType),
+            backgroundColor: CustomColors.verySoftOrange,
+            userType: userType,
+            profileImageURL: ref.read(profileImageProvider)),
         body: stackedLoadingContainer(
             context,
             _isLoading,

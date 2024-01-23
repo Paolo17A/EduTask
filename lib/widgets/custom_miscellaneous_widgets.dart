@@ -242,7 +242,7 @@ Widget studentEntry(BuildContext context,
 
 Widget teacherName(String teacherID) {
   return FutureBuilder(
-      future: getTeacherName(teacherID),
+      future: getUserName(teacherID),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
@@ -250,6 +250,34 @@ Widget teacherName(String teacherID) {
           return interText('-');
         } else {
           return interText('Created By: ${snapshot.data}', fontSize: 20);
+        }
+      });
+}
+
+Widget studentName(String studentID) {
+  return FutureBuilder(
+      future: getUserName(studentID),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return interText('-');
+        } else {
+          return interText('Submitted By: ${snapshot.data}', fontSize: 20);
+        }
+      });
+}
+
+Widget assignmentName(String assignmentID) {
+  return FutureBuilder(
+      future: getAssignmentTitle(assignmentID),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return interText('-');
+        } else {
+          return interText('Assignment: ${snapshot.data}', fontSize: 16);
         }
       });
 }

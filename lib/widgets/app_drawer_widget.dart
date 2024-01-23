@@ -8,16 +8,23 @@ import 'package:gap/gap.dart';
 Drawer appDrawer(BuildContext context,
     {required String userType,
     required Color backgroundColor,
-    String profileImageURL = ''}) {
+    String profileImageURL = '',
+    String subject = ''}) {
   return Drawer(
     backgroundColor: backgroundColor,
     child: Column(
       children: [
         DrawerHeader(
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              buildProfileImageWidget(
-                  profileImageURL: profileImageURL, radius: 65),
+              Row(children: [
+                buildProfileImageWidget(
+                    profileImageURL: profileImageURL, radius: 52)
+              ]),
+              Gap(8),
+              if (userType == 'TEACHER')
+                interText('Subject: $subject', fontWeight: FontWeight.bold)
             ],
           ),
           decoration: BoxDecoration(color: backgroundColor),

@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/providers/current_user_type_provider.dart';
+import 'package:edutask/providers/profile_image_provider.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/app_bottom_nav_bar_widget.dart';
@@ -8,20 +10,22 @@ import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../util/color_util.dart';
 import '../widgets/custom_text_widgets.dart';
 
-class StudentSubmittablesScreen extends StatefulWidget {
+class StudentSubmittablesScreen extends ConsumerStatefulWidget {
   const StudentSubmittablesScreen({super.key});
 
   @override
-  State<StudentSubmittablesScreen> createState() =>
+  ConsumerState<StudentSubmittablesScreen> createState() =>
       _StudentSubmittablesScreenState();
 }
 
-class _StudentSubmittablesScreenState extends State<StudentSubmittablesScreen> {
+class _StudentSubmittablesScreenState
+    extends ConsumerState<StudentSubmittablesScreen> {
   bool _isLoading = true;
   List<DocumentSnapshot> assignmentDocs = [];
   List<DocumentSnapshot> quizDocs = [];
@@ -78,7 +82,7 @@ class _StudentSubmittablesScreenState extends State<StudentSubmittablesScreen> {
           .where('studentID', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .get();
       quizResultDocs = quizResults.docs;
-      print('quizResultDocs fouind: ${quizResultDocs.length}');
+      print('quizResultDocs found: ${quizResultDocs.length}');
 
       setState(() {
         _isLoading = false;
@@ -98,7 +102,9 @@ class _StudentSubmittablesScreenState extends State<StudentSubmittablesScreen> {
       appBar: homeAppBarWidget(context,
           backgroundColor: CustomColors.verySoftOrange, mayGoBack: true),
       drawer: appDrawer(context,
-          backgroundColor: CustomColors.verySoftOrange, userType: 'STUDENT'),
+          backgroundColor: CustomColors.verySoftOrange,
+          userType: ref.read(currentUserTypeProvider),
+          profileImageURL: ref.read(profileImageProvider)),
       bottomNavigationBar: userBottomNavBar(context,
           index: 3,
           userType: 'STUDENT',
