@@ -34,6 +34,7 @@ class _AnswerAssignmentScreenState extends State<AnswerAssignmentScreen> {
   String title = '';
   String directions = '';
   String assignmentType = '';
+  String subject = '';
 
   //  ESSAY
   final essayController = TextEditingController();
@@ -66,6 +67,7 @@ class _AnswerAssignmentScreenState extends State<AnswerAssignmentScreen> {
       title = assignmentData['title'];
       directions = assignmentData['directions'];
       assignmentType = assignmentData['assignmentType'];
+      subject = assignmentData['subject'];
       setState(() {
         _isLoading = false;
       });
@@ -130,6 +132,7 @@ class _AnswerAssignmentScreenState extends State<AnswerAssignmentScreen> {
           'isGraded': false,
           'grade': 0,
           'remarks': '',
+          'subject': subject,
           'dateSubmitted': DateTime.now()
         });
       }
