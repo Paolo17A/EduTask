@@ -105,8 +105,7 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: homeAppBarWidget(context,
-            backgroundColor: CustomColors.lightGreyishLimeGreen),
+        appBar: homeAppBarWidget(context),
         body: stackedLoadingContainer(
             context,
             _isLoading,
@@ -123,7 +122,7 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
                   Gap(30),
                   ovalButton('CREATE ASSIGNMENT',
                       onPress: createAssignment,
-                      backgroundColor: CustomColors.softLimeGreen)
+                      backgroundColor: CustomColors.veryLightGrey)
                 ],
               )),
             )),

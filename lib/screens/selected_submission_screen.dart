@@ -121,11 +121,7 @@ class _SelectedSubmissionScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeAppBarWidget(context,
-          backgroundColor: ref.read(currentUserTypeProvider) == 'TEACHER'
-              ? CustomColors.lightGreyishLimeGreen
-              : CustomColors.verySoftOrange,
-          mayGoBack: true),
+      appBar: homeAppBarWidget(context, mayGoBack: true),
       body: switchedLoadingContainer(
           _isLoading,
           SizedBox(
@@ -196,7 +192,7 @@ class _SelectedSubmissionScreenState
 
   Widget _gradeButton() {
     return ovalButton('ASSIGN GRADE',
-        onPress: showGradeDialog, backgroundColor: CustomColors.softLimeGreen);
+        onPress: showGradeDialog, backgroundColor: CustomColors.veryLightGrey);
   }
 
   void showGradeDialog() {
@@ -206,28 +202,27 @@ class _SelectedSubmissionScreenState
         builder: (context) => GestureDetector(
               onTap: () => FocusScope.of(context).unfocus(),
               child: AlertDialog(
-                  backgroundColor: CustomColors.lightGreyishLimeGreen,
                   content: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        interText('Enter a number from 1-100.',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            textAlign: TextAlign.center),
-                        Gap(8),
-                        EduTaskTextField(
-                            text: '',
-                            controller: gradeController,
-                            textInputType: TextInputType.numberWithOptions(),
-                            displayPrefixIcon: null),
-                        vertical20Pix(
-                          child: ovalButton('SUBMIT GRADE',
-                              onPress: assignGradeToSubmission,
-                              backgroundColor: CustomColors.softLimeGreen),
-                        )
-                      ],
-                    ),
-                  )),
+                child: Column(
+                  children: [
+                    interText('Enter a number from 1-100.',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        textAlign: TextAlign.center),
+                    Gap(8),
+                    EduTaskTextField(
+                        text: '',
+                        controller: gradeController,
+                        textInputType: TextInputType.numberWithOptions(),
+                        displayPrefixIcon: null),
+                    vertical20Pix(
+                      child: ovalButton('SUBMIT GRADE',
+                          onPress: assignGradeToSubmission,
+                          backgroundColor: CustomColors.veryLightGrey),
+                    )
+                  ],
+                ),
+              )),
             ));
   }
 }

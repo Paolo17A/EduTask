@@ -72,10 +72,7 @@ class _TeacherHandledSectionsScreenState
     return Scaffold(
       appBar: homeAppBarWidget(context, mayGoBack: true),
       drawer: appDrawer(context, userType: 'TEACHER'),
-      bottomNavigationBar: userBottomNavBar(context,
-          index: 1,
-          userType: 'TEACHER',
-          backgroundColor: CustomColors.lightGreyishLimeGreen),
+      bottomNavigationBar: teacherBottomNavBar(context, index: 1),
       body: switchedLoadingContainer(
           _isLoading,
           SizedBox(
@@ -126,7 +123,7 @@ class _TeacherHandledSectionsScreenState
           onPressed: () => NavigatorRoutes.teacherSelectedSection(context,
               sectionID: sectionDoc.id),
           style: ElevatedButton.styleFrom(
-              backgroundColor: CustomColors.softLimeGreen.withOpacity(0.5)),
+              backgroundColor: CustomColors.softOrange),
           child: interText(name, fontSize: 28, color: Colors.white)),
     ));
   }

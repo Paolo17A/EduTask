@@ -242,8 +242,7 @@ class _EditQuizScreenState extends State<EditQuizScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: homeAppBarWidget(context,
-            backgroundColor: CustomColors.lightGreyishLimeGreen),
+        appBar: homeAppBarWidget(context),
         body: stackedLoadingContainer(
             context,
             _isLoading,
@@ -274,7 +273,7 @@ class _EditQuizScreenState extends State<EditQuizScreen> {
   Widget _quizInputContainer() {
     return Container(
       decoration: BoxDecoration(
-          color: CustomColors.lightGreyishLimeGreen.withOpacity(0.9),
+          color: CustomColors.veryLightGrey,
           border: Border.all(),
           borderRadius: BorderRadius.circular(20)),
       padding: EdgeInsets.all(10),

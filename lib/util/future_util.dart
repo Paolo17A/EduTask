@@ -57,6 +57,43 @@ Future<List<DocumentSnapshot>> getPendingAssignments(String sectionID) async {
   return pendingAssignments;
 }
 
+Future<List<DocumentSnapshot>> getSubmittedAssignmentsInSubject(
+    {required String subject, required String studentID}) async {
+  final submissions = await FirebaseFirestore.instance
+      .collection('submissions')
+      .where('studentID', isEqualTo: studentID)
+      .where('subject', isEqualTo: subject)
+      .where('isGraded', isEqualTo: true)
+      .get();
+
+  return submissions.docs;
+}
+
+Future<List<DocumentSnapshot>> getAnsweredQuizzesInSubject(
+    {required String subject, required String studentID}) async {
+  final submissions = await FirebaseFirestore.instance
+      .collection('quizResults')
+      .where('studentID', isEqualTo: studentID)
+      .where('subject', isEqualTo: subject)
+      .get();
+
+  return submissions.docs;
+}
+
+Future<DocumentSnapshot> getCorrespondingAssignment(String assignmentID) async {
+  final assignment = await FirebaseFirestore.instance
+      .collection('assignments')
+      .doc(assignmentID)
+      .get();
+  return assignment;
+}
+
+Future<DocumentSnapshot> getCorrespondingQuiz(String quizID) async {
+  final quiz =
+      await FirebaseFirestore.instance.collection('quizzes').doc(quizID).get();
+  return quiz;
+}
+
 Future<List<DocumentSnapshot>> getPendingQuizzes(String sectionID) async {
   if (sectionID.isEmpty) return [];
 

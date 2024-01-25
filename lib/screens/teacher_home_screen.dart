@@ -73,10 +73,7 @@ class _TeacherHomeScreenState extends ConsumerState<TeacherHomeScreen> {
             userType: ref.read(currentUserTypeProvider),
             isHome: true,
             subject: subject),
-        bottomNavigationBar: userBottomNavBar(context,
-            index: 0,
-            userType: 'TEACHER',
-            backgroundColor: CustomColors.lightGreyishLimeGreen),
+        bottomNavigationBar: teacherBottomNavBar(context, index: 0),
         body: switchedLoadingContainer(
             _isLoading,
             SingleChildScrollView(
@@ -85,13 +82,10 @@ class _TeacherHomeScreenState extends ConsumerState<TeacherHomeScreen> {
                   welcomeWidgets(
                       userType: 'TEACHER',
                       profileImageURL: ref.read(profileImageProvider),
-                      containerColor: CustomColors.lightGreyishLimeGreen),
+                      containerColor: CustomColors.veryDarkGrey),
                   all20Pix(
                       child: Column(
-                    children: [
-                      _pendingSubmissions(),
-                      //_teacherSchedule(),
-                    ],
+                    children: [_pendingSubmissions()],
                   ))
                 ],
               ),
@@ -105,7 +99,7 @@ class _TeacherHomeScreenState extends ConsumerState<TeacherHomeScreen> {
       child: Container(
         width: double.infinity,
         //height: 200,
-        color: CustomColors.softLimeGreen.withOpacity(0.5),
+        color: CustomColors.veryLightGrey,
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
@@ -161,7 +155,7 @@ class _TeacherHomeScreenState extends ConsumerState<TeacherHomeScreen> {
         style: ElevatedButton.styleFrom(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            backgroundColor: CustomColors.softLimeGreen.withOpacity(0.5),
+            backgroundColor: CustomColors.veryLightGrey,
             foregroundColor: Colors.white),
         child: Container(
           padding: EdgeInsets.all(4),

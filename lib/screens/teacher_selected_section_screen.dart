@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
+import 'package:edutask/widgets/app_bottom_nav_bar_widget.dart';
 import 'package:edutask/widgets/custom_button_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
@@ -316,6 +318,7 @@ class _TeacherSelectedSectionScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: homeAppBarWidget(context, mayGoBack: true),
+      bottomNavigationBar: teacherBottomNavBar(context, index: 1),
       body: switchedLoadingContainer(
           _isLoading,
           SingleChildScrollView(
@@ -353,8 +356,8 @@ class _TeacherSelectedSectionScreenState
         .toList();
     return vertical20Pix(
       child: ExpansionTile(
-        collapsedBackgroundColor: Colors.grey.withOpacity(0.5),
-        backgroundColor: Colors.grey.withOpacity(0.5),
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
         textColor: Colors.black,
         iconColor: Colors.black,
         collapsedShape: RoundedRectangleBorder(
@@ -366,7 +369,7 @@ class _TeacherSelectedSectionScreenState
           if (availableLessons.isNotEmpty)
             ovalButton('ASSIGN LESSON',
                 onPress: () => showAvailableLessonsDialog(availableLessons),
-                backgroundColor: CustomColors.softLimeGreen),
+                backgroundColor: CustomColors.softOrange),
           Gap(15),
           assignedLessonDocs.isNotEmpty
               ? SizedBox(
@@ -421,8 +424,8 @@ class _TeacherSelectedSectionScreenState
         .toList();
     return vertical20Pix(
       child: ExpansionTile(
-        collapsedBackgroundColor: Colors.grey.withOpacity(0.5),
-        backgroundColor: Colors.grey.withOpacity(0.5),
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
         textColor: Colors.black,
         iconColor: Colors.black,
         collapsedShape: RoundedRectangleBorder(
@@ -435,7 +438,7 @@ class _TeacherSelectedSectionScreenState
             ovalButton('ASSIGN ASSIGNMENT',
                 onPress: () =>
                     showAvailableAssignmentsDialog(availableAssignments),
-                backgroundColor: CustomColors.softLimeGreen),
+                backgroundColor: CustomColors.softOrange),
           Gap(15),
           assignedAssignmentDocs.isNotEmpty
               ? SizedBox(
@@ -492,8 +495,8 @@ class _TeacherSelectedSectionScreenState
         .toList();
     return vertical20Pix(
       child: ExpansionTile(
-        collapsedBackgroundColor: Colors.grey.withOpacity(0.5),
-        backgroundColor: Colors.grey.withOpacity(0.5),
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
         textColor: Colors.black,
         iconColor: Colors.black,
         collapsedShape: RoundedRectangleBorder(
@@ -505,7 +508,7 @@ class _TeacherSelectedSectionScreenState
           if (availableQuizzes.isNotEmpty)
             ovalButton('ASSIGN QUIZ',
                 onPress: () => showAvailableQuizzesDialog(availableQuizzes),
-                backgroundColor: CustomColors.softLimeGreen),
+                backgroundColor: CustomColors.softOrange),
           Gap(15),
           assignedQuizDocs.isNotEmpty
               ? SizedBox(
@@ -557,8 +560,8 @@ class _TeacherSelectedSectionScreenState
   Widget _expandableStudents() {
     return vertical20Pix(
       child: ExpansionTile(
-        collapsedBackgroundColor: Colors.grey.withOpacity(0.5),
-        backgroundColor: Colors.grey.withOpacity(0.5),
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
         textColor: Colors.black,
         iconColor: Colors.black,
         collapsedShape: RoundedRectangleBorder(
@@ -573,10 +576,12 @@ class _TeacherSelectedSectionScreenState
                   child: ListView.builder(
                       shrinkWrap: false,
                       itemCount: associatedStudentDocs.length,
-                      itemBuilder: (context, index) => InkWell(
-                          onTap: () {},
-                          child: studentEntry(context,
-                              studentDoc: associatedStudentDocs[index]))),
+                      itemBuilder: (context, index) => studentEntry(context,
+                          studentDoc: associatedStudentDocs[index],
+                          onPress: () =>
+                              NavigatorRoutes.teacherSelectedStudentGrades(
+                                  context,
+                                  studentDoc: associatedStudentDocs[index]))),
                 )
               : interText('NO ENROLLED STUDENTS', fontSize: 20)
         ],

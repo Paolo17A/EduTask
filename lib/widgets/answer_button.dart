@@ -27,7 +27,7 @@ class _AnswerButtonState extends State<AnswerButton> {
         color: widget.isSelected ? Colors.black : Colors.transparent,
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: SizedBox(
           width: MediaQuery.sizeOf(context).width * 0.65,
           height: 50,
@@ -36,8 +36,8 @@ class _AnswerButtonState extends State<AnswerButton> {
               style: ElevatedButton.styleFrom(
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                  foregroundColor: Colors.black,
-                  backgroundColor: CustomColors.softOrange),
+                  foregroundColor: Colors.white,
+                  backgroundColor: CustomColors.veryDarkGrey),
               child: interText(widget.answer,
                   textAlign: TextAlign.center, fontWeight: FontWeight.bold)),
         ),

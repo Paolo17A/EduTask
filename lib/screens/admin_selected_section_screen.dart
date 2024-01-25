@@ -330,7 +330,8 @@ class _AdminSelectedSectionScreenState
                       shrinkWrap: false,
                       itemCount: associatedStudentDocs.length,
                       itemBuilder: (context, index) => studentEntry(context,
-                          studentDoc: associatedStudentDocs[index])),
+                          studentDoc: associatedStudentDocs[index],
+                          onPress: () {})),
                 )
               : interText('NO ENROLLED STUDENTS', fontSize: 20)
         ],

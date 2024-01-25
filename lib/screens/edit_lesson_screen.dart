@@ -137,9 +137,7 @@ class _EditLessonScreenState extends State<EditLessonScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: homeAppBarWidget(context,
-            backgroundColor: CustomColors.lightGreyishLimeGreen,
-            mayGoBack: true),
+        appBar: homeAppBarWidget(context, mayGoBack: true),
         body: stackedLoadingContainer(
             context,
             _isLoading,
@@ -154,7 +152,7 @@ class _EditLessonScreenState extends State<EditLessonScreen> {
                   _additionalResources(),
                   ovalButton('EDIT LESSON',
                       onPress: editLesson,
-                      backgroundColor: CustomColors.softLimeGreen)
+                      backgroundColor: CustomColors.veryLightGrey)
                 ],
               )),
             )),

@@ -111,7 +111,7 @@ class _EditAssignmentScreenState extends State<EditAssignmentScreen> {
         builder: (context, child) => Theme(
             data: ThemeData().copyWith(
                 colorScheme: ColorScheme.fromSeed(
-                    seedColor: CustomColors.softLimeGreen)),
+                    seedColor: CustomColors.veryLightGrey)),
             child: child!));
     if (picked != null && picked != DateTime.now()) {
       if (picked.difference(DateTime.now()).inDays < 2) {
@@ -130,8 +130,7 @@ class _EditAssignmentScreenState extends State<EditAssignmentScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: homeAppBarWidget(context,
-            backgroundColor: CustomColors.lightGreyishLimeGreen),
+        appBar: homeAppBarWidget(context),
         body: stackedLoadingContainer(
             context,
             _isLoading,
@@ -148,7 +147,7 @@ class _EditAssignmentScreenState extends State<EditAssignmentScreen> {
                   Gap(30),
                   ovalButton('EDIT ASSIGNMENT',
                       onPress: editAssignment,
-                      backgroundColor: CustomColors.softLimeGreen)
+                      backgroundColor: CustomColors.veryLightGrey)
                 ],
               )),
             )),

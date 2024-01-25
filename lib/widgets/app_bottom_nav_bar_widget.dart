@@ -4,48 +4,106 @@ import 'package:flutter/material.dart';
 
 import '../util/navigator_util.dart';
 
-Widget userBottomNavBar(BuildContext context,
-    {required int index,
-    required String userType,
-    required Color backgroundColor}) {
-  return BottomNavigationBar(
-    currentIndex: index,
-    items: [
-      BottomNavigationBarItem(
-          backgroundColor: backgroundColor,
-          icon: blackIcon(Icons.home),
-          label: 'Home'),
-      BottomNavigationBarItem(
-          backgroundColor: backgroundColor,
-          icon: blackIcon(Icons.class_sharp),
-          label: 'Sections'),
-      BottomNavigationBarItem(
-          backgroundColor: backgroundColor,
-          icon: blackIcon(Icons.calendar_today),
-          label: 'Calendar'),
-      BottomNavigationBarItem(
-          backgroundColor: backgroundColor,
-          icon: blackIcon(Icons.auto_graph),
-          label: 'Submissions'),
-      BottomNavigationBarItem(
-          backgroundColor: backgroundColor,
-          icon: blackIcon(Icons.message),
-          label: 'Messages')
-    ],
-    onTap: (tappedIndex) {
-      if (tappedIndex == index) {
-        return;
-      }
-      switch (tappedIndex) {
-        case 0:
-          Navigator.of(context).pushNamed(NavigatorRoutes.teacherHome);
-          break;
-        case 1:
-          Navigator.of(context)
-              .pushNamed(NavigatorRoutes.teacherHandledSections);
-          break;
-      }
-    },
+Widget teacherBottomNavBar(BuildContext context, {required int index}) {
+  return BottomAppBar(
+    color: CustomColors.veryDarkGrey,
+    height: 85,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.18,
+          child: Column(
+            children: [
+              IconButton(
+                  onPressed: () => index == 0
+                      ? null
+                      : Navigator.of(context)
+                          .pushNamed(NavigatorRoutes.teacherHome),
+                  icon: Icon(Icons.home,
+                      color: index == 0
+                          ? Colors.yellow
+                          : CustomColors.veryLightGrey)),
+              interText('HOME',
+                  fontSize: 8,
+                  color:
+                      index == 0 ? Colors.yellow : CustomColors.veryLightGrey)
+            ],
+          ),
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.18,
+          child: Column(
+            children: [
+              IconButton(
+                  onPressed: () => index == 1
+                      ? null
+                      : Navigator.of(context)
+                          .pushNamed(NavigatorRoutes.teacherHandledSections),
+                  icon: Icon(Icons.class_rounded,
+                      color: index == 1
+                          ? Colors.yellow
+                          : CustomColors.veryLightGrey)),
+              interText('SECTIONS',
+                  fontSize: 8,
+                  color:
+                      index == 1 ? Colors.yellow : CustomColors.veryLightGrey)
+            ],
+          ),
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.18,
+          child: Column(
+            children: [
+              IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.calendar_month,
+                      color: index == 2
+                          ? Colors.yellow
+                          : CustomColors.veryLightGrey)),
+              interText('CALENDAR',
+                  fontSize: 8,
+                  color:
+                      index == 2 ? Colors.yellow : CustomColors.veryLightGrey)
+            ],
+          ),
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.18,
+          child: Column(
+            children: [
+              IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.auto_graph,
+                      color: index == 3
+                          ? Colors.yellow
+                          : CustomColors.veryLightGrey)),
+              interText('PROGRESS',
+                  fontSize: 8,
+                  color:
+                      index == 3 ? Colors.yellow : CustomColors.veryLightGrey)
+            ],
+          ),
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.18,
+          child: Column(
+            children: [
+              IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.message_rounded,
+                      color: index == 4
+                          ? Colors.yellow
+                          : CustomColors.veryLightGrey)),
+              interText('MESSAGES',
+                  fontSize: 8,
+                  color:
+                      index == 4 ? Colors.yellow : CustomColors.veryLightGrey)
+            ],
+          ),
+        ),
+      ],
+    ),
   );
 }
 
@@ -206,34 +264,4 @@ Widget clientBottomNavBar(BuildContext context, {required int index}) {
       ],
     ),
   );
-}
-
-Widget customBottomButton(BuildContext context,
-    {required double width,
-    required int currentIndex,
-    required int thisIndex}) {
-  return SizedBox(
-    width: width,
-    child: Column(
-      children: [
-        IconButton(
-            onPressed: () => currentIndex == thisIndex
-                ? null
-                : Navigator.of(context).pushNamed(NavigatorRoutes.studentHome),
-            icon: Icon(Icons.home,
-                color: currentIndex == thisIndex
-                    ? Colors.yellow
-                    : CustomColors.veryLightGrey)),
-        interText('HOME',
-            fontSize: 8,
-            color: currentIndex == thisIndex
-                ? Colors.yellow
-                : CustomColors.veryLightGrey)
-      ],
-    ),
-  );
-}
-
-Widget blackIcon(IconData iconData) {
-  return Icon(iconData, color: Colors.black);
 }

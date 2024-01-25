@@ -12,6 +12,6 @@ class CustomColors {
   static const Color moderateCyan = Color.fromARGB(255, 73, 168, 185);
 
   //  Teacher Colors
-  static const Color lightGreyishLimeGreen = Color.fromARGB(255, 207, 246, 211);
-  static const Color softLimeGreen = Color.fromARGB(255, 79, 222, 93);
+  //static const Color lightGreyishLimeGreen = Color.fromARGB(255, 207, 246, 211);
+  //static const Color softLimeGreen = Color.fromARGB(255, 79, 222, 93);
 }

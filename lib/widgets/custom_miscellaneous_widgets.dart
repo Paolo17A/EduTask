@@ -5,6 +5,8 @@ import 'package:edutask/widgets/custom_button_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 import '../util/future_util.dart';
 import 'custom_text_widgets.dart';
@@ -201,7 +203,7 @@ Widget sectionMaterialEntry(BuildContext context,
   String title = materialData['title'];
   return vertical10horizontal4(Container(
     decoration: BoxDecoration(
-      color: Colors.grey,
+      color: CustomColors.softOrange,
       border: Border.all(),
       borderRadius: BorderRadius.circular(10),
     ),
@@ -212,31 +214,34 @@ Widget sectionMaterialEntry(BuildContext context,
           child: interText(title, fontSize: 15)),
       ovalButton('REMOVE',
           onPress: () => onRemove(),
-          backgroundColor: CustomColors.softLimeGreen)
+          backgroundColor: CustomColors.verySoftOrange)
     ]),
   ));
 }
 
 Widget studentEntry(BuildContext context,
-    {required DocumentSnapshot studentDoc}) {
+    {required DocumentSnapshot studentDoc, required Function onPress}) {
   final studentData = studentDoc.data() as Map<dynamic, dynamic>;
   String profileImageURL = studentData['profileImageURL'];
   String formattedName =
       '${studentData['firstName']} ${studentData['lastName']}';
-  return vertical10horizontal4(Container(
-    decoration: BoxDecoration(
-      color: CustomColors.moderateCyan.withOpacity(0.75),
-      border: Border.all(),
-      borderRadius: BorderRadius.circular(10),
+  return vertical10horizontal4(InkWell(
+    onTap: () => onPress(),
+    child: Container(
+      decoration: BoxDecoration(
+        color: CustomColors.softOrange,
+        border: Border.all(),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      padding: EdgeInsets.all(10),
+      child: Row(children: [
+        buildProfileImageWidget(profileImageURL: profileImageURL, radius: 20),
+        Gap(20),
+        SizedBox(
+            width: MediaQuery.of(context).size.width * 0.65,
+            child: interText(formattedName, fontSize: 15)),
+      ]),
     ),
-    padding: EdgeInsets.all(10),
-    child: Row(children: [
-      buildProfileImageWidget(profileImageURL: profileImageURL, radius: 20),
-      Gap(20),
-      SizedBox(
-          width: MediaQuery.of(context).size.width * 0.65,
-          child: interText(formattedName, fontSize: 15)),
-    ]),
   ));
 }
 
@@ -321,5 +326,154 @@ Widget assignedSections(List<dynamic> associatedSections) {
       Gap(8),
       Divider(thickness: 4),
     ],
+  );
+}
+
+Widget pendingAssignmentEntry(BuildContext context,
+    {required DocumentSnapshot assignmentDoc}) {
+  final assignmentData = assignmentDoc.data() as Map<dynamic, dynamic>;
+  String title = assignmentData['title'];
+  String subject = assignmentData['subject'];
+  DateTime deadline = (assignmentData['deadline'] as Timestamp).toDate();
+  return ElevatedButton(
+      onPressed: () => NavigatorRoutes.answerAssignment(context,
+          assignmentID: assignmentDoc.id, fromHomeScreen: true),
+      style: ElevatedButton.styleFrom(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          backgroundColor: CustomColors.softOrange,
+          foregroundColor: Colors.white),
+      child: Container(
+        padding: EdgeInsets.all(4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            interText('Subject: $subject',
+                fontWeight: FontWeight.bold, fontSize: 18),
+            interText(
+                'Deadline: ${DateFormat('MMM dd, yyyy').format(deadline)}',
+                fontSize: 18),
+            SizedBox(
+                width: MediaQuery.of(context).size.width * 0.75,
+                child: interText(title, fontSize: 16))
+          ],
+        ),
+      ));
+}
+
+Widget pendingQuizEntry(BuildContext context,
+    {required DocumentSnapshot quizDoc}) {
+  final quizData = quizDoc.data() as Map<dynamic, dynamic>;
+  String title = quizData['title'];
+  String subject = quizData['subject'];
+  return ElevatedButton(
+      onPressed: () => NavigatorRoutes.answerQuiz(context, quizID: quizDoc.id),
+      style: ElevatedButton.styleFrom(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          backgroundColor: CustomColors.softOrange,
+          foregroundColor: Colors.white),
+      child: Container(
+        padding: EdgeInsets.all(4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            interText('Subject: $subject',
+                fontWeight: FontWeight.bold, fontSize: 18),
+            SizedBox(
+                width: MediaQuery.of(context).size.width * 0.75,
+                child: interText(title, fontSize: 16))
+          ],
+        ),
+      ));
+}
+
+Widget submittedAssignmentEntry(BuildContext context,
+    {required DocumentSnapshot submissionDoc}) {
+  final submissionData = submissionDoc.data() as Map<dynamic, dynamic>;
+  num grade = submissionData['grade'];
+  String assignmentID = submissionData['assignmentID'];
+  return all10Pix(
+    child: Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            FutureBuilder(
+                future: getCorrespondingAssignment(assignmentID),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return interText('-');
+                  } else {
+                    final assignmentData =
+                        snapshot.data!.data() as Map<dynamic, dynamic>;
+                    String title = assignmentData['title'];
+                    return SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        child: interText(title, fontWeight: FontWeight.bold));
+                  }
+                }),
+            interText('${grade.toString()}/10', fontWeight: FontWeight.bold)
+          ],
+        ),
+        Gap(8),
+        LinearPercentIndicator(
+          backgroundColor: CustomColors.veryLightGrey,
+          progressColor: CustomColors.softOrange,
+          width: MediaQuery.of(context).size.width * 0.84,
+          padding: EdgeInsets.zero,
+          lineHeight: 20,
+          barRadius: Radius.circular(20),
+          percent: (grade / 100),
+        )
+      ],
+    ),
+  );
+}
+
+Widget answeredQuizEntry(BuildContext context,
+    {required DocumentSnapshot quizResultDoc}) {
+  final quizResultData = quizResultDoc.data() as Map<dynamic, dynamic>;
+  num grade = quizResultData['grade'];
+  String assignmentID = quizResultData['quizID'];
+  return all10Pix(
+    child: Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            FutureBuilder(
+                future: getCorrespondingAssignment(assignmentID),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return interText('-');
+                  } else {
+                    final assignmentData =
+                        snapshot.data!.data() as Map<dynamic, dynamic>;
+                    String title = assignmentData['title'];
+                    return SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        child: interText(title, fontWeight: FontWeight.bold));
+                  }
+                }),
+            interText('${grade.toString()}/100', fontWeight: FontWeight.bold)
+          ],
+        ),
+        Gap(8),
+        LinearPercentIndicator(
+          backgroundColor: CustomColors.veryLightGrey,
+          progressColor: CustomColors.softOrange,
+          width: MediaQuery.of(context).size.width * 0.84,
+          padding: EdgeInsets.zero,
+          lineHeight: 20,
+          barRadius: Radius.circular(20),
+          percent: (grade / 10),
+        )
+      ],
+    ),
   );
 }

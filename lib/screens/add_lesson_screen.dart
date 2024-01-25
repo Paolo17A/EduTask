@@ -105,9 +105,7 @@ class _AddLessonScreenState extends State<AddLessonScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: homeAppBarWidget(context,
-            backgroundColor: CustomColors.lightGreyishLimeGreen,
-            mayGoBack: true),
+        appBar: homeAppBarWidget(context, mayGoBack: true),
         body: stackedLoadingContainer(
             context,
             _isLoading,
@@ -122,7 +120,7 @@ class _AddLessonScreenState extends State<AddLessonScreen> {
                   _additionalResources(),
                   ovalButton('CREATE LESSON',
                       onPress: addNewLesson,
-                      backgroundColor: CustomColors.softLimeGreen)
+                      backgroundColor: CustomColors.veryLightGrey)
                 ],
               )),
             )),

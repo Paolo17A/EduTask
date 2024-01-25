@@ -182,8 +182,7 @@ class _AnswerQuizScreenState extends State<AnswerQuizScreen> {
     return WillPopScope(
       onWillPop: () async => displayExitDialogue(context),
       child: Scaffold(
-        appBar: homeAppBarWidget(context,
-            backgroundColor: CustomColors.verySoftOrange, mayGoBack: true),
+        appBar: homeAppBarWidget(context, mayGoBack: true),
         body: switchedLoadingContainer(
             _isLoading,
             SizedBox(
@@ -212,7 +211,7 @@ class _AnswerQuizScreenState extends State<AnswerQuizScreen> {
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-          color: CustomColors.softOrange.withOpacity(0.75),
+          color: CustomColors.veryLightGrey,
           borderRadius: BorderRadius.circular(30)),
       padding: EdgeInsets.all(15),
       child: Column(
@@ -250,10 +249,12 @@ class _AnswerQuizScreenState extends State<AnswerQuizScreen> {
             children: [
               ovalButton('< PREV',
                   onPress: _previousQuestion,
-                  backgroundColor: CustomColors.softOrange),
+                  backgroundColor: CustomColors.veryDarkGrey,
+                  color: Colors.white),
               ovalButton('NEXT >',
                   onPress: _nextQuestion,
-                  backgroundColor: CustomColors.softOrange)
+                  backgroundColor: CustomColors.veryDarkGrey,
+                  color: Colors.white)
             ],
           ),
         ],

@@ -14,7 +14,10 @@ import 'package:edutask/screens/selected_lesson_screen.dart';
 import 'package:edutask/screens/selected_quiz_result_screen.dart';
 import 'package:edutask/screens/selected_submission_screen.dart';
 import 'package:edutask/screens/selected_user_record_screen.dart';
+import 'package:edutask/screens/student_subject_grades_screen.dart';
+import 'package:edutask/screens/student_subject_materials_screen.dart';
 import 'package:edutask/screens/teacher_selected_section_screen.dart';
+import 'package:edutask/screens/teacher_selected_student_grades_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../screens/edit_assignment_screen.dart';
@@ -89,6 +92,13 @@ class NavigatorRoutes {
         builder: (context) => EditQuizScreen(quizID: quizID)));
   }
 
+  static void teacherSelectedStudentGrades(BuildContext context,
+      {required DocumentSnapshot studentDoc}) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) =>
+            TeacherSelectedStudentGradesScreen(studentDoc: studentDoc)));
+  }
+
   //  STUDENT
   static const studentLogin = '/studentLogin';
   static const studentRegister = '/studentRegister';
@@ -103,6 +113,18 @@ class NavigatorRoutes {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => AnswerAssignmentScreen(
             assignmentID: assignmentID, fromHomeScreen: fromHomeScreen)));
+  }
+
+  static void studentSubjectMaterials(BuildContext context,
+      {required String subject}) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => StudentSubjectMaterialsScreen(subject: subject)));
+  }
+
+  static void studentSubjectGrades(BuildContext context,
+      {required String subject}) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => StudentSubjectGradesScreen(subject: subject)));
   }
 
   //  ADMIN
