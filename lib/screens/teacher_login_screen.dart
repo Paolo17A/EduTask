@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:edutask/providers/teacher_subject_provider.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
@@ -66,9 +65,6 @@ class _TeacherLoginScreenState extends ConsumerState<TeacherLoginScreen> {
         _isLoading = false;
       });
       ref.read(currentUserTypeProvider.notifier).setCurrentUserType('TEACHER');
-      ref
-          .read(teacherSubjectProvider.notifier)
-          .setTeacherSubject(userData['subject']);
       navigator.pushNamed(NavigatorRoutes.teacherHome);
     } catch (error) {
       scaffoldMessenger.showSnackBar(

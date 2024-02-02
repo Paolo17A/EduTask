@@ -1,6 +1,5 @@
 import 'package:edutask/providers/current_user_type_provider.dart';
 import 'package:edutask/providers/student_section_provider.dart';
-import 'package:edutask/providers/teacher_subject_provider.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/util/quit_dialogue_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
@@ -23,7 +22,6 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
     super.initState();
     ref.read(currentUserTypeProvider.notifier).setCurrentUserType('');
     ref.read(studentSectionProvider.notifier).setStudentSection('');
-    ref.read(teacherSubjectProvider.notifier).setTeacherSubject('');
   }
 
   @override

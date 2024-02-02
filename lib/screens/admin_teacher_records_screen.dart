@@ -88,7 +88,10 @@ class _AdminTeacherRecordsScreenState
     return teacherDocs.isNotEmpty
         ? _teacherEntries()
         : interText('NO TEACHERS AVAILABLE',
-            fontWeight: FontWeight.bold, fontSize: 55, color: Colors.black);
+            textAlign: TextAlign.center,
+            fontWeight: FontWeight.bold,
+            fontSize: 55,
+            color: Colors.black);
   }
 
   Widget _teacherEntries() {

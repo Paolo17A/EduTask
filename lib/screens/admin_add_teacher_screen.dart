@@ -4,7 +4,6 @@ import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/app_bottom_nav_bar_widget.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
-import 'package:edutask/widgets/dropdown_widget.dart';
 import 'package:edutask/widgets/edutask_text_field_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +27,6 @@ class _AdminAddTeacherScreenState extends State<AdminAddTeacherScreen> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final teacherNumberController = TextEditingController();
-  String handledSubject = '';
 
   void finishTeacherRegistration() async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
@@ -39,8 +37,7 @@ class _AdminAddTeacherScreenState extends State<AdminAddTeacherScreen> {
           teacherNumberController.text.isEmpty ||
           emailController.text.isEmpty ||
           passwordController.text.isEmpty ||
-          confirmPasswordController.text.isEmpty ||
-          handledSubject.isEmpty) {
+          confirmPasswordController.text.isEmpty) {
         scaffoldMessenger.showSnackBar(const SnackBar(
             content: Text('Please fill up all provided fields.')));
         return;
@@ -90,7 +87,6 @@ class _AdminAddTeacherScreenState extends State<AdminAddTeacherScreen> {
         'firstName': firstNameController.text,
         'lastName': lastNameController.text,
         'handledSections': [],
-        'subject': handledSubject,
         'profileImageURL': ''
       });
 
@@ -125,7 +121,7 @@ class _AdminAddTeacherScreenState extends State<AdminAddTeacherScreen> {
               onPressed: finishTeacherRegistration,
               style: ElevatedButton.styleFrom(
                   backgroundColor: CustomColors.veryLightGrey),
-              child: interText('SAVE\nTEACHER',
+              child: interText('ADD\nTEACHER',
                   color: Colors.black, textAlign: TextAlign.center))
         ]),
         bottomNavigationBar: adminBottomNavBar(context, index: 0),
@@ -144,8 +140,7 @@ class _AdminAddTeacherScreenState extends State<AdminAddTeacherScreen> {
                   _teacherIDNumber(),
                   _teacherFirstName(),
                   _teacherLastName(),
-                  Gap(20),
-                  _sectionDropdown()
+                  Gap(20)
                 ],
               )),
             )),
@@ -243,33 +238,6 @@ class _AdminAddTeacherScreenState extends State<AdminAddTeacherScreen> {
             controller: lastNameController,
             textInputType: TextInputType.name,
             displayPrefixIcon: null)
-      ],
-    ));
-  }
-
-  Widget _sectionDropdown() {
-    return vertical10horizontal4(Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        interText('Handled Subject', fontSize: 18),
-        Container(
-          decoration: BoxDecoration(
-              border: Border.all(), borderRadius: BorderRadius.circular(20)),
-          child: dropdownWidget(handledSubject, (newVal) {
-            setState(() {
-              handledSubject = newVal!;
-            });
-          }, [
-            'SCIENCE',
-            'MATHEMATICS',
-            'ENGLISH',
-            'AP',
-            'FILIPINO',
-            'EPP',
-            'MAPEH',
-            'ESP'
-          ], '', false),
-        ),
       ],
     ));
   }

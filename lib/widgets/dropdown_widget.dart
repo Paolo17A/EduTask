@@ -41,7 +41,6 @@ Widget userDocumentSnapshotDropdownWidget(
   return DropdownButton<String>(
     value: selectedOption,
     items: dropdownDocuments.map((doc) {
-      print(doc.id);
       final docData = doc.data() as Map<dynamic, dynamic>;
       String formattedName = '${docData['firstName']} ${docData['lastName']}';
       return DropdownMenuItem<String>(
@@ -69,9 +68,12 @@ Widget sectionDocumentSnapshotDropdownWidget(
         String sectionName = docData['name'];
         return DropdownMenuItem<String>(
             value: doc.id,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: interText(sectionName),
+            child: SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: interText(sectionName),
+              ),
             ));
       }).toList(),
       onChanged: onDropdownValueChanged,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/providers/selected_subject_provider.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
@@ -9,18 +10,19 @@ import 'package:edutask/widgets/custom_text_widgets.dart';
 import 'package:edutask/widgets/edutask_text_field_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
 import '../widgets/string_choices_radio_widget.dart';
 
-class AddQuizScreen extends StatefulWidget {
+class AddQuizScreen extends ConsumerStatefulWidget {
   const AddQuizScreen({super.key});
 
   @override
-  State<AddQuizScreen> createState() => _AddQuizScreenState();
+  ConsumerState<AddQuizScreen> createState() => _AddQuizScreenState();
 }
 
-class _AddQuizScreenState extends State<AddQuizScreen> {
+class _AddQuizScreenState extends ConsumerState<AddQuizScreen> {
   bool _isLoading = false;
 
   int currentQuestion = 0;
@@ -118,7 +120,6 @@ class _AddQuizScreenState extends State<AddQuizScreen> {
 
     setState(() {
       currentQuestion++;
-      print('current question: $currentQuestion');
       if (currentQuestion == 10) {
         //currentQuestion--;
         addNewQuiz();
@@ -168,17 +169,11 @@ class _AddQuizScreenState extends State<AddQuizScreen> {
         return;
       }
       String encodedQuiz = jsonEncode(quizQuestions);
-      final user = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .get();
-      final userData = user.data() as Map<dynamic, dynamic>;
-      String subject = userData['subject'];
 
       String quizID = DateTime.now().millisecondsSinceEpoch.toString();
       await FirebaseFirestore.instance.collection('quizzes').doc(quizID).set({
         'teacherID': FirebaseAuth.instance.currentUser!.uid,
-        'subject': subject,
+        'subject': ref.read(selectedSubjectProvider),
         'title': _titleController.text.trim(),
         'quizContent': encodedQuiz,
         'associatedSections': []
@@ -221,7 +216,7 @@ class _AddQuizScreenState extends State<AddQuizScreen> {
   Widget _quizTitle() {
     return vertical10horizontal4(
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('QUIZ TITLE',
+        Text('${ref.read(selectedSubjectProvider)} QUIZ TITLE',
             style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
         EduTaskTextField(
             text: 'Quiz Title',

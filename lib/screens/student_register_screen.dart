@@ -234,7 +234,7 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
     return Container(
       width: MediaQuery.of(context).size.width * 0.8,
       decoration: BoxDecoration(
-          color: CustomColors.softOrange.withOpacity(0.5),
+          color: CustomColors.veryLightGrey,
           borderRadius: BorderRadius.circular(30)),
       padding: EdgeInsets.all(20),
       child: Column(

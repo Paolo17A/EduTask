@@ -93,10 +93,10 @@ class NavigatorRoutes {
   }
 
   static void teacherSelectedStudentGrades(BuildContext context,
-      {required DocumentSnapshot studentDoc}) {
+      {required DocumentSnapshot studentDoc, required String subject}) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) =>
-            TeacherSelectedStudentGradesScreen(studentDoc: studentDoc)));
+        builder: (context) => TeacherSelectedStudentGradesScreen(
+            studentDoc: studentDoc, subject: subject)));
   }
 
   //  STUDENT
@@ -162,9 +162,9 @@ class NavigatorRoutes {
   }
 
   static void adminEditStudent(BuildContext context,
-      {required DocumentSnapshot studentDoc}) {
+      {required String studentID}) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => AdminEditStudentScreen(studentDoc: studentDoc)));
+        builder: (context) => AdminEditStudentScreen(studentID: studentID)));
   }
 
   static void adminEditTeacher(BuildContext context,

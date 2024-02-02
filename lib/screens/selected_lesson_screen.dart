@@ -22,6 +22,7 @@ class _SelectedLessonScreenState extends State<SelectedLessonScreen> {
 
   String title = '';
   String content = '';
+  List<dynamic> additionalDocuments = [];
   List<dynamic> additionalResources = [];
 
   @override
@@ -40,6 +41,7 @@ class _SelectedLessonScreenState extends State<SelectedLessonScreen> {
       final lessonData = lesson.data() as Map<dynamic, dynamic>;
       title = lessonData['title'];
       content = lessonData['content'];
+      additionalDocuments = lessonData['additionalDocuments'];
       additionalResources = lessonData['additionalResources'];
       setState(() {
         _isLoading = false;
@@ -56,8 +58,7 @@ class _SelectedLessonScreenState extends State<SelectedLessonScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeAppBarWidget(context,
-          backgroundColor: CustomColors.verySoftOrange, mayGoBack: true),
+      appBar: homeAppBarWidget(context, mayGoBack: true),
       body: switchedLoadingContainer(
           _isLoading,
           SizedBox(
@@ -69,6 +70,7 @@ class _SelectedLessonScreenState extends State<SelectedLessonScreen> {
                     _title(),
                     Gap(20),
                     _content(),
+                    if (additionalDocuments.isNotEmpty) _additionalDocuments(),
                     if (additionalResources.isNotEmpty) _additionalResources()
                   ],
                 ),
@@ -97,31 +99,74 @@ class _SelectedLessonScreenState extends State<SelectedLessonScreen> {
     );
   }
 
+  Widget _additionalDocuments() {
+    return vertical10horizontal4(
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          interText('Supplementary Documents',
+              fontWeight: FontWeight.bold, fontSize: 14),
+          SizedBox(
+            height: 50,
+            child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemCount: additionalDocuments.length,
+                itemBuilder: (context, index) {
+                  Map<dynamic, dynamic> externalDocument =
+                      additionalDocuments[index] as Map<dynamic, dynamic>;
+                  return SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.75,
+                      child: ElevatedButton(
+                          onPressed: () async =>
+                              launchThisURL(externalDocument['docURL']),
+                          style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(),
+                              backgroundColor: CustomColors.softOrange),
+                          child: interText(externalDocument['fileName'],
+                              textAlign: TextAlign.center,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 15)));
+                }),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _additionalResources() {
     return vertical10horizontal4(
-      SizedBox(
-        height: 50,
-        child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-            itemCount: additionalResources.length,
-            itemBuilder: (context, index) {
-              Map<dynamic, dynamic> externalResource =
-                  additionalResources[index] as Map<dynamic, dynamic>;
-              return SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.75,
-                  child: ElevatedButton(
-                      onPressed: () async =>
-                          launchThisURL(externalResource['downloadLink']),
-                      style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(),
-                          backgroundColor: CustomColors.softOrange),
-                      child: interText(externalResource['fileName'],
-                          textAlign: TextAlign.center,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontSize: 15)));
-            }),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          interText('Additional Resources',
+              fontWeight: FontWeight.bold, fontSize: 14),
+          SizedBox(
+            height: 50,
+            child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemCount: additionalResources.length,
+                itemBuilder: (context, index) {
+                  Map<dynamic, dynamic> externalResource =
+                      additionalResources[index] as Map<dynamic, dynamic>;
+                  return SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.75,
+                      child: ElevatedButton(
+                          onPressed: () async =>
+                              launchThisURL(externalResource['downloadLink']),
+                          style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(),
+                              backgroundColor: CustomColors.softOrange),
+                          child: interText(externalResource['fileName'],
+                              textAlign: TextAlign.center,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 15)));
+                }),
+          ),
+        ],
       ),
     );
   }

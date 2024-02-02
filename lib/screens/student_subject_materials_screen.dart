@@ -167,26 +167,29 @@ class _StudentSubjectMaterialsScreenState
                   return interText('Error getting section lessons');
                 }
                 return snapshot.data!.isNotEmpty
-                    ? SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: snapshot.data!.length,
-                          itemBuilder: (context, index) {
-                            final lessonData = snapshot.data![index].data()
-                                as Map<dynamic, dynamic>;
-                            String title = lessonData['title'];
-                            return ElevatedButton(
-                                onPressed: () => NavigatorRoutes.selectedLesson(
-                                    context,
-                                    lessonID: snapshot.data![index].id),
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: CustomColors.softOrange),
-                                child: interText(title,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black));
-                          },
-                        ))
+                    ? all20Pix(
+                        child: SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.3,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: snapshot.data!.length,
+                              itemBuilder: (context, index) {
+                                final lessonData = snapshot.data![index].data()
+                                    as Map<dynamic, dynamic>;
+                                String title = lessonData['title'];
+                                return ElevatedButton(
+                                    onPressed: () =>
+                                        NavigatorRoutes.selectedLesson(context,
+                                            lessonID: snapshot.data![index].id),
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            CustomColors.softOrange),
+                                    child: interText(title,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black));
+                              },
+                            )),
+                      )
                     : interText('NO AVAILABLE LESSONS', fontSize: 20);
               })
         ],

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/providers/selected_subject_provider.dart';
 import 'package:edutask/util/color_util.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
@@ -7,6 +8,7 @@ import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
@@ -14,14 +16,15 @@ import '../widgets/custom_text_widgets.dart';
 import '../widgets/dropdown_widget.dart';
 import '../widgets/edutask_text_field_widget.dart';
 
-class AddAssignmentScreen extends StatefulWidget {
+class AddAssignmentScreen extends ConsumerStatefulWidget {
   const AddAssignmentScreen({super.key});
 
   @override
-  State<AddAssignmentScreen> createState() => _AddAssignmentScreenState();
+  ConsumerState<AddAssignmentScreen> createState() =>
+      _AddAssignmentScreenState();
 }
 
-class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
+class _AddAssignmentScreenState extends ConsumerState<AddAssignmentScreen> {
   bool _isLoading = false;
 
   String assignmentType = '';
@@ -44,12 +47,6 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
       setState(() {
         _isLoading = true;
       });
-      final user = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .get();
-      final userData = user.data() as Map<dynamic, dynamic>;
-      String subject = userData['subject'];
 
       String assignmentID = DateTime.now().millisecondsSinceEpoch.toString();
       await FirebaseFirestore.instance
@@ -57,7 +54,7 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
           .doc(assignmentID)
           .set({
         'teacherID': FirebaseAuth.instance.currentUser!.uid,
-        'subject': subject,
+        'subject': ref.read(selectedSubjectProvider),
         'title': titleController.text,
         'directions': directionsController.text,
         'assignmentType': assignmentType,
@@ -131,7 +128,7 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
   }
 
   Widget newAssignmentHeader() {
-    return interText('NEW ASSIGNMENT',
+    return interText('NEW ${ref.read(selectedSubjectProvider)} ASSIGNMENT',
         fontSize: 40, textAlign: TextAlign.center, color: Colors.black);
   }
 

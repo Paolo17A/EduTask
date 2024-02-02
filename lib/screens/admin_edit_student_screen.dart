@@ -13,8 +13,8 @@ import '../widgets/dropdown_widget.dart';
 import '../widgets/edutask_text_field_widget.dart';
 
 class AdminEditStudentScreen extends ConsumerStatefulWidget {
-  final DocumentSnapshot studentDoc;
-  const AdminEditStudentScreen({super.key, required this.studentDoc});
+  final String studentID;
+  const AdminEditStudentScreen({super.key, required this.studentID});
 
   @override
   ConsumerState<AdminEditStudentScreen> createState() =>
@@ -34,45 +34,101 @@ class _AdminEditStudentScreenState
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final studentData = widget.studentDoc.data() as Map<dynamic, dynamic>;
+      getStudentData();
+    });
+  }
+
+  void getStudentData() async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    try {
+      final student = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.studentID)
+          .get();
+      final studentData = student.data() as Map<dynamic, dynamic>;
       studentNumberController.text = studentData['IDNumber'];
       firstNameController.text = studentData['firstName'];
       lastNameController.text = studentData['lastName'];
+      selectedSection = studentData['section'];
       final sections =
           await FirebaseFirestore.instance.collection('sections').get();
       availableSectionDocs = sections.docs;
-      selectedSection = studentData['section'];
       setState(() {
         _isLoading = false;
       });
-    });
+    } catch (error) {
+      scaffoldMessenger.showSnackBar(
+          SnackBar(content: Text('Error getting student data: $error')));
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   void saveStudentData() async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
     try {
+      final student = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.studentID)
+          .get();
+      final studentData = student.data() as Map<dynamic, dynamic>;
+      String currentSection = studentData['section'];
+
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(widget.studentDoc.id)
+          .doc(widget.studentID)
           .update({
-        'userType': 'STUDENT',
         'IDNumber': studentNumberController.text,
         'firstName': firstNameController.text,
         'lastName': lastNameController.text,
-        'section': selectedSection
       });
+
+      if (currentSection != selectedSection) {
+        await switchStudentSection(currentSection, selectedSection);
+      }
+
       scaffoldMessenger.showSnackBar(
-          SnackBar(content: Text('Successfully savedc student data.')));
-      setState(() {
-        _isLoading = false;
-      });
+          SnackBar(content: Text('Successfully saved student data.')));
+      setState(() {});
       navigator.pop();
       navigator.pop();
       navigator.pushReplacementNamed(NavigatorRoutes.adminStudentRecords);
     } catch (error) {
       scaffoldMessenger.showSnackBar(
           SnackBar(content: Text('Error saving student data: $error')));
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future switchStudentSection(String oldSection, String newSection) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.studentID)
+          .update({'section': newSection});
+      await FirebaseFirestore.instance
+          .collection('sections')
+          .doc(oldSection)
+          .update({
+        'students': FieldValue.arrayRemove([widget.studentID])
+      });
+      await FirebaseFirestore.instance
+          .collection('sections')
+          .doc(newSection)
+          .update({
+        'students': FieldValue.arrayUnion([widget.studentID])
+      });
+    } catch (error) {
+      scaffoldMessenger.showSnackBar(
+          SnackBar(content: Text('Error switching student section: $error')));
       setState(() {
         _isLoading = false;
       });
@@ -104,7 +160,9 @@ class _AdminEditStudentScreenState
                   _studentIDNumber(),
                   _studentFirstName(),
                   _studentLastName(),
-                  if (availableSectionDocs.isNotEmpty) _sectionDropdown()
+                  if (selectedSection.isNotEmpty &&
+                      availableSectionDocs.isNotEmpty)
+                    _sectionDropdown()
                 ],
               )),
             )),
@@ -175,6 +233,7 @@ class _AdminEditStudentScreenState
             setState(() {
               selectedSection = newVal!;
             });
+            //switchStudentSection(selectedSection, newVal!);
           }, availableSectionDocs),
         ],
       ),

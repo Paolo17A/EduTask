@@ -1,11 +1,13 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/providers/selected_subject_provider.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
 import '../util/color_util.dart';
@@ -16,14 +18,14 @@ import '../widgets/custom_button_widgets.dart';
 import '../widgets/custom_miscellaneous_widgets.dart';
 import '../widgets/custom_text_widgets.dart';
 
-class LessonPlanScreen extends StatefulWidget {
+class LessonPlanScreen extends ConsumerStatefulWidget {
   const LessonPlanScreen({super.key});
 
   @override
-  State<LessonPlanScreen> createState() => _LessonPlanScreenState();
+  ConsumerState<LessonPlanScreen> createState() => _LessonPlanScreenState();
 }
 
-class _LessonPlanScreenState extends State<LessonPlanScreen> {
+class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
   bool _isLoading = true;
   List<DocumentSnapshot> lessonDocs = [];
   List<DocumentSnapshot> quizDocs = [];
@@ -225,8 +227,8 @@ class _LessonPlanScreenState extends State<LessonPlanScreen> {
         title: interText('LESSONS'),
         children: [
           ovalButton('CREATE LESSON',
-              onPress: () =>
-                  Navigator.of(context).pushNamed(NavigatorRoutes.addLesson),
+              onPress: () => showSubjectSelectDialog(() =>
+                  Navigator.of(context).pushNamed(NavigatorRoutes.addLesson)),
               backgroundColor: CustomColors.veryLightGrey),
           Gap(15),
           lessonDocs.isNotEmpty
@@ -267,8 +269,8 @@ class _LessonPlanScreenState extends State<LessonPlanScreen> {
         title: interText('ASSIGNMENTS'),
         children: [
           ovalButton('CREATE ASSIGNMENT',
-              onPress: () => Navigator.of(context)
-                  .pushNamed(NavigatorRoutes.addAssignment),
+              onPress: () => showSubjectSelectDialog(() => Navigator.of(context)
+                  .pushNamed(NavigatorRoutes.addAssignment)),
               backgroundColor: CustomColors.veryLightGrey),
           Gap(15),
           assignmentDocs.isNotEmpty
@@ -309,8 +311,8 @@ class _LessonPlanScreenState extends State<LessonPlanScreen> {
         title: interText('QUIZZES'),
         children: [
           ovalButton('CREATE QUIZ',
-              onPress: () =>
-                  Navigator.of(context).pushNamed(NavigatorRoutes.addQuiz),
+              onPress: () => showSubjectSelectDialog(() =>
+                  Navigator.of(context).pushNamed(NavigatorRoutes.addQuiz)),
               backgroundColor: CustomColors.veryLightGrey),
           Gap(15),
           quizDocs.isNotEmpty
@@ -333,6 +335,45 @@ class _LessonPlanScreenState extends State<LessonPlanScreen> {
               : interText('NO AVAILABLE QUIZZES', fontSize: 20)
         ],
       ),
+    );
+  }
+
+  void showSubjectSelectDialog(Function onPress) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              content: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    interText('SELECT SUBJECT',
+                        fontWeight: FontWeight.bold, fontSize: 20),
+                    _subjectTile('AP', onPress),
+                    _subjectTile('ENGLISH', onPress),
+                    _subjectTile('EPP', onPress),
+                    _subjectTile('ESP', onPress),
+                    _subjectTile('FILIPINO', onPress),
+                    _subjectTile('MATH', onPress),
+                    _subjectTile('MAPEH', onPress),
+                    _subjectTile('SCIENCE', onPress),
+                  ],
+                ),
+              ),
+            ));
+  }
+
+  Widget _subjectTile(String label, Function onPress) {
+    return InkWell(
+      onTap: () {
+        ref.read(selectedSubjectProvider.notifier).setSelectedSubject(label);
+        Navigator.of(context).pop();
+        onPress();
+      },
+      child: Container(
+          decoration: BoxDecoration(border: Border.all()),
+          padding: EdgeInsets.all(10),
+          child: Center(
+            child: interText(label, fontSize: 20),
+          )),
     );
   }
 }

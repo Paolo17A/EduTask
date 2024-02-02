@@ -155,3 +155,11 @@ Future<String> getAssignmentTitle(String assignmentID) async {
   final assignmentData = assignment.data() as Map<dynamic, dynamic>;
   return assignmentData['title'];
 }
+
+Future<List<DocumentSnapshot>> getTeacherDocs() async {
+  final teachers = await FirebaseFirestore.instance
+      .collection('users')
+      .where('userType', isEqualTo: 'TEACHER')
+      .get();
+  return teachers.docs;
+}

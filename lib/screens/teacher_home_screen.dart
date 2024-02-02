@@ -30,7 +30,6 @@ class TeacherHomeScreen extends ConsumerStatefulWidget {
 class _TeacherHomeScreenState extends ConsumerState<TeacherHomeScreen> {
   bool _isLoading = true;
   String profileImageURL = '';
-  String subject = '';
 
   @override
   void didChangeDependencies() {
@@ -48,7 +47,6 @@ class _TeacherHomeScreenState extends ConsumerState<TeacherHomeScreen> {
       final userData = user.data() as Map<dynamic, dynamic>;
       profileImageURL = userData['profileImageURL'];
       ref.read(profileImageProvider.notifier).setProfileImage(profileImageURL);
-      subject = userData['subject'];
 
       setState(() {
         _isLoading = false;
@@ -71,8 +69,7 @@ class _TeacherHomeScreenState extends ConsumerState<TeacherHomeScreen> {
         drawer: appDrawer(context,
             profileImageURL: ref.read(profileImageProvider),
             userType: ref.read(currentUserTypeProvider),
-            isHome: true,
-            subject: subject),
+            isHome: true),
         bottomNavigationBar: teacherBottomNavBar(context, index: 0),
         body: switchedLoadingContainer(
             _isLoading,

@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/util/future_util.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
@@ -26,15 +27,8 @@ class _AdminSelectedSectionScreenState
   bool _isLoading = true;
 
   String sectionName = '';
+  String adviserName = '';
   List<DocumentSnapshot> associatedTeacherDocs = [];
-  String scienceTeacherID = '';
-  String mathTeacherID = '';
-  String englishTeacherID = '';
-  String apTeacherID = '';
-  String filipinoTeacherID = '';
-  String eppTeacherID = '';
-  String mapehTeacherID = '';
-  String espTeacherID = '';
   List<DocumentSnapshot> associatedStudentDocs = [];
 
   @override
@@ -42,46 +36,15 @@ class _AdminSelectedSectionScreenState
     super.didChangeDependencies();
     final sectionData = widget.sectionDoc.data() as Map<dynamic, dynamic>;
     sectionName = sectionData['name'];
-    List<dynamic> associatedTeacherIDs = [];
-    scienceTeacherID = sectionData['SCIENCE'];
-    if (scienceTeacherID.isNotEmpty) {
-      associatedTeacherIDs.add(sectionData['SCIENCE']);
-    }
-    mathTeacherID = sectionData['MATHEMATICS'];
-    if (mathTeacherID.isNotEmpty) {
-      associatedTeacherIDs.add(sectionData['MATHEMATICS']);
-    }
-    englishTeacherID = sectionData['ENGLISH'];
-    if (englishTeacherID.isNotEmpty) {
-      associatedTeacherIDs.add(sectionData['ENGLISH']);
-    }
-    apTeacherID = sectionData['AP'];
-    if (apTeacherID.isNotEmpty) {
-      associatedTeacherIDs.add(sectionData['AP']);
-    }
-    filipinoTeacherID = sectionData['FILIPINO'];
-    if (filipinoTeacherID.isNotEmpty) {
-      associatedTeacherIDs.add(sectionData['FILIPINO']);
-    }
-    eppTeacherID = sectionData['EPP'];
-    if (eppTeacherID.isNotEmpty) {
-      associatedTeacherIDs.add(sectionData['EPP']);
-    }
-    espTeacherID = sectionData['ESP'];
-    if (espTeacherID.isNotEmpty) {
-      associatedTeacherIDs.add(sectionData['ESP']);
-    }
-    mapehTeacherID = sectionData['MAPEH'];
-    if (mapehTeacherID.isNotEmpty) {
-      associatedTeacherIDs.add(sectionData['MAPEH']);
-    }
+    List<dynamic> associatedTeacherIDs = sectionData['teachers'];
     List<dynamic> students = sectionData['students'];
+    String adviser = sectionData['adviser'];
 
-    getSectionUsers(associatedTeacherIDs, students);
+    getSectionUsers(associatedTeacherIDs, students, adviser);
   }
 
-  void getSectionUsers(
-      List<dynamic> teacherIDs, List<dynamic> studentIDs) async {
+  void getSectionUsers(List<dynamic> teacherIDs, List<dynamic> studentIDs,
+      String adviserID) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
       //  GET ASSOCIATED TEACHERS
@@ -100,6 +63,10 @@ class _AdminSelectedSectionScreenState
             .where(FieldPath.documentId, whereIn: studentIDs)
             .get();
         associatedStudentDocs = studentsQuery.docs;
+      }
+
+      if (adviserID.isNotEmpty) {
+        adviserName = await getUserName(adviserID);
       }
 
       setState(() {
@@ -127,7 +94,7 @@ class _AdminSelectedSectionScreenState
       },
       child: Scaffold(
           appBar: homeAppBarWidget(context,
-              backgroundColor: CustomColors.verySoftCyan, mayGoBack: true),
+              backgroundColor: CustomColors.veryDarkGrey, mayGoBack: true),
           body: switchedLoadingContainer(
               _isLoading,
               SingleChildScrollView(
@@ -135,8 +102,9 @@ class _AdminSelectedSectionScreenState
                   child: Column(
                     children: [
                       selectedSectionHeader(),
-                      if (!_isLoading) _sectionTeachersContainer(),
-                      if (!_isLoading) _expandableStudents(),
+                      _sectionAdviser(),
+                      _expandableTeachers(),
+                      _expandableStudents(),
                       ovalButton('EDIT SECTION',
                           onPress: () => NavigatorRoutes.adminEditSection(
                               context,
@@ -156,160 +124,55 @@ class _AdminSelectedSectionScreenState
         fontSize: 40, textAlign: TextAlign.center, color: Colors.black);
   }
 
-  Widget _sectionTeachersContainer() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [_teacher1stColumn(), _teacher2ndColumn()],
-    );
-  }
-
-  Widget _teacher1stColumn() {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.4,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _scienceTeacher(),
-          _mathTeacher(),
-          _englishTeacher(),
-          _apTeacher()
-        ],
-      ),
-    );
-  }
-
-  Widget _teacher2ndColumn() {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.4,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _filipinoTeacher(),
-          _eppTeacher(),
-          _espTeacher(),
-          _mapehTeacher()
-        ],
-      ),
-    );
-  }
-
-  Widget _scienceTeacher() {
-    String formattedName = '';
-    if (scienceTeacherID.isNotEmpty) {
-      DocumentSnapshot teacherDoc = associatedTeacherDocs.where((teacher) {
-        return teacher.id == scienceTeacherID;
-      }).first;
-      final teacherData = teacherDoc.data() as Map<dynamic, dynamic>;
-      formattedName = '${teacherData['firstName']} ${teacherData['lastName']}';
-    }
-
-    return sectionTeacherContainer(context,
-        subjectLabel: 'SCIENCE TEACHER', formattedName: formattedName);
-  }
-
-  Widget _mathTeacher() {
-    String formattedName = '';
-    if (mathTeacherID.isNotEmpty) {
-      DocumentSnapshot teacherDoc = associatedTeacherDocs.where((teacher) {
-        return teacher.id == mathTeacherID;
-      }).first;
-      final teacherData = teacherDoc.data() as Map<dynamic, dynamic>;
-      formattedName = '${teacherData['firstName']} ${teacherData['lastName']}';
-    }
-
-    return sectionTeacherContainer(context,
-        subjectLabel: 'MATH TEACHER', formattedName: formattedName);
-  }
-
-  Widget _englishTeacher() {
-    String formattedName = '';
-    if (englishTeacherID.isNotEmpty) {
-      print('ENGLISH TEACHER ID: $englishTeacherID');
-      DocumentSnapshot teacherDoc = associatedTeacherDocs.where((teacher) {
-        print('current teacher: ${teacher.id}');
-        return teacher.id == englishTeacherID;
-      }).first;
-      final teacherData = teacherDoc.data() as Map<dynamic, dynamic>;
-      formattedName = '${teacherData['firstName']} ${teacherData['lastName']}';
-    }
-
-    return sectionTeacherContainer(context,
-        subjectLabel: 'ENGLISH TEACHER', formattedName: formattedName);
-  }
-
-  Widget _apTeacher() {
-    String formattedName = '';
-    if (apTeacherID.isNotEmpty) {
-      DocumentSnapshot teacherDoc = associatedTeacherDocs.where((teacher) {
-        return teacher.id == apTeacherID;
-      }).first;
-      final teacherData = teacherDoc.data() as Map<dynamic, dynamic>;
-      formattedName = '${teacherData['firstName']} ${teacherData['lastName']}';
-    }
-
-    return sectionTeacherContainer(context,
-        subjectLabel: 'AP TEACHER', formattedName: formattedName);
-  }
-
-  Widget _filipinoTeacher() {
-    String formattedName = '';
-    if (filipinoTeacherID.isNotEmpty) {
-      DocumentSnapshot teacherDoc = associatedTeacherDocs.where((teacher) {
-        return teacher.id == filipinoTeacherID;
-      }).first;
-      final teacherData = teacherDoc.data() as Map<dynamic, dynamic>;
-      formattedName = '${teacherData['firstName']} ${teacherData['lastName']}';
-    }
-
-    return sectionTeacherContainer(context,
-        subjectLabel: 'FILIPINO TEACHER', formattedName: formattedName);
-  }
-
-  Widget _eppTeacher() {
-    String formattedName = '';
-    if (eppTeacherID.isNotEmpty) {
-      DocumentSnapshot teacherDoc = associatedTeacherDocs.where((teacher) {
-        return teacher.id == eppTeacherID;
-      }).first;
-      final teacherData = teacherDoc.data() as Map<dynamic, dynamic>;
-      formattedName = '${teacherData['firstName']} ${teacherData['lastName']}';
-    }
-
-    return sectionTeacherContainer(context,
-        subjectLabel: 'EPP TEACHER', formattedName: formattedName);
-  }
-
-  Widget _espTeacher() {
-    String formattedName = '';
-    if (espTeacherID.isNotEmpty) {
-      DocumentSnapshot teacherDoc = associatedTeacherDocs.where((teacher) {
-        return teacher.id == espTeacherID;
-      }).first;
-      final teacherData = teacherDoc.data() as Map<dynamic, dynamic>;
-      formattedName = '${teacherData['firstName']} ${teacherData['lastName']}';
-    }
-
-    return sectionTeacherContainer(context,
-        subjectLabel: 'ESP TEACHER', formattedName: formattedName);
-  }
-
-  Widget _mapehTeacher() {
-    String formattedName = '';
-    if (mapehTeacherID.isNotEmpty) {
-      DocumentSnapshot teacherDoc = associatedTeacherDocs.where((teacher) {
-        return teacher.id == mapehTeacherID;
-      }).first;
-      final teacherData = teacherDoc.data() as Map<dynamic, dynamic>;
-      formattedName = '${teacherData['firstName']} ${teacherData['lastName']}';
-    }
-
-    return sectionTeacherContainer(context,
-        subjectLabel: 'MAPEH TEACHER', formattedName: formattedName);
-  }
-
   //  STUDENT WIDGETS
   //============================================================================
+
+  Widget _sectionAdviser() {
+    return vertical20Pix(
+        child: Row(
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            interText('Section Adviser:', fontSize: 24),
+            interText(adviserName.isNotEmpty ? adviserName : 'N/A',
+                fontSize: 20)
+          ],
+        ),
+      ],
+    ));
+  }
+
+  Widget _expandableTeachers() {
+    return vertical20Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.moderateCyan.withOpacity(0.5),
+        backgroundColor: CustomColors.moderateCyan.withOpacity(0.5),
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('ASSIGNED TEACHERS'),
+        children: [
+          associatedTeacherDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: associatedTeacherDocs.length,
+                      itemBuilder: (context, index) => studentEntry(context,
+                          studentDoc: associatedTeacherDocs[index],
+                          onPress: () {},
+                          backgroundColor: CustomColors.moderateCyan)),
+                )
+              : interText('NO ASSIGNED TEACHERS', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
   Widget _expandableStudents() {
     return vertical20Pix(
       child: ExpansionTile(
@@ -331,7 +194,8 @@ class _AdminSelectedSectionScreenState
                       itemCount: associatedStudentDocs.length,
                       itemBuilder: (context, index) => studentEntry(context,
                           studentDoc: associatedStudentDocs[index],
-                          onPress: () {})),
+                          onPress: () {},
+                          backgroundColor: CustomColors.moderateCyan)),
                 )
               : interText('NO ENROLLED STUDENTS', fontSize: 20)
         ],

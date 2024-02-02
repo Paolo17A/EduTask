@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/util/delete_entry_dialog_util.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/custom_button_widgets.dart';
@@ -29,6 +30,7 @@ class _EditLessonScreenState extends State<EditLessonScreen> {
   List<dynamic> additionalResources = [];
   final List<TextEditingController> _fileNameControllers = [];
   final List<TextEditingController> _downloadLinkControllers = [];
+  List<dynamic> additionalDocuments = [];
 
   @override
   void didChangeDependencies() {
@@ -56,6 +58,7 @@ class _EditLessonScreenState extends State<EditLessonScreen> {
         _downloadLinkControllers.add(TextEditingController());
         _downloadLinkControllers[i].text = resourceEntry['downloadLink'];
       }
+      additionalDocuments = lessonData['additionalDocuments'];
 
       setState(() {
         _isLoading = false;
@@ -149,6 +152,7 @@ class _EditLessonScreenState extends State<EditLessonScreen> {
                   Gap(30),
                   _lessonTitle(),
                   _lessonContent(),
+                  _additionalDocuments(),
                   _additionalResources(),
                   ovalButton('EDIT LESSON',
                       onPress: editLesson,
@@ -192,6 +196,73 @@ class _EditLessonScreenState extends State<EditLessonScreen> {
               controller: contentController,
               textInputType: TextInputType.multiline,
               displayPrefixIcon: null),
+        ],
+      ),
+    );
+  }
+
+  Widget _additionalDocuments() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 30),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              interText('Additional Documents', fontWeight: FontWeight.bold),
+              ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(shape: CircleBorder()),
+                child: interText('+',
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontSize: 20),
+              )
+            ],
+          ),
+          if (additionalDocuments.isNotEmpty)
+            ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: additionalDocuments.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.7,
+                          child: Column(children: [
+                            Row(
+                              children: [
+                                Text('Resource # ${index + 1}',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w300)),
+                              ],
+                            ),
+                            interText(additionalDocuments[index]['fileName']),
+                          ]),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => displayDeleteEntryDialog(context,
+                              message:
+                                  'Are you sure you want to delete this supplementary document?',
+                              deleteWord: 'Delete', deleteEntry: () {
+                            setState(() {
+                              additionalDocuments.removeAt(index);
+                            });
+                          }),
+                          style:
+                              ElevatedButton.styleFrom(shape: CircleBorder()),
+                          child: const Icon(Icons.delete_rounded,
+                              color: Colors.black),
+                        )
+                      ],
+                    ),
+                  );
+                }),
         ],
       ),
     );

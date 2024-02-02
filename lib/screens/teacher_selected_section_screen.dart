@@ -581,7 +581,8 @@ class _TeacherSelectedSectionScreenState
                           onPress: () =>
                               NavigatorRoutes.teacherSelectedStudentGrades(
                                   context,
-                                  studentDoc: associatedStudentDocs[index]))),
+                                  studentDoc: associatedStudentDocs[index],
+                                  subject: ''))),
                 )
               : interText('NO ENROLLED STUDENTS', fontSize: 20)
         ],

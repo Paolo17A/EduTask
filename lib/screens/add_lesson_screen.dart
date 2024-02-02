@@ -1,29 +1,37 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/providers/selected_subject_provider.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/custom_button_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
 import '../util/color_util.dart';
+import '../util/string_util.dart';
 import '../widgets/custom_text_widgets.dart';
 import '../widgets/edutask_text_field_widget.dart';
 
-class AddLessonScreen extends StatefulWidget {
+class AddLessonScreen extends ConsumerStatefulWidget {
   const AddLessonScreen({super.key});
 
   @override
-  State<AddLessonScreen> createState() => _AddLessonScreenState();
+  ConsumerState<AddLessonScreen> createState() => _AddLessonScreenState();
 }
 
-class _AddLessonScreenState extends State<AddLessonScreen> {
+class _AddLessonScreenState extends ConsumerState<AddLessonScreen> {
   bool _isLoading = false;
 
   final titleController = TextEditingController();
   final contentController = TextEditingController();
+  final List<File?> _documentFiles = [];
   final List<TextEditingController> _fileNameControllers = [];
   final List<TextEditingController> _downloadLinkControllers = [];
 
@@ -67,20 +75,34 @@ class _AddLessonScreenState extends State<AddLessonScreen> {
         });
       }
 
-      final user = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .get();
-      final userData = user.data() as Map<dynamic, dynamic>;
-      String subject = userData['subject'];
+      //  Handle Portfolio Entries
+      List<Map<String, String>> documentEntries = [];
+      for (var docFile in _documentFiles) {
+        String hex =
+            '${generateRandomHexString(6)}.${docFile!.path.split('.').last}';
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('lessons')
+            .child(lessonID)
+            .child(hex);
+        final uploadTask = storageRef.putFile(docFile);
+        final taskSnapshot = await uploadTask.whenComplete(() {});
+        final String downloadURL = await taskSnapshot.ref.getDownloadURL();
+        documentEntries.add({
+          'id': hex,
+          'fileName': docFile.path.split('/').last,
+          'docURL': downloadURL
+        });
+      }
 
       //  1. Create Lesson Document and indicate it's associated sections
       await FirebaseFirestore.instance.collection('lessons').doc(lessonID).set({
         'teacherID': FirebaseAuth.instance.currentUser!.uid,
-        'subject': subject,
+        'subject': ref.read(selectedSubjectProvider),
         'title': titleController.text,
         'content': contentController.text,
         'additionalResources': additionalResources,
+        'additionalDocuments': documentEntries,
         'associatedSections': []
       });
 
@@ -96,6 +118,20 @@ class _AddLessonScreenState extends State<AddLessonScreen> {
           SnackBar(content: Text('Error adding new lesson: $error')));
       setState(() {
         _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _pickDocument() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf', 'doc'],
+        allowMultiple: false);
+
+    if (result != null) {
+      File file = File(result.files.single.path!);
+      setState(() {
+        _documentFiles.add(file);
       });
     }
   }
@@ -117,6 +153,7 @@ class _AddLessonScreenState extends State<AddLessonScreen> {
                   Gap(30),
                   _lessonTitle(),
                   _lessonContent(),
+                  _additionalDocuments(),
                   _additionalResources(),
                   ovalButton('CREATE LESSON',
                       onPress: addNewLesson,
@@ -129,7 +166,7 @@ class _AddLessonScreenState extends State<AddLessonScreen> {
   }
 
   Widget newLessonHeader() {
-    return interText('NEW LESSON',
+    return interText('NEW ${ref.read(selectedSubjectProvider)} LESSON',
         fontSize: 40, textAlign: TextAlign.center, color: Colors.black);
   }
 
@@ -160,6 +197,71 @@ class _AddLessonScreenState extends State<AddLessonScreen> {
               controller: contentController,
               textInputType: TextInputType.multiline,
               displayPrefixIcon: null),
+        ],
+      ),
+    );
+  }
+
+  Widget _additionalDocuments() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 30),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              interText('Additional Documents', fontWeight: FontWeight.bold),
+              ElevatedButton(
+                onPressed: _pickDocument,
+                style: ElevatedButton.styleFrom(shape: CircleBorder()),
+                child: interText('+',
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontSize: 20),
+              )
+            ],
+          ),
+          if (_documentFiles.isNotEmpty)
+            ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: _documentFiles.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.7,
+                          child: Column(children: [
+                            Row(
+                              children: [
+                                Text('Resource # ${index + 1}',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w300)),
+                              ],
+                            ),
+                            interText(
+                                _documentFiles[index]!.path.split('/').last),
+                          ]),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              _documentFiles.removeAt(index);
+                            });
+                          },
+                          style:
+                              ElevatedButton.styleFrom(shape: CircleBorder()),
+                          child: const Icon(Icons.delete_rounded,
+                              color: Colors.black),
+                        )
+                      ],
+                    ),
+                  );
+                }),
         ],
       ),
     );

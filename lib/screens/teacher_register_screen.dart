@@ -6,7 +6,6 @@ import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_miscellaneous_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:edutask/widgets/custom_text_widgets.dart';
-import 'package:edutask/widgets/dropdown_widget.dart';
 import 'package:edutask/widgets/edutask_text_field_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +29,6 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-  String handledSubject = '';
   final teacherNumberController = TextEditingController();
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
@@ -134,9 +132,7 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
     try {
-      if (handledSubject.isEmpty ||
-          firstNameController.text.isEmpty ||
-          lastNameController.text.isEmpty) {
+      if (firstNameController.text.isEmpty || lastNameController.text.isEmpty) {
         scaffoldMessenger.showSnackBar(const SnackBar(
             content: Text('Please fill up all provided fields.')));
         return;
@@ -153,10 +149,10 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
         'userType': 'TEACHER',
         'email': emailController.text,
         'password': passwordController.text,
-        'subject': handledSubject,
         'IDNumber': teacherNumberController.text,
         'firstName': firstNameController.text,
         'lastName': lastNameController.text,
+        'advisorySection': '',
         'handledSections': [],
         'profileImageURL': ''
       });
@@ -236,7 +232,6 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
     return all20Pix(
         child: Column(
       children: [
-        _sectionDropdown(),
         _teacherNumber(),
         _firstName(),
         _lastName(),
@@ -285,33 +280,6 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
             controller: confirmPasswordController,
             textInputType: TextInputType.visiblePassword,
             displayPrefixIcon: const Icon(Icons.lock)),
-      ],
-    ));
-  }
-
-  Widget _sectionDropdown() {
-    return vertical10horizontal4(Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        interText('Handled Subject', fontSize: 18),
-        Container(
-          decoration: BoxDecoration(
-              border: Border.all(), borderRadius: BorderRadius.circular(20)),
-          child: dropdownWidget(handledSubject, (newVal) {
-            setState(() {
-              handledSubject = newVal!;
-            });
-          }, [
-            'SCIENCE',
-            'MATHEMATICS',
-            'ENGLISH',
-            'AP',
-            'FILIPINO',
-            'EPP',
-            'MAPEH',
-            'ESP'
-          ], '', false),
-        ),
       ],
     ));
   }

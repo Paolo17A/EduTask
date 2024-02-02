@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../widgets/app_bottom_nav_bar_widget.dart';
-import '../widgets/dropdown_widget.dart';
 import '../widgets/edutask_text_field_widget.dart';
 
 class AdminEditTeacherScreen extends ConsumerStatefulWidget {
@@ -27,7 +26,6 @@ class _AdminEditTeacherScreenState
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final teacherNumberController = TextEditingController();
-  String handledSubject = '';
 
   @override
   void initState() {
@@ -37,7 +35,6 @@ class _AdminEditTeacherScreenState
       teacherNumberController.text = teacherData['IDNumber'];
       firstNameController.text = teacherData['firstName'];
       lastNameController.text = teacherData['lastName'];
-      handledSubject = teacherData['subject'];
       setState(() {
         _isLoading = false;
       });
@@ -54,8 +51,7 @@ class _AdminEditTeacherScreenState
           .update({
         'IDNumber': teacherNumberController.text,
         'firstName': firstNameController.text,
-        'lastName': lastNameController.text,
-        'subject': handledSubject
+        'lastName': lastNameController.text
       });
       scaffoldMessenger.showSnackBar(
           SnackBar(content: Text('Successfully saved teacher data.')));
@@ -98,8 +94,7 @@ class _AdminEditTeacherScreenState
                   _teacherHeader(),
                   _teacherIDNumber(),
                   _teacherFirstName(),
-                  _teacherLastName(),
-                  _sectionDropdown()
+                  _teacherLastName()
                 ],
               )),
             )),
@@ -153,33 +148,6 @@ class _AdminEditTeacherScreenState
             controller: lastNameController,
             textInputType: TextInputType.name,
             displayPrefixIcon: null)
-      ],
-    ));
-  }
-
-  Widget _sectionDropdown() {
-    return vertical10horizontal4(Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        interText('Handled Subject', fontSize: 20),
-        Container(
-          decoration: BoxDecoration(
-              border: Border.all(), borderRadius: BorderRadius.circular(10)),
-          child: dropdownWidget(handledSubject, (newVal) {
-            setState(() {
-              handledSubject = newVal!;
-            });
-          }, [
-            'SCIENCE',
-            'MATHEMATICS',
-            'ENGLISH',
-            'AP',
-            'FILIPINO',
-            'EPP',
-            'MAPEH',
-            'ESP'
-          ], handledSubject, false),
-        ),
       ],
     ));
   }

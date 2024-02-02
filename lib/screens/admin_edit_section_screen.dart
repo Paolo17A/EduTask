@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/util/delete_entry_dialog_util.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/app_bottom_nav_bar_widget.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import '../util/color_util.dart';
+import '../util/future_util.dart';
 import '../widgets/custom_padding_widgets.dart';
 import '../widgets/custom_text_widgets.dart';
 import '../widgets/dropdown_widget.dart';
@@ -28,22 +30,10 @@ class _AdminEditSectionState extends State<AdminEditSection> {
 
   //  TEACHERS
   List<DocumentSnapshot> teacherDocs = [];
-  List<DocumentSnapshot> scienceTeachers = [];
-  String selectedScienceTeacherID = '';
-  List<DocumentSnapshot> mathTeachers = [];
-  String selectedMathTeacherID = '';
-  List<DocumentSnapshot> englishTeachers = [];
-  String selectedEnglishTeacherID = '';
-  List<DocumentSnapshot> apTeachers = [];
-  String selectedAPTeacherID = '';
-  List<DocumentSnapshot> filipinoTeachers = [];
-  String selectedFilipinoTeacherID = '';
-  List<DocumentSnapshot> eppTeachers = [];
-  String selectedEPPTeacherID = '';
-  List<DocumentSnapshot> mapehTeachers = [];
-  String selectedMAPEHTeacherID = '';
-  List<DocumentSnapshot> espTeachers = [];
-  String selectedESPTeacherID = '';
+  List<DocumentSnapshot> availableAdvisers = [];
+  List<DocumentSnapshot> availableTeachers = [];
+  String selectedAdviserID = '';
+  List<dynamic> assignedTeachers = [];
 
   //  STUDENTS
   List<DocumentSnapshot> studentDocs = [];
@@ -64,93 +54,20 @@ class _AdminEditSectionState extends State<AdminEditSection> {
           .get();
       final sectionData = section.data() as Map<dynamic, dynamic>;
       sectionNameController.text = sectionData['name'];
-      selectedScienceTeacherID = sectionData['SCIENCE'];
-      selectedMathTeacherID = sectionData['MATHEMATICS'];
-      selectedEnglishTeacherID = sectionData['ENGLISH'];
-      selectedAPTeacherID = sectionData['AP'];
-      selectedFilipinoTeacherID = sectionData['FILIPINO'];
-      selectedEPPTeacherID = sectionData['EPP'];
-      selectedESPTeacherID = sectionData['ESP'];
-      selectedMAPEHTeacherID = sectionData['MAPEH'];
+      selectedAdviserID = sectionData['adviser'];
+      assignedTeachers = sectionData['teachers'];
 
       //  Get Teacher Data
-      final teachers = await FirebaseFirestore.instance
-          .collection('users')
-          .where('userType', isEqualTo: 'TEACHER')
-          .get();
-      teacherDocs = teachers.docs;
-
-      scienceTeachers = teacherDocs.where((teacher) {
+      List<DocumentSnapshot> teacherDocs = await getTeacherDocs();
+      availableAdvisers = teacherDocs.where((teacher) {
         final teacherData = teacher.data() as Map<dynamic, dynamic>;
-        String subject = teacherData['subject'];
-        return subject == 'SCIENCE';
+        String advisorySection = teacherData['advisorySection'];
+        return advisorySection.isEmpty || teacher.id == selectedAdviserID;
       }).toList();
-      if (selectedScienceTeacherID.isEmpty && scienceTeachers.isNotEmpty) {
-        selectedScienceTeacherID = scienceTeachers.first.id;
-      }
-
-      mathTeachers = teacherDocs.where((teacher) {
-        final teacherData = teacher.data() as Map<dynamic, dynamic>;
-        String subject = teacherData['subject'];
-        return subject == 'MATHEMATICS';
+      availableTeachers = teacherDocs.where((teacher) {
+        return !assignedTeachers.contains(teacher.id) &&
+            teacher.id != selectedAdviserID;
       }).toList();
-      if (selectedMathTeacherID.isNotEmpty && mathTeachers.isNotEmpty) {
-        selectedMathTeacherID = mathTeachers.first.id;
-      }
-
-      englishTeachers = teacherDocs.where((teacher) {
-        final teacherData = teacher.data() as Map<dynamic, dynamic>;
-        String subject = teacherData['subject'];
-        return subject == 'ENGLISH';
-      }).toList();
-      if (selectedEnglishTeacherID.isEmpty && englishTeachers.isNotEmpty) {
-        selectedEnglishTeacherID = englishTeachers.first.id;
-      }
-
-      filipinoTeachers = teacherDocs.where((teacher) {
-        final teacherData = teacher.data() as Map<dynamic, dynamic>;
-        String subject = teacherData['subject'];
-        return subject == 'FILIPINO';
-      }).toList();
-      if (selectedFilipinoTeacherID.isEmpty && filipinoTeachers.isNotEmpty) {
-        selectedFilipinoTeacherID = filipinoTeachers.first.id;
-      }
-
-      apTeachers = teacherDocs.where((teacher) {
-        final teacherData = teacher.data() as Map<dynamic, dynamic>;
-        String subject = teacherData['subject'];
-        return subject == 'AP';
-      }).toList();
-      if (selectedAPTeacherID.isEmpty && apTeachers.isNotEmpty) {
-        selectedAPTeacherID = apTeachers.first.id;
-      }
-
-      eppTeachers = teacherDocs.where((teacher) {
-        final teacherData = teacher.data() as Map<dynamic, dynamic>;
-        String subject = teacherData['subject'];
-        return subject == 'EPP';
-      }).toList();
-      if (selectedEPPTeacherID.isEmpty && eppTeachers.isNotEmpty) {
-        selectedAPTeacherID = eppTeachers.first.id;
-      }
-
-      espTeachers = teacherDocs.where((teacher) {
-        final teacherData = teacher.data() as Map<dynamic, dynamic>;
-        String subject = teacherData['subject'];
-        return subject == 'ESP';
-      }).toList();
-      if (selectedESPTeacherID.isEmpty && espTeachers.isNotEmpty) {
-        selectedESPTeacherID = espTeachers.first.id;
-      }
-
-      mapehTeachers = teacherDocs.where((teacher) {
-        final teacherData = teacher.data() as Map<dynamic, dynamic>;
-        String subject = teacherData['subject'];
-        return subject == 'MAPEH';
-      }).toList();
-      if (selectedMAPEHTeacherID.isEmpty && mapehTeachers.isNotEmpty) {
-        selectedMAPEHTeacherID = mapehTeachers.first.id;
-      }
 
       setState(() {
         _isLoading = false;
@@ -172,21 +89,6 @@ class _AdminEditSectionState extends State<AdminEditSection> {
       setState(() {
         _isLoading = true;
       });
-      //  Get current section data
-      final section = await FirebaseFirestore.instance
-          .collection('sections')
-          .doc(widget.sectionID)
-          .get();
-      final sectionData = section.data() as Map<dynamic, dynamic>;
-
-      String currentScienceTeacherID = sectionData['SCIENCE'];
-      String currentMathTeacherID = sectionData['MATHEMATICS'];
-      String currentEnglishTeacherID = sectionData['ENGLISH'];
-      String currentAPTeacherID = sectionData['AP'];
-      String currentFilipinoTeacherID = sectionData['FILIPINO'];
-      String currentEPPTeacherID = sectionData['EPP'];
-      String currentESPTeacherID = sectionData['ESP'];
-      String currentMAPEHTeacherID = sectionData['MAPEH'];
 
       //  Start updating section data with new data
       await FirebaseFirestore.instance
@@ -194,167 +96,10 @@ class _AdminEditSectionState extends State<AdminEditSection> {
           .doc(widget.sectionID)
           .update({
         'name': sectionNameController.text,
-        'SCIENCE': selectedScienceTeacherID,
-        'MATHEMATICS': selectedMathTeacherID,
-        'ENGLISH': selectedEnglishTeacherID,
-        'AP': selectedAPTeacherID,
-        'FILIPINO': selectedFilipinoTeacherID,
-        'EPP': selectedEPPTeacherID,
-        'MAPEH': selectedMAPEHTeacherID,
-        'ESP': selectedESPTeacherID,
+        'adviser': selectedAdviserID,
+        'teachers': assignedTeachers
       });
 
-      //  Set Science Teacher
-      if (currentScienceTeacherID.isNotEmpty &&
-          currentScienceTeacherID != selectedScienceTeacherID) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(currentScienceTeacherID)
-            .update({
-          'handledSections': FieldValue.arrayRemove([widget.sectionID])
-        });
-      }
-      if (selectedScienceTeacherID.isNotEmpty) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(selectedScienceTeacherID)
-            .update({
-          'handledSections': FieldValue.arrayUnion([widget.sectionID])
-        });
-      }
-
-      //  Set Math Teacher
-      if (currentMathTeacherID.isNotEmpty &&
-          currentMathTeacherID != selectedMathTeacherID) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(currentMathTeacherID)
-            .update({
-          'handledSections': FieldValue.arrayRemove([widget.sectionID])
-        });
-      }
-      if (selectedMathTeacherID.isNotEmpty) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(selectedMathTeacherID)
-            .update({
-          'handledSections': FieldValue.arrayUnion([widget.sectionID])
-        });
-      }
-
-      //  Set English Teacher
-      if (currentEnglishTeacherID.isNotEmpty &&
-          currentEnglishTeacherID != selectedEnglishTeacherID) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(currentEnglishTeacherID)
-            .update({
-          'handledSections': FieldValue.arrayRemove([widget.sectionID])
-        });
-      }
-      if (selectedEnglishTeacherID.isNotEmpty) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(selectedEnglishTeacherID)
-            .update({
-          'handledSections': FieldValue.arrayUnion([widget.sectionID])
-        });
-      }
-
-      //  Set AP Teacher
-      if (currentAPTeacherID.isNotEmpty &&
-          currentAPTeacherID != selectedAPTeacherID) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(currentAPTeacherID)
-            .update({
-          'handledSections': FieldValue.arrayRemove([widget.sectionID])
-        });
-      }
-      if (selectedAPTeacherID.isNotEmpty) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(selectedAPTeacherID)
-            .update({
-          'handledSections': FieldValue.arrayUnion([widget.sectionID])
-        });
-      }
-
-      //  Set Filipino Teacher
-      if (currentFilipinoTeacherID.isNotEmpty &&
-          currentFilipinoTeacherID != selectedAPTeacherID) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(currentFilipinoTeacherID)
-            .update({
-          'handledSections': FieldValue.arrayRemove([widget.sectionID])
-        });
-      }
-      if (selectedFilipinoTeacherID.isNotEmpty) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(selectedFilipinoTeacherID)
-            .update({
-          'handledSections': FieldValue.arrayUnion([widget.sectionID])
-        });
-      }
-
-      //  Set EPP Teacher
-      if (currentEPPTeacherID.isNotEmpty &&
-          currentEPPTeacherID != selectedAPTeacherID) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(currentEPPTeacherID)
-            .update({
-          'handledSections': FieldValue.arrayRemove([widget.sectionID])
-        });
-      }
-      if (selectedEPPTeacherID.isNotEmpty) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(selectedEPPTeacherID)
-            .update({
-          'handledSections': FieldValue.arrayUnion([widget.sectionID])
-        });
-      }
-
-      //  Set ESP Teacher
-      if (currentESPTeacherID.isNotEmpty &&
-          currentESPTeacherID != selectedAPTeacherID) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(currentESPTeacherID)
-            .update({
-          'handledSections': FieldValue.arrayRemove([widget.sectionID])
-        });
-      }
-      if (selectedESPTeacherID.isNotEmpty) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(selectedESPTeacherID)
-            .update({
-          'handledSections': FieldValue.arrayUnion([widget.sectionID])
-        });
-      }
-
-      //  Set MAPEH Teacher
-      if (currentMAPEHTeacherID.isNotEmpty &&
-          currentMAPEHTeacherID != selectedAPTeacherID) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(currentMAPEHTeacherID)
-            .update({
-          'handledSections': FieldValue.arrayRemove([widget.sectionID])
-        });
-      }
-      if (selectedMAPEHTeacherID.isNotEmpty) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(selectedMAPEHTeacherID)
-            .update({
-          'handledSections': FieldValue.arrayUnion([widget.sectionID])
-        });
-      }
       final sectionDoc = await FirebaseFirestore.instance
           .collection('sections')
           .doc(widget.sectionID)
@@ -365,6 +110,97 @@ class _AdminEditSectionState extends State<AdminEditSection> {
     } catch (error) {
       scaffoldMessenger.showSnackBar(
           SnackBar(content: Text('Error editing this section: $error')));
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void changeSectionAdviser(String oldAdviserID, String newAdviserID) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(oldAdviserID)
+          .update({'advisorySection': ''});
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(newAdviserID)
+          .update({'advisorySection': widget.sectionID});
+      await FirebaseFirestore.instance
+          .collection('sections')
+          .doc(widget.sectionID)
+          .update({'adviser': newAdviserID});
+      scaffoldMessenger.showSnackBar(SnackBar(
+          content: Text('Successfully changed this section\'s adviser')));
+      getSectionData();
+    } catch (error) {
+      scaffoldMessenger
+          .showSnackBar(SnackBar(content: Text('Error changing ')));
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void assignNewTeacher(String teacherID) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(teacherID)
+          .update({
+        'handledSections': FieldValue.arrayUnion([widget.sectionID])
+      });
+      await FirebaseFirestore.instance
+          .collection('sections')
+          .doc(widget.sectionID)
+          .update({
+        'teachers': FieldValue.arrayUnion([teacherID])
+      });
+      scaffoldMessenger.showSnackBar(SnackBar(
+          content: Text('Successfully assigned new teacher to this section.')));
+      getSectionData();
+    } catch (error) {
+      scaffoldMessenger.showSnackBar(
+          SnackBar(content: Text('Error assigning new teacher: $error')));
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void unassignThisTeacher(String teacherID) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(teacherID)
+          .update({
+        'handledSections': FieldValue.arrayRemove([widget.sectionID])
+      });
+      await FirebaseFirestore.instance
+          .collection('sections')
+          .doc(widget.sectionID)
+          .update({
+        'teachers': FieldValue.arrayRemove([teacherID])
+      });
+      scaffoldMessenger.showSnackBar(SnackBar(
+          content:
+              Text('Successfully unassigned this teacher from this section.')));
+      getSectionData();
+    } catch (error) {
+      scaffoldMessenger.showSnackBar(
+          SnackBar(content: Text('Error unassigning this teacher: $error')));
       setState(() {
         _isLoading = false;
       });
@@ -387,8 +223,9 @@ class _AdminEditSectionState extends State<AdminEditSection> {
                   child: Column(
                 children: [
                   _sectionName(),
+                  _availableAdvisers(),
+                  _availableTeachers(),
                   Gap(20),
-                  _sectionTeachersContainer(),
                   ovalButton('SAVE CHANGES',
                       onPress: editThisSection,
                       backgroundColor: CustomColors.moderateCyan)
@@ -415,260 +252,133 @@ class _AdminEditSectionState extends State<AdminEditSection> {
     ));
   }
 
-  Widget _sectionTeachersContainer() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  Widget _availableAdvisers() {
+    return vertical10horizontal4(Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [_teacher1stColumn(), _teacher2ndColumn()],
-    );
+      children: [
+        interText('Section Adviser', fontSize: 18),
+        if (availableAdvisers.isNotEmpty)
+          Container(
+            width: double.infinity,
+            height: 40,
+            decoration: BoxDecoration(
+                border: Border.all(), borderRadius: BorderRadius.circular(10)),
+            padding: EdgeInsets.all(5),
+            child: userDocumentSnapshotDropdownWidget(
+                context,
+                selectedAdviserID.isNotEmpty
+                    ? selectedAdviserID
+                    : availableAdvisers.first.id, (newVal) {
+              changeSectionAdviser(selectedAdviserID, newVal!);
+            }, availableAdvisers),
+          )
+        else
+          interText('NO OTHER AVAILABLE ADVISERS AVAILABLE',
+              fontWeight: FontWeight.bold)
+      ],
+    ));
   }
 
-  Widget _teacher1stColumn() {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.4,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _scienceTeachers(),
-          _mathTeachers(),
-          _englishTeachers(),
-          _apTeachers()
-        ],
+  Widget _availableTeachers() {
+    return vertical10horizontal4(ExpansionTile(
+      title: interText('Assigned Teachers', fontWeight: FontWeight.bold),
+      collapsedBackgroundColor: CustomColors.moderateCyan,
+      backgroundColor: CustomColors.verySoftCyan,
+      textColor: Colors.black,
+      iconColor: Colors.black,
+      collapsedShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10), side: BorderSide()),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10), side: BorderSide()),
+      children: [
+        if (availableTeachers.isNotEmpty)
+          ovalButton('ASSIGN NEW TEACHER',
+              onPress: showAvailableTeachersDialog,
+              backgroundColor: CustomColors.moderateCyan),
+        if (assignedTeachers.isNotEmpty)
+          all10Pix(
+            child: Column(
+              children: assignedTeachers.map((teacher) {
+                return _assignedTeacherEntry(teacher);
+              }).toList(),
+            ),
+          )
+        else
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: interText('NO ASSIGNED TEACHERS YET',
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                textAlign: TextAlign.center),
+          )
+      ],
+    ));
+  }
+
+  Widget _assignedTeacherEntry(String teacher) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 10),
+      child: Container(
+        decoration: BoxDecoration(
+            color: CustomColors.moderateCyan,
+            border: Border.all(),
+            borderRadius: BorderRadius.circular(10)),
+        padding: EdgeInsets.all(10),
+        child: FutureBuilder(
+            future: getUserName(teacher),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return interText('Error getting teacher');
+              } else {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    interText(snapshot.data!, fontSize: 16),
+                    IconButton(
+                        onPressed: () => displayDeleteEntryDialog(context,
+                            message:
+                                'Are you sure you want to unassign this teacher from this section?',
+                            deleteWord: 'Remove',
+                            deleteEntry: () => unassignThisTeacher(teacher)),
+                        icon: Icon(
+                          Icons.delete,
+                          color: Colors.black,
+                        ))
+                  ],
+                );
+              }
+            }),
       ),
     );
   }
 
-  Widget _teacher2ndColumn() {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.4,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _filipinoTeachers(),
-          _eppTeachers(),
-          _espTeachers(),
-          _mapehTeachers()
-        ],
-      ),
-    );
-  }
-
-  Widget _scienceTeachers() {
-    return vertical10horizontal4(Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        interText('Science Teachers', fontSize: 18),
-        if (scienceTeachers.isNotEmpty)
-          Container(
-            height: 40,
-            decoration: BoxDecoration(
-                border: Border.all(), borderRadius: BorderRadius.circular(10)),
-            padding: EdgeInsets.all(5),
-            child: userDocumentSnapshotDropdownWidget(
-                context,
-                selectedScienceTeacherID.isNotEmpty
-                    ? selectedScienceTeacherID
-                    : scienceTeachers.first.id, (newVal) {
-              setState(() {
-                selectedScienceTeacherID = newVal!;
-              });
-            }, scienceTeachers),
-          )
-        else
-          interText('NO SCIENCE TEACHERS AVAILABLE',
-              fontWeight: FontWeight.bold)
-      ],
-    ));
-  }
-
-  Widget _mathTeachers() {
-    return vertical10horizontal4(Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        interText('Math Teachers', fontSize: 18),
-        if (mathTeachers.isNotEmpty)
-          Container(
-            height: 40,
-            decoration: BoxDecoration(
-                border: Border.all(), borderRadius: BorderRadius.circular(10)),
-            padding: EdgeInsets.all(5),
-            child: userDocumentSnapshotDropdownWidget(
-                context,
-                selectedMathTeacherID.isNotEmpty
-                    ? selectedMathTeacherID
-                    : mathTeachers.first.id, (newVal) {
-              setState(() {
-                selectedMathTeacherID = newVal!;
-              });
-            }, mathTeachers),
-          )
-        else
-          interText('NO MATH TEACHERS AVAILABLE', fontWeight: FontWeight.bold)
-      ],
-    ));
-  }
-
-  Widget _englishTeachers() {
-    return vertical10horizontal4(Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        interText('English Teachers', fontSize: 18),
-        if (englishTeachers.isNotEmpty)
-          Container(
-            height: 40,
-            decoration: BoxDecoration(
-                border: Border.all(), borderRadius: BorderRadius.circular(10)),
-            padding: EdgeInsets.all(5),
-            child: userDocumentSnapshotDropdownWidget(
-                context,
-                selectedEnglishTeacherID.isNotEmpty
-                    ? selectedEnglishTeacherID
-                    : englishTeachers.first.id, (newVal) {
-              setState(() {
-                selectedEnglishTeacherID = newVal!;
-              });
-            }, englishTeachers),
-          )
-        else
-          interText('NO ENGLISH TEACHERS AVAILABLE',
-              fontWeight: FontWeight.bold)
-      ],
-    ));
-  }
-
-  Widget _apTeachers() {
-    return vertical10horizontal4(Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        interText('AP Teachers', fontSize: 18),
-        if (apTeachers.isNotEmpty)
-          Container(
-            height: 40,
-            decoration: BoxDecoration(
-                border: Border.all(), borderRadius: BorderRadius.circular(10)),
-            padding: EdgeInsets.all(5),
-            child: userDocumentSnapshotDropdownWidget(
-                context,
-                selectedAPTeacherID.isNotEmpty
-                    ? selectedAPTeacherID
-                    : apTeachers.first.id, (newVal) {
-              setState(() {
-                selectedAPTeacherID = newVal!;
-              });
-            }, apTeachers),
-          )
-        else
-          interText('NO AP TEACHERS AVAILABLE', fontWeight: FontWeight.bold)
-      ],
-    ));
-  }
-
-  Widget _filipinoTeachers() {
-    return vertical10horizontal4(Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        interText('Filipino Teachers', fontSize: 18),
-        if (filipinoTeachers.isNotEmpty)
-          Container(
-            height: 40,
-            decoration: BoxDecoration(
-                border: Border.all(), borderRadius: BorderRadius.circular(10)),
-            padding: EdgeInsets.all(5),
-            child: userDocumentSnapshotDropdownWidget(
-                context,
-                selectedFilipinoTeacherID.isNotEmpty
-                    ? selectedFilipinoTeacherID
-                    : filipinoTeachers.first.id, (newVal) {
-              setState(() {
-                selectedFilipinoTeacherID = newVal!;
-              });
-            }, filipinoTeachers),
-          )
-        else
-          interText('NO FILIPINO TEACHERS AVAILABLE',
-              fontWeight: FontWeight.bold)
-      ],
-    ));
-  }
-
-  Widget _eppTeachers() {
-    return vertical10horizontal4(Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        interText('EPP Teachers', fontSize: 18),
-        if (eppTeachers.isNotEmpty)
-          Container(
-            height: 40,
-            decoration: BoxDecoration(
-                border: Border.all(), borderRadius: BorderRadius.circular(10)),
-            padding: EdgeInsets.all(5),
-            child: userDocumentSnapshotDropdownWidget(
-                context,
-                selectedEPPTeacherID.isNotEmpty
-                    ? selectedEPPTeacherID
-                    : eppTeachers.first.id, (newVal) {
-              setState(() {
-                selectedEPPTeacherID = newVal!;
-              });
-            }, eppTeachers),
-          )
-        else
-          interText('NO EPP TEACHERS AVAILABLE', fontWeight: FontWeight.bold)
-      ],
-    ));
-  }
-
-  Widget _espTeachers() {
-    return vertical10horizontal4(Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        interText('ESP Teachers', fontSize: 18),
-        if (espTeachers.isNotEmpty)
-          Container(
-            height: 40,
-            decoration: BoxDecoration(
-                border: Border.all(), borderRadius: BorderRadius.circular(10)),
-            padding: EdgeInsets.all(5),
-            child: userDocumentSnapshotDropdownWidget(
-                context,
-                selectedESPTeacherID.isNotEmpty
-                    ? selectedESPTeacherID
-                    : espTeachers.first.id, (newVal) {
-              setState(() {
-                selectedESPTeacherID = newVal!;
-              });
-            }, espTeachers),
-          )
-        else
-          interText('NO ESP TEACHERS AVAILABLE', fontWeight: FontWeight.bold)
-      ],
-    ));
-  }
-
-  Widget _mapehTeachers() {
-    return vertical10horizontal4(Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        interText('MAPEH Teachers', fontSize: 18),
-        if (mapehTeachers.isNotEmpty)
-          Container(
-            height: 40,
-            decoration: BoxDecoration(
-                border: Border.all(), borderRadius: BorderRadius.circular(10)),
-            padding: EdgeInsets.all(5),
-            child: userDocumentSnapshotDropdownWidget(
-                context,
-                selectedMAPEHTeacherID.isNotEmpty
-                    ? selectedMAPEHTeacherID
-                    : mapehTeachers.first.id, (newVal) {
-              setState(() {
-                selectedMAPEHTeacherID = newVal!;
-              });
-            }, mapehTeachers),
-          )
-        else
-          interText('NO MAPEH TEACHERS AVAILABLE', fontWeight: FontWeight.bold)
-      ],
-    ));
+  void showAvailableTeachersDialog() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              content: SingleChildScrollView(
+                  child: Column(
+                children: [
+                  interText('ASSIGN A TEACHER TO THIS SECTION',
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      textAlign: TextAlign.center),
+                  Gap(20),
+                  Column(
+                      children: (availableTeachers.map((teacher) {
+                    final teacherData = teacher.data() as Map<dynamic, dynamic>;
+                    String formattedName =
+                        '${teacherData['firstName']} ${teacherData['lastName']}';
+                    return ovalButton(formattedName, width: double.infinity,
+                        onPress: () {
+                      Navigator.of(context).pop();
+                      assignNewTeacher(teacher.id);
+                    }, backgroundColor: CustomColors.verySoftCyan);
+                  }).toList())),
+                ],
+              )),
+            ));
   }
 }

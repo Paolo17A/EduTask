@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutask/providers/current_user_type_provider.dart';
 import 'package:edutask/util/delete_entry_dialog_util.dart';
+import 'package:edutask/util/future_util.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/custom_button_widgets.dart';
@@ -34,7 +35,8 @@ class _SelectedUserRecordScreenState
   String profileImageURL = '';
 
   //  TEACHER
-  String subject = '';
+  String advisorySection = '';
+  String advisorySectionName = '';
   List<dynamic> handledSections = [];
   List<DocumentSnapshot> handledSectionDocs = [];
 
@@ -54,7 +56,10 @@ class _SelectedUserRecordScreenState
     userType = userData['userType'];
     if (userType == 'TEACHER') {
       handledSections = userData['handledSections'];
-      subject = userData['subject'];
+      advisorySection = userData['advisorySection'];
+      if (advisorySection.isNotEmpty) {
+        getAdvisorySection();
+      }
       if (handledSections.isNotEmpty) getHandledSections();
     } else if (userType == 'STUDENT') {
       section = userData['section'];
@@ -62,6 +67,22 @@ class _SelectedUserRecordScreenState
         getStudentSection();
       else
         getAvailableSections();
+    }
+  }
+
+  void getAdvisorySection() async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    try {
+      advisorySectionName = await getSectionName(advisorySection);
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (error) {
+      scaffoldMessenger.showSnackBar(
+          SnackBar(content: Text('Error getting advisory section: $error')));
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -169,20 +190,22 @@ class _SelectedUserRecordScreenState
   void deleteStudentUser() async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
+    String userEmail = '';
+    String userPassword = '';
     try {
       setState(() {
         _isLoading = true;
       });
+      print(FirebaseAuth.instance.currentUser == null ? 'no user' : 'meron');
       //  Store admin's current data locally
       final currentUser = await FirebaseFirestore.instance
           .collection('users')
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .get();
       final currentUserData = currentUser.data() as Map<dynamic, dynamic>;
-      String userEmail = currentUserData['email'];
-      String userPassword = currentUserData['password'];
+      userEmail = currentUserData['email'];
+      userPassword = currentUserData['password'];
       await FirebaseAuth.instance.signOut();
-
       //  1. Delete all of this students submissions
       final submissions = await FirebaseFirestore.instance
           .collection('submissions')
@@ -191,7 +214,6 @@ class _SelectedUserRecordScreenState
       for (var submission in submissions.docs) {
         await submission.reference.delete();
       }
-
       //  2. Delete all of this students quiz results
       final quizResults = await FirebaseFirestore.instance
           .collection('quizResults')
@@ -200,21 +222,21 @@ class _SelectedUserRecordScreenState
       for (var quizResult in quizResults.docs) {
         await quizResult.reference.delete();
       }
-
       //  3. Remove this student from their section
-      await FirebaseFirestore.instance
-          .collection('sections')
-          .doc(section)
-          .update({
-        'students': FieldValue.arrayRemove([widget.userDoc.id])
-      });
+      if (section.isNotEmpty) {
+        await FirebaseFirestore.instance
+            .collection('sections')
+            .doc(section)
+            .update({
+          'students': FieldValue.arrayRemove([widget.userDoc.id])
+        });
+      }
 
       //  4. Delete the grades document
       await FirebaseFirestore.instance
           .collection('grades')
           .doc(widget.userDoc.id)
           .delete();
-
       //  5. Sign in to the student's account and delete it
       final studentData = widget.userDoc.data() as Map<dynamic, dynamic>;
       String instructorEmail = studentData['email'];
@@ -227,7 +249,6 @@ class _SelectedUserRecordScreenState
           .doc(instructorToDelete.user!.uid)
           .delete();
       await instructorToDelete.user!.delete();
-
       //  Log-back in to admin or user's account and refresh the page
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: userEmail, password: userPassword);
@@ -242,6 +263,8 @@ class _SelectedUserRecordScreenState
       scaffoldMessenger.showSnackBar(SnackBar(
           content:
               Text('Error deleting all records for this student: $error')));
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: userEmail, password: userPassword);
       setState(() {
         _isLoading = false;
       });
@@ -251,6 +274,8 @@ class _SelectedUserRecordScreenState
   void deleteTeacherUser() async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
+    String userEmail = '';
+    String userPassword = '';
     try {
       setState(() {
         _isLoading = true;
@@ -320,7 +345,7 @@ class _SelectedUserRecordScreenState
           'assignments': FieldValue.arrayRemove(assignmentIDs),
           'lessons': FieldValue.arrayRemove(lessonIDs),
           'quizzes': FieldValue.arrayRemove(quizIDs),
-          subject: ''
+          'adviser': ''
         });
       }
 
@@ -330,8 +355,8 @@ class _SelectedUserRecordScreenState
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .get();
       final currentUserData = currentUser.data() as Map<dynamic, dynamic>;
-      String userEmail = currentUserData['email'];
-      String userPassword = currentUserData['password'];
+      userEmail = currentUserData['email'];
+      userPassword = currentUserData['password'];
       await FirebaseAuth.instance.signOut();
 
       //  6. Sign in to the student's account and delete it
@@ -362,6 +387,8 @@ class _SelectedUserRecordScreenState
       scaffoldMessenger.showSnackBar(SnackBar(
           content:
               Text('Error deleting all records for this teacher: $error')));
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: userEmail, password: userPassword);
       setState(() {
         _isLoading = false;
       });
@@ -378,7 +405,7 @@ class _SelectedUserRecordScreenState
             onPressed: () {
               if (userType == 'STUDENT') {
                 NavigatorRoutes.adminEditStudent(context,
-                    studentDoc: widget.userDoc);
+                    studentID: widget.userDoc.id);
               } else if (userType == 'TEACHER') {
                 NavigatorRoutes.adminEditTeacher(context,
                     teacherDoc: widget.userDoc);
@@ -476,7 +503,6 @@ class _SelectedUserRecordScreenState
                 interText('Email', fontSize: 20),
                 Container(
                   width: double.infinity,
-                  //height: 30,
                   color: CustomColors.veryLightGrey,
                   child: Center(
                       child: Row(
@@ -488,30 +514,7 @@ class _SelectedUserRecordScreenState
                     ],
                   )),
                 ),
-                if (userType == 'TEACHER')
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Gap(15),
-                      interText('Subject', fontSize: 20),
-                      Container(
-                        width: double.infinity,
-                        //height: 30,
-                        color: CustomColors.veryLightGrey,
-                        child: Center(
-                            child: Row(
-                          children: [
-                            const Gap(5),
-                            SizedBox(
-                                width:
-                                    (MediaQuery.of(context).size.width * 0.5) -
-                                        5,
-                                child: interText(subject)),
-                          ],
-                        )),
-                      ),
-                    ],
-                  ),
+                if (userType == 'TEACHER') _advisorySection()
               ],
             ),
           ),
@@ -545,6 +548,23 @@ class _SelectedUserRecordScreenState
                       return interText(name);
                     }).toList())
                 : Center(child: interText('NO HANDLED SECTIONS'))),
+      ],
+    );
+  }
+
+  Widget _advisorySection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Gap(20),
+        interText('ADVISORY SECTION:', fontSize: 16),
+        Container(
+          width: double.infinity,
+          color: CustomColors.veryLightGrey,
+          child: Center(
+              child: interText(
+                  advisorySection.isNotEmpty ? advisorySectionName : 'N/A')),
+        ),
       ],
     );
   }
@@ -583,9 +603,9 @@ class _SelectedUserRecordScreenState
                     return vertical10horizontal4(
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.75,
-                        child: ElevatedButton(
-                            onPressed: () => assignStudentToSection(section),
-                            child: interText(sectionName)),
+                        child: ovalButton(sectionName,
+                            onPress: () => assignStudentToSection(section),
+                            backgroundColor: CustomColors.moderateCyan),
                       ),
                     );
                   }).toList())

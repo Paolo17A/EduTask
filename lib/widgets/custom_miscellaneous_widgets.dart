@@ -128,6 +128,7 @@ Widget teacherMaterialEntry(BuildContext context,
     required Function onDelete}) {
   final materialData = materialDoc.data() as Map<dynamic, dynamic>;
   String title = materialData['title'];
+  String subject = materialData['subject'];
   return vertical10horizontal4(Container(
     decoration: BoxDecoration(
       color: Colors.grey,
@@ -138,7 +139,13 @@ Widget teacherMaterialEntry(BuildContext context,
     child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       SizedBox(
           width: MediaQuery.of(context).size.width * 0.5,
-          child: interText(title, fontSize: 15)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              interText(title, fontSize: 15),
+              interText(subject, fontSize: 13)
+            ],
+          )),
       Row(
         children: [
           IconButton(
@@ -220,7 +227,9 @@ Widget sectionMaterialEntry(BuildContext context,
 }
 
 Widget studentEntry(BuildContext context,
-    {required DocumentSnapshot studentDoc, required Function onPress}) {
+    {required DocumentSnapshot studentDoc,
+    required Function onPress,
+    Color backgroundColor = CustomColors.softOrange}) {
   final studentData = studentDoc.data() as Map<dynamic, dynamic>;
   String profileImageURL = studentData['profileImageURL'];
   String formattedName =
@@ -229,7 +238,7 @@ Widget studentEntry(BuildContext context,
     onTap: () => onPress(),
     child: Container(
       decoration: BoxDecoration(
-        color: CustomColors.softOrange,
+        color: backgroundColor,
         border: Border.all(),
         borderRadius: BorderRadius.circular(10),
       ),

@@ -11,8 +11,7 @@ Drawer appDrawer(BuildContext context,
     {required String userType,
     bool isHome = false,
     Color backgroundColor = CustomColors.veryDarkGrey,
-    String profileImageURL = '',
-    String subject = ''}) {
+    String profileImageURL = ''}) {
   return Drawer(
     backgroundColor: backgroundColor,
     child: Column(
@@ -26,10 +25,6 @@ Drawer appDrawer(BuildContext context,
                     profileImageURL: profileImageURL, radius: 52)
               ]),
               Gap(8),
-              if (userType == 'TEACHER')
-                interText('Subject: $subject',
-                    fontWeight: FontWeight.bold,
-                    color: CustomColors.veryLightGrey)
             ],
           ),
           decoration: BoxDecoration(color: backgroundColor),

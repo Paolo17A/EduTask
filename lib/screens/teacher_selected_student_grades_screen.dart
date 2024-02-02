@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:edutask/providers/teacher_subject_provider.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/app_bottom_nav_bar_widget.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
@@ -14,8 +13,9 @@ import '../widgets/custom_miscellaneous_widgets.dart';
 
 class TeacherSelectedStudentGradesScreen extends ConsumerStatefulWidget {
   final DocumentSnapshot studentDoc;
+  final String subject;
   const TeacherSelectedStudentGradesScreen(
-      {super.key, required this.studentDoc});
+      {super.key, required this.studentDoc, required this.subject});
 
   @override
   ConsumerState<TeacherSelectedStudentGradesScreen> createState() =>
@@ -70,13 +70,12 @@ class _TeacherSelectedStudentGradesScreenState
           borderRadius: BorderRadius.circular(10)),
       child: Column(
         children: [
-          interText('GRADED ${ref.read(teacherSubjectProvider)} ASSIGNMENTS',
+          interText('GRADED ${widget.subject} ASSIGNMENTS',
               fontWeight: FontWeight.bold, fontSize: 20),
           Divider(color: CustomColors.softOrange),
           FutureBuilder(
               future: getSubmittedAssignmentsInSubject(
-                  subject: ref.read(teacherSubjectProvider),
-                  studentID: widget.studentDoc.id),
+                  subject: widget.subject, studentID: widget.studentDoc.id),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
@@ -110,13 +109,12 @@ class _TeacherSelectedStudentGradesScreenState
       child: Column(
         children: [
           Gap(10),
-          interText('ANSWERED ${ref.read(teacherSubjectProvider)} QUIZZES',
+          interText('ANSWERED ${widget.subject} QUIZZES',
               fontWeight: FontWeight.bold, fontSize: 20),
           Divider(color: CustomColors.softOrange),
           FutureBuilder(
               future: getAnsweredQuizzesInSubject(
-                  subject: ref.read(teacherSubjectProvider),
-                  studentID: widget.studentDoc.id),
+                  subject: widget.subject, studentID: widget.studentDoc.id),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
