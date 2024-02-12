@@ -102,7 +102,7 @@ class _AdminTeacherRecordsScreenState
           itemCount: teacherDocs.length,
           itemBuilder: (context, index) {
             Color backgroundColor = index % 2 == 0
-                ? CustomColors.moderateCyan.withOpacity(0.5)
+                ? CustomColors.softOrange.withOpacity(0.5)
                 : Colors.white;
             return userRecordEntry(
                 userDoc: teacherDocs[index],

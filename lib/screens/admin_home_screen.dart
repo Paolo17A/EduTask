@@ -72,7 +72,7 @@ class _AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
                 welcomeWidgets(
                     userType: 'ADMIN',
                     profileImageURL: profileImageURL,
-                    containerColor: CustomColors.verySoftCyan),
+                    containerColor: CustomColors.verySoftOrange),
                 _homeButtons()
               ],
             )),

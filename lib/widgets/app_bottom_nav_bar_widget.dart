@@ -12,7 +12,7 @@ Widget teacherBottomNavBar(BuildContext context, {required int index}) {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         SizedBox(
-          width: MediaQuery.of(context).size.width * 0.18,
+          width: MediaQuery.of(context).size.width * 0.45,
           child: Column(
             children: [
               IconButton(
@@ -32,7 +32,7 @@ Widget teacherBottomNavBar(BuildContext context, {required int index}) {
           ),
         ),
         SizedBox(
-          width: MediaQuery.of(context).size.width * 0.18,
+          width: MediaQuery.of(context).size.width * 0.45,
           child: Column(
             children: [
               IconButton(
@@ -51,7 +51,7 @@ Widget teacherBottomNavBar(BuildContext context, {required int index}) {
             ],
           ),
         ),
-        SizedBox(
+        /*SizedBox(
           width: MediaQuery.of(context).size.width * 0.18,
           child: Column(
             children: [
@@ -67,8 +67,8 @@ Widget teacherBottomNavBar(BuildContext context, {required int index}) {
                       index == 2 ? Colors.yellow : CustomColors.veryLightGrey)
             ],
           ),
-        ),
-        SizedBox(
+        ),*/
+        /*SizedBox(
           width: MediaQuery.of(context).size.width * 0.18,
           child: Column(
             children: [
@@ -84,8 +84,8 @@ Widget teacherBottomNavBar(BuildContext context, {required int index}) {
                       index == 3 ? Colors.yellow : CustomColors.veryLightGrey)
             ],
           ),
-        ),
-        SizedBox(
+        ),*/
+        /*SizedBox(
           width: MediaQuery.of(context).size.width * 0.18,
           child: Column(
             children: [
@@ -101,7 +101,7 @@ Widget teacherBottomNavBar(BuildContext context, {required int index}) {
                       index == 4 ? Colors.yellow : CustomColors.veryLightGrey)
             ],
           ),
-        ),
+        ),*/
       ],
     ),
   );
@@ -112,9 +112,10 @@ Widget adminBottomNavBar(BuildContext context, {required int index}) {
     color: CustomColors.veryDarkGrey,
     height: 85,
     child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         SizedBox(
-          width: MediaQuery.of(context).size.width * 0.3,
+          width: MediaQuery.of(context).size.width * 0.45,
           child: Column(
             children: [
               IconButton(
@@ -133,7 +134,7 @@ Widget adminBottomNavBar(BuildContext context, {required int index}) {
             ],
           ),
         ),
-        SizedBox(
+        /*SizedBox(
           width: MediaQuery.of(context).size.width * 0.3,
           child: Column(
             children: [
@@ -149,9 +150,9 @@ Widget adminBottomNavBar(BuildContext context, {required int index}) {
                       index == 1 ? Colors.yellow : CustomColors.veryLightGrey)
             ],
           ),
-        ),
+        ),*/
         SizedBox(
-          width: MediaQuery.of(context).size.width * 0.3,
+          width: MediaQuery.of(context).size.width * 0.45,
           child: Column(
             children: [
               IconButton(
@@ -185,7 +186,7 @@ Widget clientBottomNavBar(BuildContext context, {required int index}) {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         SizedBox(
-          width: MediaQuery.of(context).size.width * 0.15,
+          width: MediaQuery.of(context).size.width * 0.2,
           child: Column(
             children: [
               IconButton(
@@ -205,7 +206,7 @@ Widget clientBottomNavBar(BuildContext context, {required int index}) {
           ),
         ),
         SizedBox(
-          width: MediaQuery.of(context).size.width * 0.3,
+          width: MediaQuery.of(context).size.width * 0.25,
           child: Column(
             children: [
               IconButton(
@@ -225,7 +226,7 @@ Widget clientBottomNavBar(BuildContext context, {required int index}) {
           ),
         ),
         SizedBox(
-          width: MediaQuery.of(context).size.width * 0.3,
+          width: MediaQuery.of(context).size.width * 0.25,
           child: Column(
             children: [
               IconButton(
@@ -245,16 +246,19 @@ Widget clientBottomNavBar(BuildContext context, {required int index}) {
           ),
         ),
         SizedBox(
-          width: MediaQuery.of(context).size.width * 0.15,
+          width: MediaQuery.of(context).size.width * 0.2,
           child: Column(
             children: [
               IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.message_rounded,
+                  onPressed: () => index == 3
+                      ? null
+                      : Navigator.of(context)
+                          .pushNamed(NavigatorRoutes.studentProfile),
+                  icon: Icon(Icons.person,
                       color: index == 3
                           ? Colors.yellow
                           : CustomColors.veryLightGrey)),
-              interText('MESSAGES',
+              interText('PROFILE',
                   fontSize: 8,
                   color:
                       index == 3 ? Colors.yellow : CustomColors.veryLightGrey)

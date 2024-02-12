@@ -132,8 +132,9 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
       setState(() {
         _isLoading = true;
       });
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text, password: passwordController.text);
+      final userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: emailController.text, password: passwordController.text);
 
       await FirebaseFirestore.instance
           .collection('grades')
@@ -149,6 +150,9 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
         'ESP': {'assignments': {}, 'quizzes': {}}
       });
 
+      // Send email confirmation link to user
+      await userCredential.user!.sendEmailVerification();
+
       await FirebaseFirestore.instance
           .collection('users')
           .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -160,13 +164,15 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
         'firstName': firstNameController.text,
         'lastName': lastNameController.text,
         'section': '',
-        'profileImageURL': ''
+        'profileImageURL': '',
+        'dateEmailVerificationSent': DateTime.now()
       });
       setState(() {
         _isLoading = false;
       });
       scaffoldMessenger.showSnackBar(const SnackBar(
           content: Text('Sucessfully created new student user!')));
+      await FirebaseAuth.instance.signOut();
       navigator.pop();
       navigator.pushReplacementNamed(NavigatorRoutes.studentLogin);
     } catch (error) {

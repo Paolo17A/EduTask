@@ -70,7 +70,7 @@ class _AdminSectionRecordsScreenState
                   ovalButton('ADD SECTION',
                       onPress: () => Navigator.of(context)
                           .pushNamed(NavigatorRoutes.addSection),
-                      backgroundColor: CustomColors.moderateCyan)
+                      backgroundColor: CustomColors.softOrange)
                 ],
               )),
             )));
@@ -106,7 +106,7 @@ class _AdminSectionRecordsScreenState
               child: Container(
                 decoration: BoxDecoration(
                     color: index % 2 == 0
-                        ? CustomColors.moderateCyan.withOpacity(0.5)
+                        ? CustomColors.softOrange.withOpacity(0.5)
                         : Colors.white,
                     border: Border.all()),
                 height: 50,

@@ -125,7 +125,7 @@ class _AdminAllAssignmentsScreenState
             itemBuilder: (context, index) {
               return adminMaterialEntry(context,
                   materialDoc: assignmentDocs[index],
-                  color: CustomColors.moderateCyan.withOpacity(0.5),
+                  color: CustomColors.softOrange.withOpacity(0.5),
                   onView: () => NavigatorRoutes.adminSelectedAssignment(context,
                       assignmentDoc: assignmentDocs[index]),
                   onDelete: () => displayDeleteEntryDialog(context,

@@ -5,6 +5,7 @@ import 'package:edutask/widgets/app_bottom_nav_bar_widget.dart';
 import 'package:edutask/widgets/custom_button_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
+import 'package:emailjs/emailjs.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -41,8 +42,6 @@ class _TeacherSelectedSectionScreenState
   List<DocumentSnapshot> assignedAssignmentDocs = [];
   List<dynamic> assignedAssignmentIDs = [];
   List<DocumentSnapshot> associatedStudentDocs = [];
-
-  //  Assigned Lessons
 
   @override
   void didChangeDependencies() {
@@ -139,6 +138,28 @@ class _TeacherSelectedSectionScreenState
           .update({
         'associatedSections': FieldValue.arrayUnion([widget.sectionID])
       });
+
+      final lessonData = lessonDoc.data() as Map<dynamic, dynamic>;
+      String title = lessonData['title'];
+      String subject = lessonData['subject'];
+      for (var student in associatedStudentDocs) {
+        final studentData = student.data() as Map<dynamic, dynamic>;
+        String email = studentData['email'];
+        String firstName = studentData['firstName'];
+        String lastName = studentData['lastName'];
+        await EmailJS.send(
+            'service_8qicz6r',
+            'template_6zzxsku',
+            {
+              'to_email': email,
+              'to_name': '$firstName $lastName',
+              'message_content':
+                  'A new $subject lesson has been assigned your section: $title.'
+            },
+            Options(
+                publicKey: 'u6vTOeKnZ6uLR3BVX',
+                privateKey: 'e-HosRtW2lC5-XlLVt1WV'));
+      }
       scaffoldMessenger.showSnackBar(const SnackBar(
           content: Text('Successfully assigned this lesson to this section.')));
       getSectionData();
@@ -171,6 +192,27 @@ class _TeacherSelectedSectionScreenState
           .update({
         'associatedSections': FieldValue.arrayRemove([widget.sectionID])
       });
+      final lessonData = lessonDoc.data() as Map<dynamic, dynamic>;
+      String title = lessonData['title'];
+      String subject = lessonData['subject'];
+      for (var student in associatedStudentDocs) {
+        final studentData = student.data() as Map<dynamic, dynamic>;
+        String email = studentData['email'];
+        String firstName = studentData['firstName'];
+        String lastName = studentData['lastName'];
+        await EmailJS.send(
+            'service_8qicz6r',
+            'template_6zzxsku',
+            {
+              'to_email': email,
+              'to_name': '$firstName $lastName',
+              'message_content':
+                  'The $subject lesson $title has been unassigned from your section.'
+            },
+            Options(
+                publicKey: 'u6vTOeKnZ6uLR3BVX',
+                privateKey: 'e-HosRtW2lC5-XlLVt1WV'));
+      }
       scaffoldMessenger.showSnackBar(const SnackBar(
           content:
               Text('Successfully assigned this lesson from this section.')));
@@ -204,6 +246,28 @@ class _TeacherSelectedSectionScreenState
           .update({
         'associatedSections': FieldValue.arrayUnion([widget.sectionID])
       });
+      final assignmentData = assignmentDoc.data() as Map<dynamic, dynamic>;
+      String title = assignmentData['title'];
+      String subject = assignmentData['subject'];
+
+      for (var student in associatedStudentDocs) {
+        final studentData = student.data() as Map<dynamic, dynamic>;
+        String email = studentData['email'];
+        String firstName = studentData['firstName'];
+        String lastName = studentData['lastName'];
+        await EmailJS.send(
+            'service_8qicz6r',
+            'template_6zzxsku',
+            {
+              'to_email': email,
+              'to_name': '$firstName $lastName',
+              'message_content':
+                  'The $subject assignment $title has been unassigned from your section.'
+            },
+            Options(
+                publicKey: 'u6vTOeKnZ6uLR3BVX',
+                privateKey: 'e-HosRtW2lC5-XlLVt1WV'));
+      }
       scaffoldMessenger.showSnackBar(const SnackBar(
           content:
               Text('Successfully assigned this assignment to this section.')));
@@ -237,6 +301,28 @@ class _TeacherSelectedSectionScreenState
           .update({
         'associatedSections': FieldValue.arrayRemove([widget.sectionID])
       });
+      final assignmentData = assignmentDoc.data() as Map<dynamic, dynamic>;
+      String title = assignmentData['title'];
+      String subject = assignmentData['subject'];
+
+      for (var student in associatedStudentDocs) {
+        final studentData = student.data() as Map<dynamic, dynamic>;
+        String email = studentData['email'];
+        String firstName = studentData['firstName'];
+        String lastName = studentData['lastName'];
+        await EmailJS.send(
+            'service_8qicz6r',
+            'template_6zzxsku',
+            {
+              'to_email': email,
+              'to_name': '$firstName $lastName',
+              'message_content':
+                  'The $subject assignment $title has been unassigned from your section.'
+            },
+            Options(
+                publicKey: 'u6vTOeKnZ6uLR3BVX',
+                privateKey: 'e-HosRtW2lC5-XlLVt1WV'));
+      }
       scaffoldMessenger.showSnackBar(const SnackBar(
           content:
               Text('Successfully removed this assignment from this section.')));
@@ -270,6 +356,28 @@ class _TeacherSelectedSectionScreenState
           .update({
         'associatedSections': FieldValue.arrayUnion([widget.sectionID])
       });
+      final quizData = quizDoc.data() as Map<dynamic, dynamic>;
+      String title = quizData['title'];
+      String subject = quizData['subject'];
+
+      for (var student in associatedStudentDocs) {
+        final studentData = student.data() as Map<dynamic, dynamic>;
+        String email = studentData['email'];
+        String firstName = studentData['firstName'];
+        String lastName = studentData['lastName'];
+        await EmailJS.send(
+            'service_8qicz6r',
+            'template_6zzxsku',
+            {
+              'to_email': email,
+              'to_name': '$firstName $lastName',
+              'message_content':
+                  'A new $subject quiz has been assigned to your section: $title'
+            },
+            Options(
+                publicKey: 'u6vTOeKnZ6uLR3BVX',
+                privateKey: 'e-HosRtW2lC5-XlLVt1WV'));
+      }
       scaffoldMessenger.showSnackBar(const SnackBar(
           content: Text('Successfully assigned this quiz to this section.')));
       getSectionData();
@@ -282,7 +390,7 @@ class _TeacherSelectedSectionScreenState
     }
   }
 
-  void removeThisQuiz(DocumentSnapshot assignmentDoc) async {
+  void removeThisQuiz(DocumentSnapshot quizDoc) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
       setState(() {
@@ -293,15 +401,37 @@ class _TeacherSelectedSectionScreenState
           .collection('sections')
           .doc(widget.sectionID)
           .update({
-        'quizzes': FieldValue.arrayRemove([assignmentDoc.id])
+        'quizzes': FieldValue.arrayRemove([quizDoc.id])
       });
       //  2. Assign assignment to lesson doc
       await FirebaseFirestore.instance
           .collection('quizzes')
-          .doc(assignmentDoc.id)
+          .doc(quizDoc.id)
           .update({
         'associatedSections': FieldValue.arrayRemove([widget.sectionID])
       });
+      final quizData = quizDoc.data() as Map<dynamic, dynamic>;
+      String title = quizData['title'];
+      String subject = quizData['subject'];
+
+      for (var student in associatedStudentDocs) {
+        final studentData = student.data() as Map<dynamic, dynamic>;
+        String email = studentData['email'];
+        String firstName = studentData['firstName'];
+        String lastName = studentData['lastName'];
+        await EmailJS.send(
+            'service_8qicz6r',
+            'template_6zzxsku',
+            {
+              'to_email': email,
+              'to_name': '$firstName $lastName',
+              'message_content':
+                  'The $subject quiz $title has been unassigned from your section.'
+            },
+            Options(
+                publicKey: 'u6vTOeKnZ6uLR3BVX',
+                privateKey: 'e-HosRtW2lC5-XlLVt1WV'));
+      }
       scaffoldMessenger.showSnackBar(const SnackBar(
           content: Text('Successfully removed this quiz from this section.')));
       getSectionData();

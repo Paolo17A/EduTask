@@ -109,7 +109,7 @@ class _AdminSelectedSectionScreenState
                           onPress: () => NavigatorRoutes.adminEditSection(
                               context,
                               sectionID: widget.sectionDoc.id),
-                          backgroundColor: CustomColors.moderateCyan)
+                          backgroundColor: CustomColors.softOrange)
                     ],
                   ),
                 ),
@@ -146,8 +146,8 @@ class _AdminSelectedSectionScreenState
   Widget _expandableTeachers() {
     return vertical20Pix(
       child: ExpansionTile(
-        collapsedBackgroundColor: CustomColors.moderateCyan.withOpacity(0.5),
-        backgroundColor: CustomColors.moderateCyan.withOpacity(0.5),
+        collapsedBackgroundColor: CustomColors.softOrange.withOpacity(0.5),
+        backgroundColor: CustomColors.softOrange.withOpacity(0.5),
         textColor: Colors.black,
         iconColor: Colors.black,
         collapsedShape: RoundedRectangleBorder(
@@ -165,7 +165,7 @@ class _AdminSelectedSectionScreenState
                       itemBuilder: (context, index) => studentEntry(context,
                           studentDoc: associatedTeacherDocs[index],
                           onPress: () {},
-                          backgroundColor: CustomColors.moderateCyan)),
+                          backgroundColor: CustomColors.softOrange)),
                 )
               : interText('NO ASSIGNED TEACHERS', fontSize: 20)
         ],
@@ -176,8 +176,8 @@ class _AdminSelectedSectionScreenState
   Widget _expandableStudents() {
     return vertical20Pix(
       child: ExpansionTile(
-        collapsedBackgroundColor: CustomColors.moderateCyan.withOpacity(0.5),
-        backgroundColor: CustomColors.moderateCyan.withOpacity(0.5),
+        collapsedBackgroundColor: CustomColors.softOrange.withOpacity(0.5),
+        backgroundColor: CustomColors.softOrange.withOpacity(0.5),
         textColor: Colors.black,
         iconColor: Colors.black,
         collapsedShape: RoundedRectangleBorder(
@@ -195,7 +195,7 @@ class _AdminSelectedSectionScreenState
                       itemBuilder: (context, index) => studentEntry(context,
                           studentDoc: associatedStudentDocs[index],
                           onPress: () {},
-                          backgroundColor: CustomColors.moderateCyan)),
+                          backgroundColor: CustomColors.softOrange)),
                 )
               : interText('NO ENROLLED STUDENTS', fontSize: 20)
         ],

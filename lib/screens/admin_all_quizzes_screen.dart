@@ -124,7 +124,7 @@ class _AdminAllQuizzesScreenState extends ConsumerState<AdminAllQuizzesScreen> {
             itemBuilder: (context, index) {
               return adminMaterialEntry(context,
                   materialDoc: quizDocs[index],
-                  color: CustomColors.moderateCyan.withOpacity(0.5),
+                  color: CustomColors.softOrange.withOpacity(0.5),
                   onView: () => NavigatorRoutes.adminSelectedQuiz(context,
                       quizDoc: quizDocs[index]),
                   onDelete: () => displayDeleteEntryDialog(context,

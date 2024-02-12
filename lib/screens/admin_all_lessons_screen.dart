@@ -117,7 +117,7 @@ class _AdminAllLessonsScreenState extends ConsumerState<AdminAllLessonsScreen> {
             itemBuilder: (context, index) {
               return adminMaterialEntry(context,
                   materialDoc: lessonDocs[index],
-                  color: CustomColors.moderateCyan.withOpacity(0.5),
+                  color: CustomColors.softOrange.withOpacity(0.5),
                   onView: () => NavigatorRoutes.adminSelectedLesson(context,
                       lessonDoc: lessonDocs[index]),
                   onDelete: () => displayDeleteEntryDialog(context,

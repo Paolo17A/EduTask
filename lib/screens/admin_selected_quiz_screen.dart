@@ -77,7 +77,7 @@ class _AdminSelectedQuizScreenState extends State<AdminSelectedQuizScreen> {
     return vertical20Pix(
       child: Container(
         decoration: BoxDecoration(
-            color: CustomColors.verySoftCyan,
+            color: CustomColors.verySoftOrange,
             borderRadius: BorderRadius.circular(20)),
         padding: EdgeInsets.all(15),
         child: ListView.builder(
@@ -92,7 +92,7 @@ class _AdminSelectedQuizScreenState extends State<AdminSelectedQuizScreen> {
               return vertical10horizontal4(
                 Container(
                   decoration: BoxDecoration(
-                      color: CustomColors.moderateCyan,
+                      color: CustomColors.softOrange,
                       borderRadius: BorderRadius.circular(10)),
                   padding: EdgeInsets.all(5),
                   child: Column(
@@ -115,7 +115,7 @@ class _AdminSelectedQuizScreenState extends State<AdminSelectedQuizScreen> {
                                     height: 60,
                                     decoration: BoxDecoration(
                                         color: entry.key == answer
-                                            ? CustomColors.verySoftCyan
+                                            ? CustomColors.verySoftOrange
                                             : Colors.white,
                                         borderRadius:
                                             BorderRadius.circular(10)),

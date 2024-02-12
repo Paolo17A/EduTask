@@ -8,8 +8,8 @@ class CustomColors {
   static const Color softOrange = Color.fromARGB(255, 221, 136, 73);
 
   //  Admin Colors
-  static const Color verySoftCyan = Color.fromARGB(255, 165, 212, 220);
-  static const Color moderateCyan = Color.fromARGB(255, 73, 168, 185);
+  //static const Color verySoftCyan = Color.fromARGB(255, 165, 212, 220);
+  //static const Color moderateCyan = Color.fromARGB(255, 73, 168, 185);
 
   //  Teacher Colors
   //static const Color lightGreyishLimeGreen = Color.fromARGB(255, 207, 246, 211);

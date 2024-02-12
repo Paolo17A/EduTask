@@ -113,7 +113,7 @@ class _AdminSelectedLessonScreenState extends State<AdminSelectedLessonScreen> {
                               launchThisURL(externalResource['downloadLink']),
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(),
-                              backgroundColor: CustomColors.moderateCyan),
+                              backgroundColor: CustomColors.softOrange),
                           child: interText(externalResource['fileName'],
                               textAlign: TextAlign.center,
                               fontWeight: FontWeight.bold,

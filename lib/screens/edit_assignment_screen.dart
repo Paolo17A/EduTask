@@ -86,11 +86,10 @@ class _EditAssignmentScreenState extends State<EditAssignmentScreen> {
         'assignmentType': assignmentType,
         'teacherID': FirebaseAuth.instance.currentUser!.uid,
         'deadline': deadline,
-        'associatedSections': []
       });
 
       scaffoldMessenger.showSnackBar(const SnackBar(
-          content: Text('Successfully created new assignment!')));
+          content: Text('Successfully edited this assignment!')));
       navigator.pop();
       navigator.pushReplacementNamed(NavigatorRoutes.lessonPlan);
     } catch (error) {

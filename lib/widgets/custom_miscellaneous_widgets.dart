@@ -109,7 +109,7 @@ Widget sectionTeacherContainer(BuildContext context,
         interText(subjectLabel),
         Container(
             width: MediaQuery.of(context).size.width * 0.4,
-            color: CustomColors.moderateCyan.withOpacity(0.75),
+            color: CustomColors.softOrange.withOpacity(0.75),
             padding: EdgeInsets.all(10),
             child: Center(
               child: Row(children: [
@@ -319,8 +319,8 @@ Widget assignedSections(List<dynamic> associatedSections) {
                             return Container(
                                 decoration: BoxDecoration(
                                   border: Border.all(width: 0.5),
-                                  color: CustomColors.moderateCyan
-                                      .withOpacity(0.5),
+                                  color:
+                                      CustomColors.softOrange.withOpacity(0.5),
                                 ),
                                 padding: EdgeInsets.all(4),
                                 child: interText(snapshot.data![index],

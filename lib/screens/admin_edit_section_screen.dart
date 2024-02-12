@@ -228,7 +228,7 @@ class _AdminEditSectionState extends State<AdminEditSection> {
                   Gap(20),
                   ovalButton('SAVE CHANGES',
                       onPress: editThisSection,
-                      backgroundColor: CustomColors.moderateCyan)
+                      backgroundColor: CustomColors.softOrange)
                 ],
               )),
             )),
@@ -282,8 +282,8 @@ class _AdminEditSectionState extends State<AdminEditSection> {
   Widget _availableTeachers() {
     return vertical10horizontal4(ExpansionTile(
       title: interText('Assigned Teachers', fontWeight: FontWeight.bold),
-      collapsedBackgroundColor: CustomColors.moderateCyan,
-      backgroundColor: CustomColors.verySoftCyan,
+      collapsedBackgroundColor: CustomColors.softOrange,
+      backgroundColor: CustomColors.verySoftOrange,
       textColor: Colors.black,
       iconColor: Colors.black,
       collapsedShape: RoundedRectangleBorder(
@@ -294,7 +294,7 @@ class _AdminEditSectionState extends State<AdminEditSection> {
         if (availableTeachers.isNotEmpty)
           ovalButton('ASSIGN NEW TEACHER',
               onPress: showAvailableTeachersDialog,
-              backgroundColor: CustomColors.moderateCyan),
+              backgroundColor: CustomColors.softOrange),
         if (assignedTeachers.isNotEmpty)
           all10Pix(
             child: Column(
@@ -320,7 +320,7 @@ class _AdminEditSectionState extends State<AdminEditSection> {
       padding: EdgeInsets.symmetric(vertical: 10),
       child: Container(
         decoration: BoxDecoration(
-            color: CustomColors.moderateCyan,
+            color: CustomColors.softOrange,
             border: Border.all(),
             borderRadius: BorderRadius.circular(10)),
         padding: EdgeInsets.all(10),
@@ -375,7 +375,7 @@ class _AdminEditSectionState extends State<AdminEditSection> {
                         onPress: () {
                       Navigator.of(context).pop();
                       assignNewTeacher(teacher.id);
-                    }, backgroundColor: CustomColors.verySoftCyan);
+                    }, backgroundColor: CustomColors.verySoftOrange);
                   }).toList())),
                 ],
               )),

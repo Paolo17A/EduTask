@@ -155,7 +155,7 @@ class _AddSectionScreenState extends State<AddSectionScreen> {
                   _availableAdvisers(),
                   ovalButton('ADD NEW SECTION',
                       onPress: addNewSection,
-                      backgroundColor: CustomColors.moderateCyan)
+                      backgroundColor: CustomColors.softOrange)
                 ],
               )),
             )),

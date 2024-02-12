@@ -5,6 +5,7 @@ import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:edutask/widgets/custom_text_widgets.dart';
+import 'package:emailjs/emailjs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -24,6 +25,7 @@ class AdminEditStudentScreen extends ConsumerStatefulWidget {
 class _AdminEditStudentScreenState
     extends ConsumerState<AdminEditStudentScreen> {
   bool _isLoading = true;
+  String email = '';
   final studentNumberController = TextEditingController();
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
@@ -50,6 +52,7 @@ class _AdminEditStudentScreenState
       firstNameController.text = studentData['firstName'];
       lastNameController.text = studentData['lastName'];
       selectedSection = studentData['section'];
+      email = studentData['email'];
       final sections =
           await FirebaseFirestore.instance.collection('sections').get();
       availableSectionDocs = sections.docs;
@@ -126,6 +129,24 @@ class _AdminEditStudentScreenState
           .update({
         'students': FieldValue.arrayUnion([widget.studentID])
       });
+      final section = await FirebaseFirestore.instance
+          .collection('sections')
+          .doc(newSection)
+          .get();
+      final newSectionData = section.data() as Map<dynamic, dynamic>;
+
+      await EmailJS.send(
+          'service_8qicz6r',
+          'template_6zzxsku',
+          {
+            'to_email': email,
+            'to_name': '${firstNameController.text} ${lastNameController.text}',
+            'message_content':
+                'You have been reassigned to section ${newSectionData['name']}.'
+          },
+          Options(
+              publicKey: 'u6vTOeKnZ6uLR3BVX',
+              privateKey: 'e-HosRtW2lC5-XlLVt1WV'));
     } catch (error) {
       scaffoldMessenger.showSnackBar(
           SnackBar(content: Text('Error switching student section: $error')));
@@ -233,7 +254,6 @@ class _AdminEditStudentScreenState
             setState(() {
               selectedSection = newVal!;
             });
-            //switchStudentSection(selectedSection, newVal!);
           }, availableSectionDocs),
         ],
       ),

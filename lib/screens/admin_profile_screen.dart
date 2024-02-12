@@ -192,7 +192,7 @@ class _AdminProfileScreenState extends ConsumerState<AdminProfileScreen> {
                   if (_editMode)
                     ovalButton('CANCEL CHANGES',
                         onPress: () => getAdminProfile(),
-                        backgroundColor: CustomColors.moderateCyan),
+                        backgroundColor: CustomColors.softOrange),
                   ovalButton(_editMode ? 'SAVE CHANGES' : 'EDIT PROFILE',
                       onPress: () {
                     if (_editMode) {
@@ -226,11 +226,11 @@ class _AdminProfileScreenState extends ConsumerState<AdminProfileScreen> {
                 if (_editMode)
                   ovalButton('UPLOAD PHOTO',
                       onPress: _pickProfileImage,
-                      backgroundColor: CustomColors.moderateCyan),
+                      backgroundColor: CustomColors.softOrange),
                 if (_editMode && profileImageURL.isNotEmpty)
                   ovalButton('DELETE PHOTO',
                       onPress: _removeProfileImage,
-                      backgroundColor: CustomColors.moderateCyan)
+                      backgroundColor: CustomColors.softOrange)
               ],
             ),
           ),

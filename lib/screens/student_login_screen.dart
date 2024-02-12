@@ -62,6 +62,30 @@ class _StudentLoginScreenState extends ConsumerState<StudentLoginScreen> {
         });
         return;
       }
+      if (!FirebaseAuth.instance.currentUser!.emailVerified) {
+        DateTime dateEmailVerificationSent =
+            (userData['dateEmailVerificationSent'] as Timestamp).toDate();
+        if (DateTime.now().difference(dateEmailVerificationSent).inMinutes <
+            50) {
+          scaffoldMessenger.showSnackBar(SnackBar(
+              content: Text(
+                  'Please check your email for the email verification link.')));
+        } else {
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .update({'dateEmailVerificationSent': DateTime.now()});
+          await FirebaseAuth.instance.currentUser!.sendEmailVerification();
+          scaffoldMessenger.showSnackBar(SnackBar(
+              content: Text(
+                  'A new email verification link has been sent to your email.')));
+        }
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+
       if (userData['section'].toString().isEmpty) {
         scaffoldMessenger.showSnackBar(const SnackBar(
             content: Text('You have not yet been assigned a section')));

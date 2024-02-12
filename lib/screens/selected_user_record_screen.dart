@@ -9,6 +9,7 @@ import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_miscellaneous_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:edutask/widgets/custom_text_widgets.dart';
+import 'package:emailjs/emailjs.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -162,7 +163,8 @@ class _SelectedUserRecordScreenState
       setState(() {
         _isLoading = true;
       });
-
+      final sectionData = sectionDoc.data() as Map<dynamic, dynamic>;
+      String name = sectionData['name'];
       //  1. Set the student's section parameter to the section's ID
       await FirebaseFirestore.instance
           .collection('users')
@@ -177,6 +179,17 @@ class _SelectedUserRecordScreenState
         'students': FieldValue.arrayUnion([widget.userDoc.id])
       });
       section = sectionDoc.id;
+      await EmailJS.send(
+          'service_8qicz6r',
+          'template_6zzxsku',
+          {
+            'to_email': email,
+            'to_name': formattedName,
+            'message_content': 'You have been assigned to section $name.'
+          },
+          Options(
+              publicKey: 'u6vTOeKnZ6uLR3BVX',
+              privateKey: 'e-HosRtW2lC5-XlLVt1WV'));
       getStudentSection();
     } catch (error) {
       scaffoldMessenger.showSnackBar(
@@ -585,7 +598,7 @@ class _SelectedUserRecordScreenState
           )
         : ovalButton('ASSIGN SECTION',
             onPress: showAvailableSectionsDialog,
-            backgroundColor: CustomColors.moderateCyan);
+            backgroundColor: CustomColors.softOrange);
   }
 
   void showAvailableSectionsDialog() {
@@ -605,7 +618,7 @@ class _SelectedUserRecordScreenState
                         width: MediaQuery.of(context).size.width * 0.75,
                         child: ovalButton(sectionName,
                             onPress: () => assignStudentToSection(section),
-                            backgroundColor: CustomColors.moderateCyan),
+                            backgroundColor: CustomColors.softOrange),
                       ),
                     );
                   }).toList())

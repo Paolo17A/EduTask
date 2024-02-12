@@ -179,10 +179,8 @@ class _StudentProfileScreenState extends ConsumerState<StudentProfileScreen> {
         }
       },
       child: Scaffold(
-        appBar: homeAppBarWidget(context,
-            backgroundColor: CustomColors.verySoftOrange, mayGoBack: true),
+        appBar: homeAppBarWidget(context, mayGoBack: true),
         drawer: appDrawer(context,
-            backgroundColor: CustomColors.verySoftOrange,
             userType: userType,
             profileImageURL: ref.read(profileImageProvider)),
         body: stackedLoadingContainer(

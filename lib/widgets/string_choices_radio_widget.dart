@@ -64,7 +64,7 @@ class ChoicesRadioWidgetState extends State<StringChoicesRadioWidget> {
                     widget.choiceSelectCallback(_choice);
                   });
                 },
-                activeColor: CustomColors.moderateCyan,
+                activeColor: CustomColors.softOrange,
               )
             ]);
           }).toList()),

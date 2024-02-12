@@ -73,7 +73,7 @@ Widget homeButton(BuildContext context,
           onPress: onPress,
           width: MediaQuery.of(context).size.width * 0.75,
           height: 125,
-          backgroundColor: CustomColors.moderateCyan));
+          backgroundColor: CustomColors.softOrange));
 }
 
 Widget studentSubmittablesButton(BuildContext context,
