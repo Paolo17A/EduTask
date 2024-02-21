@@ -290,9 +290,17 @@ class _SelectedUserRecordScreenState
     String userEmail = '';
     String userPassword = '';
     try {
+      if (advisorySection.isNotEmpty) {
+        scaffoldMessenger.showSnackBar(SnackBar(
+            content: Text(
+                'This teacher has an advisory section. Assign a different adviser to this section first before deleting this user.')));
+        return;
+      }
       setState(() {
         _isLoading = true;
       });
+      //  Get Teacher Data
+
       //  1. Get all created assignments
       final assignments = await FirebaseFirestore.instance
           .collection('assignments')
@@ -358,8 +366,15 @@ class _SelectedUserRecordScreenState
           'assignments': FieldValue.arrayRemove(assignmentIDs),
           'lessons': FieldValue.arrayRemove(lessonIDs),
           'quizzes': FieldValue.arrayRemove(quizIDs),
-          'adviser': ''
+          'teachers': FieldValue.arrayRemove([widget.userDoc.id]),
         });
+      }
+      //  If the teacher was an adviser of a section, remove that section's adviser
+      if (advisorySection.isNotEmpty) {
+        await FirebaseFirestore.instance
+            .collection('sections')
+            .doc(advisorySection)
+            .update({'adviser': ''});
       }
 
       //  5. Store admin's current data locally

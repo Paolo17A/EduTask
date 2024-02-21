@@ -53,7 +53,6 @@ class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
           .get();
       final userData = user.data() as Map<dynamic, dynamic>;
       userType = userData['userType'];
-      subject = userData['subject'];
       firstNameController.text = userData['firstName'];
       lastNameController.text = userData['lastName'];
       profileImageURL = userData['profileImageURL'];

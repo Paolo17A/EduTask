@@ -55,7 +55,7 @@ class _AdminSelectedSectionScreenState
             .get();
         associatedTeacherDocs = teachers.docs;
       }
-
+      print('a');
       //  GET ASSOCIATED STUDENTS
       if (studentIDs.isNotEmpty) {
         final studentsQuery = await FirebaseFirestore.instance
@@ -64,11 +64,11 @@ class _AdminSelectedSectionScreenState
             .get();
         associatedStudentDocs = studentsQuery.docs;
       }
-
+      print('b');
       if (adviserID.isNotEmpty) {
         adviserName = await getUserName(adviserID);
       }
-
+      print('c');
       setState(() {
         _isLoading = false;
       });
