@@ -23,6 +23,7 @@ class TeacherHandledSectionsScreen extends StatefulWidget {
 class _TeacherHandledSectionsScreenState
     extends State<TeacherHandledSectionsScreen> {
   bool _isLoading = true;
+  String advisorySection = '';
   List<DocumentSnapshot> handledSectionDocs = [];
 
   @override
@@ -39,6 +40,7 @@ class _TeacherHandledSectionsScreenState
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .get();
       final userData = user.data() as Map<dynamic, dynamic>;
+      advisorySection = userData['advisorySection'];
       List<dynamic> handledSections = userData['handledSections'];
       if (handledSections.isEmpty) {
         setState(() {
@@ -81,9 +83,9 @@ class _TeacherHandledSectionsScreenState
               child: all20Pix(
                   child: Column(
                 children: [
+                  if (advisorySection.isNotEmpty) _advisorySection(),
                   handledSectionHeader(),
-                  Gap(30),
-                  _sectionsContainer()
+                  _handledSectionsContainer()
                 ],
               )),
             ),
@@ -91,12 +93,39 @@ class _TeacherHandledSectionsScreenState
     );
   }
 
-  Widget handledSectionHeader() {
-    return interText('HANDLED SECTIONS',
-        fontSize: 40, textAlign: TextAlign.center, color: Colors.black);
+  Widget _advisorySection() {
+    return Column(
+      children: [
+        interText('ADVISORY SECTION',
+            fontSize: 30, textAlign: TextAlign.center, color: Colors.black),
+        FutureBuilder(
+            future: FirebaseFirestore.instance
+                .collection('sections')
+                .doc(advisorySection)
+                .get(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return interText(
+                    'Error getting advisory section: ${snapshot.error.toString()}');
+              }
+              DocumentSnapshot sectionDoc = snapshot.data!;
+              return SizedBox(
+                  width: double.infinity,
+                  child: _handledSectionEntry(sectionDoc));
+            }),
+        Gap(30)
+      ],
+    );
   }
 
-  Widget _sectionsContainer() {
+  Widget handledSectionHeader() {
+    return interText('HANDLED SECTIONS',
+        fontSize: 30, textAlign: TextAlign.center, color: Colors.black);
+  }
+
+  Widget _handledSectionsContainer() {
     return handledSectionDocs.isNotEmpty
         ? _sectionEntries()
         : interText('YOU HAVE NO ASSIGNED SECTIONS TO HANDLE YET.',

@@ -533,13 +533,10 @@ class _TeacherSelectedSectionScreenState
                       String title = lessonData['title'];
                       return SizedBox(
                         width: MediaQuery.of(context).size.width * 0.75,
-                        child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              assignThisLesson(lesson);
-                            },
-                            child:
-                                interText(title, fontWeight: FontWeight.bold)),
+                        child: ovalButton(title, onPress: () {
+                          Navigator.of(context).pop();
+                          assignThisLesson(lesson);
+                        }, backgroundColor: CustomColors.softOrange),
                       );
                     }).toList()),
                   ],
@@ -604,13 +601,10 @@ class _TeacherSelectedSectionScreenState
                       String title = assignmentData['title'];
                       return SizedBox(
                         width: MediaQuery.of(context).size.width * 0.75,
-                        child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              assignThisAssignment(assignment);
-                            },
-                            child:
-                                interText(title, fontWeight: FontWeight.bold)),
+                        child: ovalButton(title, onPress: () {
+                          Navigator.of(context).pop();
+                          assignThisAssignment(assignment);
+                        }, backgroundColor: CustomColors.softOrange),
                       );
                     }).toList()),
                   ],
@@ -672,13 +666,10 @@ class _TeacherSelectedSectionScreenState
                       String title = quizData['title'];
                       return SizedBox(
                         width: MediaQuery.of(context).size.width * 0.75,
-                        child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              assignThisQuiz(quiz);
-                            },
-                            child:
-                                interText(title, fontWeight: FontWeight.bold)),
+                        child: ovalButton(title, onPress: () {
+                          Navigator.of(context).pop();
+                          assignThisQuiz(quiz);
+                        }, backgroundColor: CustomColors.softOrange),
                       );
                     }).toList()),
                   ],
