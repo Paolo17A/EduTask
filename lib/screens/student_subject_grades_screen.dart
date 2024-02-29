@@ -100,6 +100,8 @@ class StudentSubjectGradesScreen extends ConsumerWidget {
                   return const CircularProgressIndicator();
                 } else if (snapshot.hasError) {
                   return interText('-');
+                } else if (!snapshot.hasData) {
+                  return interText('no data returned');
                 } else {
                   return snapshot.data!.isNotEmpty
                       ? ListView.builder(

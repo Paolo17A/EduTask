@@ -446,7 +446,7 @@ Widget answeredQuizEntry(BuildContext context,
     {required DocumentSnapshot quizResultDoc}) {
   final quizResultData = quizResultDoc.data() as Map<dynamic, dynamic>;
   num grade = quizResultData['grade'];
-  String assignmentID = quizResultData['quizID'];
+  String quizID = quizResultData['quizID'];
   return all10Pix(
     child: Column(
       children: [
@@ -454,7 +454,7 @@ Widget answeredQuizEntry(BuildContext context,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             FutureBuilder(
-                future: getCorrespondingAssignment(assignmentID),
+                future: getCorrespondingQuiz(quizID),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();

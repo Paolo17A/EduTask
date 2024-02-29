@@ -234,7 +234,11 @@ class _AnswerQuizScreenState extends State<AnswerQuizScreen> {
   Widget _questionContainer(String question) {
     return vertical10horizontal4(
       Row(
-        children: [interText(question, color: Colors.black, fontSize: 20)],
+        children: [
+          SizedBox(
+              width: MediaQuery.of(context).size.width * 0.8,
+              child: interText(question, color: Colors.black, fontSize: 20))
+        ],
       ),
     );
   }
