@@ -28,6 +28,7 @@ import 'package:edutask/screens/student_submittables_screen.dart';
 import 'package:edutask/screens/teacher_handled_sections_screen.dart';
 import 'package:edutask/screens/teacher_home_screen.dart';
 import 'package:edutask/screens/teacher_login_screen.dart';
+import 'package:edutask/screens/teacher_make_announcement.dart';
 import 'package:edutask/screens/teacher_profile_screen.dart';
 import 'package:edutask/screens/teacher_register_screen.dart';
 import 'package:edutask/screens/welcome_screen.dart';
@@ -62,6 +63,8 @@ final Map<String, WidgetBuilder> _routes = {
   NavigatorRoutes.addLesson: (context) => const AddLessonScreen(),
   NavigatorRoutes.addAssignment: (context) => const AddAssignmentScreen(),
   NavigatorRoutes.addQuiz: (context) => const AddQuizScreen(),
+  NavigatorRoutes.makeAnnouncement: (context) =>
+      const TeacherMakeAnnouncementScreen(),
 
   //  STUDENTS
   NavigatorRoutes.studentLogin: (context) => const StudentLoginScreen(),

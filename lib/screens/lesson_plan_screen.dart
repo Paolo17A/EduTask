@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/providers/profile_image_provider.dart';
 import 'package:edutask/providers/selected_subject_provider.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
@@ -124,7 +125,19 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
         });
       }
 
-      //  2. Delete the assignment document
+      //  2. Delete all associated submissions
+      final submissions = await FirebaseFirestore.instance
+          .collection('submissions')
+          .where('assignmentID', isEqualTo: assignmentDoc.id)
+          .get();
+      for (var submission in submissions.docs) {
+        await FirebaseFirestore.instance
+            .collection('submissions')
+            .doc(submission.id)
+            .delete();
+      }
+
+      //  3. Delete the assignment document
       await FirebaseFirestore.instance
           .collection('assignments')
           .doc(assignmentDoc.id)
@@ -161,7 +174,19 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
         });
       }
 
-      //  2. Delete the assignment document
+      //  2. Delete all associated quizResults
+      final quizResults = await FirebaseFirestore.instance
+          .collection('quizResults')
+          .where('quizID', isEqualTo: quizDoc.id)
+          .get();
+      for (var quizResult in quizResults.docs) {
+        await FirebaseFirestore.instance
+            .collection('quizResults')
+            .doc(quizResult.id)
+            .delete();
+      }
+
+      //  3. Delete the quiz document
       await FirebaseFirestore.instance
           .collection('quizzes')
           .doc(quizDoc.id)
@@ -189,7 +214,9 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
       },
       child: Scaffold(
         appBar: homeAppBarWidget(context, mayGoBack: true),
-        drawer: appDrawer(context, userType: 'TEACHER'),
+        drawer: appDrawer(context,
+            userType: 'TEACHER',
+            profileImageURL: ref.read(profileImageProvider)),
         body: switchedLoadingContainer(
             _isLoading,
             SingleChildScrollView(

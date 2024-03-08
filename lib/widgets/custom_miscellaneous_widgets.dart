@@ -415,6 +415,8 @@ Widget submittedAssignmentEntry(BuildContext context,
                     return const CircularProgressIndicator();
                   } else if (snapshot.hasError) {
                     return interText('-');
+                  } else if (!snapshot.hasData) {
+                    return interText('This assignment has been deleted');
                   } else {
                     final assignmentData =
                         snapshot.data!.data() as Map<dynamic, dynamic>;
@@ -424,7 +426,7 @@ Widget submittedAssignmentEntry(BuildContext context,
                         child: interText(title, fontWeight: FontWeight.bold));
                   }
                 }),
-            interText('${grade.toString()}/10', fontWeight: FontWeight.bold)
+            interText('${grade.toString()}/100', fontWeight: FontWeight.bold)
           ],
         ),
         Gap(8),

@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import '../util/color_util.dart';
+import '../widgets/custom_button_widgets.dart';
 import '../widgets/custom_text_widgets.dart';
 
 class TeacherHandledSectionsScreen extends StatefulWidget {
@@ -75,6 +76,8 @@ class _TeacherHandledSectionsScreenState
       appBar: homeAppBarWidget(context, mayGoBack: true),
       drawer: appDrawer(context, userType: 'TEACHER'),
       bottomNavigationBar: teacherBottomNavBar(context, index: 1),
+      floatingActionButton: teacherAnnouncementButton(context),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: switchedLoadingContainer(
           _isLoading,
           SizedBox(

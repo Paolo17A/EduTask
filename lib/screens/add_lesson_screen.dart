@@ -157,7 +157,7 @@ class _AddLessonScreenState extends ConsumerState<AddLessonScreen> {
                   _additionalResources(),
                   ovalButton('CREATE LESSON',
                       onPress: addNewLesson,
-                      backgroundColor: CustomColors.veryLightGrey)
+                      backgroundColor: CustomColors.softOrange)
                 ],
               )),
             )),

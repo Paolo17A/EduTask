@@ -192,7 +192,7 @@ class _SelectedSubmissionScreenState
 
   Widget _gradeButton() {
     return ovalButton('ASSIGN GRADE',
-        onPress: showGradeDialog, backgroundColor: CustomColors.veryLightGrey);
+        onPress: showGradeDialog, backgroundColor: CustomColors.softOrange);
   }
 
   void showGradeDialog() {
@@ -218,7 +218,7 @@ class _SelectedSubmissionScreenState
                     vertical20Pix(
                       child: ovalButton('SUBMIT GRADE',
                           onPress: assignGradeToSubmission,
-                          backgroundColor: CustomColors.veryLightGrey),
+                          backgroundColor: CustomColors.softOrange),
                     )
                   ],
                 ),

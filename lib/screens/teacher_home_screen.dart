@@ -6,6 +6,7 @@ import 'package:edutask/util/future_util.dart';
 import 'package:edutask/util/navigator_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/app_drawer_widget.dart';
+import 'package:edutask/widgets/custom_button_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:edutask/widgets/custom_text_widgets.dart';
@@ -70,6 +71,8 @@ class _TeacherHomeScreenState extends ConsumerState<TeacherHomeScreen> {
             profileImageURL: ref.read(profileImageProvider),
             userType: ref.read(currentUserTypeProvider),
             isHome: true),
+        floatingActionButton: teacherAnnouncementButton(context),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: teacherBottomNavBar(context, index: 0),
         body: switchedLoadingContainer(
             _isLoading,
@@ -96,7 +99,7 @@ class _TeacherHomeScreenState extends ConsumerState<TeacherHomeScreen> {
       child: Container(
         width: double.infinity,
         //height: 200,
-        color: CustomColors.veryLightGrey,
+        color: CustomColors.verySoftOrange,
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
@@ -152,8 +155,8 @@ class _TeacherHomeScreenState extends ConsumerState<TeacherHomeScreen> {
         style: ElevatedButton.styleFrom(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            backgroundColor: CustomColors.veryLightGrey,
-            foregroundColor: Colors.white),
+            backgroundColor: CustomColors.softOrange,
+            foregroundColor: Colors.black),
         child: Container(
           padding: EdgeInsets.all(4),
           child: Column(

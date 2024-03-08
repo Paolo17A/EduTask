@@ -67,6 +67,7 @@ class NavigatorRoutes {
   static const addLesson = '/addLesson';
   static const addAssignment = '/addAssignment';
   static const addQuiz = '/addQuiz';
+  static const makeAnnouncement = '/makeAnnouncement';
 
   static void teacherSelectedSection(BuildContext context,
       {required String sectionID}) {

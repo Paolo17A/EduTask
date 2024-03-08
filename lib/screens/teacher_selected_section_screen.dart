@@ -699,15 +699,57 @@ class _TeacherSelectedSectionScreenState
                       itemCount: associatedStudentDocs.length,
                       itemBuilder: (context, index) => studentEntry(context,
                           studentDoc: associatedStudentDocs[index],
-                          onPress: () =>
-                              NavigatorRoutes.teacherSelectedStudentGrades(
-                                  context,
-                                  studentDoc: associatedStudentDocs[index],
-                                  subject: ''))),
+                          onPress: () => showSelectSubjectDialog(
+                              studentDoc: associatedStudentDocs[index]))),
                 )
               : interText('NO ENROLLED STUDENTS', fontSize: 20)
         ],
       ),
     );
+  }
+
+  void showSelectSubjectDialog({required DocumentSnapshot studentDoc}) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+                content: SingleChildScrollView(
+              child: Column(
+                children: [
+                  interText('SELECT A SUBJECT: ',
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24),
+                  const Gap(12),
+                  subjectButton(studentDoc: studentDoc, subject: 'AP'),
+                  subjectButton(studentDoc: studentDoc, subject: 'ENGLISH'),
+                  subjectButton(studentDoc: studentDoc, subject: 'EPP'),
+                  subjectButton(studentDoc: studentDoc, subject: 'ESP'),
+                  subjectButton(studentDoc: studentDoc, subject: 'FILIPINO'),
+                  subjectButton(studentDoc: studentDoc, subject: 'MAPEH'),
+                  subjectButton(studentDoc: studentDoc, subject: 'MATHEMATICS'),
+                  subjectButton(studentDoc: studentDoc, subject: 'SCIENCE'),
+                ],
+              ),
+            )));
+  }
+
+  Widget subjectButton(
+      {required DocumentSnapshot studentDoc, required String subject}) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+          onPressed: () => _goToTeacherSelectedStudentGrades(
+              studentDoc: studentDoc, subject: subject),
+          style: ElevatedButton.styleFrom(
+              backgroundColor: CustomColors.softOrange),
+          child: interText(subject, fontSize: 16, color: Colors.black)),
+    );
+  }
+
+  void _goToTeacherSelectedStudentGrades(
+      {required DocumentSnapshot studentDoc, required String subject}) {
+    Navigator.of(context).pop();
+    NavigatorRoutes.teacherSelectedStudentGrades(context,
+        studentDoc: studentDoc, subject: subject);
   }
 }

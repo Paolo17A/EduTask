@@ -8,6 +8,7 @@ Widget teacherBottomNavBar(BuildContext context, {required int index}) {
   return BottomAppBar(
     color: CustomColors.veryDarkGrey,
     height: 85,
+    shape: CircularNotchedRectangle(),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -51,57 +52,6 @@ Widget teacherBottomNavBar(BuildContext context, {required int index}) {
             ],
           ),
         ),
-        /*SizedBox(
-          width: MediaQuery.of(context).size.width * 0.18,
-          child: Column(
-            children: [
-              IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.calendar_month,
-                      color: index == 2
-                          ? Colors.yellow
-                          : CustomColors.veryLightGrey)),
-              interText('CALENDAR',
-                  fontSize: 8,
-                  color:
-                      index == 2 ? Colors.yellow : CustomColors.veryLightGrey)
-            ],
-          ),
-        ),*/
-        /*SizedBox(
-          width: MediaQuery.of(context).size.width * 0.18,
-          child: Column(
-            children: [
-              IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.auto_graph,
-                      color: index == 3
-                          ? Colors.yellow
-                          : CustomColors.veryLightGrey)),
-              interText('PROGRESS',
-                  fontSize: 8,
-                  color:
-                      index == 3 ? Colors.yellow : CustomColors.veryLightGrey)
-            ],
-          ),
-        ),*/
-        /*SizedBox(
-          width: MediaQuery.of(context).size.width * 0.18,
-          child: Column(
-            children: [
-              IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.message_rounded,
-                      color: index == 4
-                          ? Colors.yellow
-                          : CustomColors.veryLightGrey)),
-              interText('MESSAGES',
-                  fontSize: 8,
-                  color:
-                      index == 4 ? Colors.yellow : CustomColors.veryLightGrey)
-            ],
-          ),
-        ),*/
       ],
     ),
   );
@@ -134,23 +84,6 @@ Widget adminBottomNavBar(BuildContext context, {required int index}) {
             ],
           ),
         ),
-        /*SizedBox(
-          width: MediaQuery.of(context).size.width * 0.3,
-          child: Column(
-            children: [
-              IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.calendar_month,
-                      color: index == 1
-                          ? Colors.yellow
-                          : CustomColors.veryLightGrey)),
-              interText('CALENDAR',
-                  fontSize: 8,
-                  color:
-                      index == 1 ? Colors.yellow : CustomColors.veryLightGrey)
-            ],
-          ),
-        ),*/
         SizedBox(
           width: MediaQuery.of(context).size.width * 0.45,
           child: Column(

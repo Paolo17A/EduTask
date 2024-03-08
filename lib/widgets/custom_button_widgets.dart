@@ -100,3 +100,27 @@ Widget studentSubmittablesButton(BuildContext context,
         )),
   );
 }
+
+Widget teacherAnnouncementButton(BuildContext context,
+    {Color backgroundColor = CustomColors.veryLightGrey,
+    bool doNothing = false}) {
+  return SizedBox(
+    width: 70,
+    height: 70,
+    child: ElevatedButton(
+        onPressed: () => doNothing == true
+            ? null
+            : Navigator.of(context).pushNamed(NavigatorRoutes.makeAnnouncement),
+        style: ElevatedButton.styleFrom(
+            shape: CircleBorder(
+                side: BorderSide(color: CustomColors.veryDarkGrey, width: 4)),
+            backgroundColor: backgroundColor),
+        child: Transform.scale(
+          scale: 1.5,
+          child: Icon(
+            Icons.add_alert,
+            color: CustomColors.veryDarkGrey,
+          ),
+        )),
+  );
+}

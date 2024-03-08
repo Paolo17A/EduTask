@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutask/providers/current_user_type_provider.dart';
 import 'package:edutask/util/future_util.dart';
@@ -18,7 +16,6 @@ import 'package:intl/intl.dart';
 
 import '../providers/profile_image_provider.dart';
 import '../util/color_util.dart';
-import '../util/navigator_util.dart';
 
 class StudentHomeScreen extends ConsumerStatefulWidget {
   const StudentHomeScreen({super.key});
@@ -88,13 +85,90 @@ class _StudentHomeScreenState extends ConsumerState<StudentHomeScreen> {
                       profileImageURL: profileImageURL,
                       containerColor: CustomColors.verySoftOrange),
                   _sectionName(),
-                  _pendingAssignments(),
-                  _pendingQuizzes()
+                  _announcements()
                 ],
               ),
             )),
       ),
     );
+  }
+
+  Widget _announcements() {
+    return all10Pix(
+        child: FutureBuilder(
+            future: FirebaseFirestore.instance
+                .collection('announcements')
+                .where('associatedSections', arrayContains: section)
+                .get(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return interText('Error getting section');
+              }
+              return Column(
+                children: [
+                  interText('ANNOUNCEMENTS',
+                      fontWeight: FontWeight.bold, fontSize: 16),
+                  snapshot.data!.docs.isNotEmpty
+                      ? ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            final annoucementData =
+                                snapshot.data!.docs[index].data();
+                            String title = annoucementData['title'];
+                            String content = annoucementData['content'];
+                            DateTime dateTimeAnnounced =
+                                (annoucementData['dateTimeAnnounced']
+                                        as Timestamp)
+                                    .toDate();
+                            return all10Pix(
+                              child: ElevatedButton(
+                                  onPressed: () => _viewAnnouncement(
+                                      snapshot.data!.docs[index]),
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: CustomColors.softOrange,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10))),
+                                  child: all10Pix(
+                                    child: Row(
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            interText(
+                                                DateFormat('MMM dd, YYY')
+                                                    .format(dateTimeAnnounced),
+                                                color: Colors.black),
+                                            interText(title,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                                fontSize: 20),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.7,
+                                              child: interText(content,
+                                                  color: Colors.black,
+                                                  overflow:
+                                                      TextOverflow.ellipsis),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  )),
+                            );
+                          })
+                      : interText('NO ANNOUNCEMENTS AVAILABLE'),
+                ],
+              );
+            }));
   }
 
   Widget _sectionName() {
@@ -114,148 +188,37 @@ class _StudentHomeScreenState extends ConsumerState<StudentHomeScreen> {
     );
   }
 
-  Widget _pendingAssignments() {
-    return all10Pix(
-        child: Container(
-      color: CustomColors.verySoftOrange,
-      padding: EdgeInsets.all(10),
-      child: Column(
-        children: [
-          interText('PENDING ASSIGNMENTS',
-              fontWeight: FontWeight.bold, fontSize: 20),
-          FutureBuilder(
-              future: getPendingAssignments(section),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return interText('Error getting assignments');
-                } else {
-                  return snapshot.data!.isNotEmpty
-                      ? Column(children: [
-                          ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: min(2, snapshot.data!.length),
-                              itemBuilder: (context, index) {
-                                return _pendingAssignmentEntry(
-                                    snapshot.data![index]);
-                              }),
-                          if (snapshot.data!.length > 2)
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  TextButton(
-                                      onPressed: () {},
-                                      child: interText('VIEW ALL'))
-                                ])
-                        ])
-                      : interText('YOU HAVE NO PENDING ASSIGNMENTS TO SUBMIT.',
-                          fontSize: 24, textAlign: TextAlign.center);
-                }
-              })
-        ],
-      ),
-    ));
-  }
-
-  Widget _pendingQuizzes() {
-    return all10Pix(
-        child: Container(
-      color: CustomColors.verySoftOrange,
-      padding: EdgeInsets.all(10),
-      child: Column(
-        children: [
-          interText('PENDING QUIZZES',
-              fontWeight: FontWeight.bold, fontSize: 20),
-          FutureBuilder(
-              future: getPendingQuizzes(section),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return interText('Error getting quizzes');
-                } else {
-                  return snapshot.data!.isNotEmpty
-                      ? Column(children: [
-                          ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: min(2, snapshot.data!.length),
-                              itemBuilder: (context, index) {
-                                return _pendingQuizEntry(snapshot.data![index]);
-                              }),
-                          if (snapshot.data!.length > 2)
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  TextButton(
-                                      onPressed: () {},
-                                      child: interText('VIEW ALL'))
-                                ])
-                        ])
-                      : interText('YOU HAVE NO PENDING ASSIGNMENTS TO SUBMIT.',
-                          fontSize: 24, textAlign: TextAlign.center);
-                }
-              })
-        ],
-      ),
-    ));
-  }
-
-  Widget _pendingAssignmentEntry(DocumentSnapshot assignmentDoc) {
-    final assignmentData = assignmentDoc.data() as Map<dynamic, dynamic>;
-    String title = assignmentData['title'];
-    String subject = assignmentData['subject'];
-    DateTime deadline = (assignmentData['deadline'] as Timestamp).toDate();
-    return ElevatedButton(
-        onPressed: () => NavigatorRoutes.answerAssignment(context,
-            assignmentID: assignmentDoc.id, fromHomeScreen: true),
-        style: ElevatedButton.styleFrom(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            backgroundColor: CustomColors.softOrange,
-            foregroundColor: Colors.white),
-        child: Container(
-          padding: EdgeInsets.all(4),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              interText('Subject: $subject',
-                  fontWeight: FontWeight.bold, fontSize: 18),
-              interText(
-                  'Deadline: ${DateFormat('MMM dd, yyyy').format(deadline)}',
-                  fontSize: 18),
-              SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.75,
-                  child: interText(title, fontSize: 16))
-            ],
-          ),
-        ));
-  }
-
-  Widget _pendingQuizEntry(DocumentSnapshot quizDoc) {
-    final quizData = quizDoc.data() as Map<dynamic, dynamic>;
-    String title = quizData['title'];
-    String subject = quizData['subject'];
-    return ElevatedButton(
-        onPressed: () =>
-            NavigatorRoutes.answerQuiz(context, quizID: quizDoc.id),
-        style: ElevatedButton.styleFrom(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            backgroundColor: CustomColors.softOrange,
-            foregroundColor: Colors.white),
-        child: Container(
-          padding: EdgeInsets.all(4),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              interText('Subject: $subject',
-                  fontWeight: FontWeight.bold, fontSize: 18),
-              SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.75,
-                  child: interText(title, fontSize: 16))
-            ],
-          ),
-        ));
+  void _viewAnnouncement(DocumentSnapshot announcementDoc) {
+    final annoucementData = announcementDoc.data() as Map<dynamic, dynamic>;
+    String title = annoucementData['title'];
+    String content = annoucementData['content'];
+    DateTime dateTimeAnnounced =
+        (annoucementData['dateTimeAnnounced'] as Timestamp).toDate();
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              content: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    interText(title,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: 25),
+                    Row(children: [
+                      interText(
+                          DateFormat('MMM dd, YYY').format(dateTimeAnnounced),
+                          color: Colors.black)
+                    ]),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 50),
+                      child: interText(content),
+                    ),
+                    ovalButton('CLOSE',
+                        onPress: () => Navigator.of(context).pop(),
+                        backgroundColor: CustomColors.softOrange)
+                  ],
+                ),
+              ),
+            ));
   }
 }
