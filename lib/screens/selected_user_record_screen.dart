@@ -18,8 +18,10 @@ import 'package:gap/gap.dart';
 import '../util/color_util.dart';
 
 class SelectedUserRecordScreen extends ConsumerStatefulWidget {
-  final DocumentSnapshot userDoc;
-  const SelectedUserRecordScreen({super.key, required this.userDoc});
+  final String userID;
+  final String previousRoute;
+  const SelectedUserRecordScreen(
+      {super.key, required this.userID, required this.previousRoute});
 
   @override
   ConsumerState<SelectedUserRecordScreen> createState() =>
@@ -34,6 +36,7 @@ class _SelectedUserRecordScreenState
   String idNumber = '';
   String email = '';
   String profileImageURL = '';
+  bool adminApproved = true;
 
   //  TEACHER
   String advisorySection = '';
@@ -47,14 +50,19 @@ class _SelectedUserRecordScreenState
   List<DocumentSnapshot> availableSectionDocs = [];
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     super.didChangeDependencies();
-    final userData = widget.userDoc.data() as Map<dynamic, dynamic>;
+    final user = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.userID)
+        .get();
+    final userData = user.data() as Map<dynamic, dynamic>;
     formattedName = '${userData['firstName']} ${userData['lastName']}';
     idNumber = userData['IDNumber'];
     email = userData['email'];
     profileImageURL = userData['profileImageURL'];
     userType = userData['userType'];
+    adminApproved = userData['adminApproved'];
     if (userType == 'TEACHER') {
       handledSections = userData['handledSections'];
       advisorySection = userData['advisorySection'];
@@ -155,6 +163,30 @@ class _SelectedUserRecordScreenState
     }
   }
 
+  void approveUser() async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.userID)
+          .update({'adminApproved': true});
+      setState(() {
+        adminApproved = true;
+        _isLoading = false;
+      });
+    } catch (error) {
+      scaffoldMessenger.showSnackBar(
+          SnackBar(content: Text('Error getting handled sections: $error')));
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   void assignStudentToSection(DocumentSnapshot sectionDoc) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
@@ -168,7 +200,7 @@ class _SelectedUserRecordScreenState
       //  1. Set the student's section parameter to the section's ID
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(widget.userDoc.id)
+          .doc(widget.userID)
           .update({'section': sectionDoc.id});
 
       //  2.Add user to section's students
@@ -176,7 +208,7 @@ class _SelectedUserRecordScreenState
           .collection('sections')
           .doc(sectionDoc.id)
           .update({
-        'students': FieldValue.arrayUnion([widget.userDoc.id])
+        'students': FieldValue.arrayUnion([widget.userID])
       });
       section = sectionDoc.id;
       await EmailJS.send(
@@ -209,7 +241,6 @@ class _SelectedUserRecordScreenState
       setState(() {
         _isLoading = true;
       });
-      print(FirebaseAuth.instance.currentUser == null ? 'no user' : 'meron');
       //  Store admin's current data locally
       final currentUser = await FirebaseFirestore.instance
           .collection('users')
@@ -222,7 +253,7 @@ class _SelectedUserRecordScreenState
       //  1. Delete all of this students submissions
       final submissions = await FirebaseFirestore.instance
           .collection('submissions')
-          .where('studentID', isEqualTo: widget.userDoc.id)
+          .where('studentID', isEqualTo: widget.userID)
           .get();
       for (var submission in submissions.docs) {
         await submission.reference.delete();
@@ -230,7 +261,7 @@ class _SelectedUserRecordScreenState
       //  2. Delete all of this students quiz results
       final quizResults = await FirebaseFirestore.instance
           .collection('quizResults')
-          .where('studentID', isEqualTo: widget.userDoc.id)
+          .where('studentID', isEqualTo: widget.userID)
           .get();
       for (var quizResult in quizResults.docs) {
         await quizResult.reference.delete();
@@ -241,17 +272,21 @@ class _SelectedUserRecordScreenState
             .collection('sections')
             .doc(section)
             .update({
-          'students': FieldValue.arrayRemove([widget.userDoc.id])
+          'students': FieldValue.arrayRemove([widget.userID])
         });
       }
 
       //  4. Delete the grades document
       await FirebaseFirestore.instance
           .collection('grades')
-          .doc(widget.userDoc.id)
+          .doc(widget.userID)
           .delete();
       //  5. Sign in to the student's account and delete it
-      final studentData = widget.userDoc.data() as Map<dynamic, dynamic>;
+      final student = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.userID)
+          .get();
+      final studentData = student.data() as Map<dynamic, dynamic>;
       String instructorEmail = studentData['email'];
       String instructorPassword = studentData['password'];
       final instructorToDelete = await FirebaseAuth.instance
@@ -304,7 +339,7 @@ class _SelectedUserRecordScreenState
       //  1. Get all created assignments
       final assignments = await FirebaseFirestore.instance
           .collection('assignments')
-          .where('teacherID', isEqualTo: widget.userDoc.id)
+          .where('teacherID', isEqualTo: widget.userID)
           .get();
       final assignmentDocs = assignments.docs;
       final assignmentIDs = assignmentDocs.map((e) => e.id).toList();
@@ -327,7 +362,7 @@ class _SelectedUserRecordScreenState
       //  2. Get all created lessons
       final lessons = await FirebaseFirestore.instance
           .collection('lessons')
-          .where('teacherID', isEqualTo: widget.userDoc.id)
+          .where('teacherID', isEqualTo: widget.userID)
           .get();
       final lessonDocs = lessons.docs;
       final lessonIDs = lessonDocs.map((e) => e.id).toList();
@@ -338,7 +373,7 @@ class _SelectedUserRecordScreenState
       //  3. Get all created quizzes
       final quizzes = await FirebaseFirestore.instance
           .collection('quizzes')
-          .where('teacherID', isEqualTo: widget.userDoc.id)
+          .where('teacherID', isEqualTo: widget.userID)
           .get();
       final quizDocs = quizzes.docs;
       final quizIDs = quizDocs.map((e) => e.id).toList();
@@ -366,7 +401,7 @@ class _SelectedUserRecordScreenState
           'assignments': FieldValue.arrayRemove(assignmentIDs),
           'lessons': FieldValue.arrayRemove(lessonIDs),
           'quizzes': FieldValue.arrayRemove(quizIDs),
-          'teachers': FieldValue.arrayRemove([widget.userDoc.id]),
+          'teachers': FieldValue.arrayRemove([widget.userID]),
         });
       }
       //  If the teacher was an adviser of a section, remove that section's adviser
@@ -388,9 +423,13 @@ class _SelectedUserRecordScreenState
       await FirebaseAuth.instance.signOut();
 
       //  6. Sign in to the student's account and delete it
-      final studentData = widget.userDoc.data() as Map<dynamic, dynamic>;
-      String instructorEmail = studentData['email'];
-      String instructorPassword = studentData['password'];
+      final teacher = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.userID)
+          .get();
+      final teacherData = teacher.data() as Map<dynamic, dynamic>;
+      String instructorEmail = teacherData['email'];
+      String instructorPassword = teacherData['password'];
       final instructorToDelete = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
               email: instructorEmail, password: instructorPassword);
@@ -427,60 +466,71 @@ class _SelectedUserRecordScreenState
   //============================================================================
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: homeAppBarWidget(context, mayGoBack: true, actions: [
-        ElevatedButton(
-            onPressed: () {
-              if (userType == 'STUDENT') {
-                NavigatorRoutes.adminEditStudent(context,
-                    studentID: widget.userDoc.id);
-              } else if (userType == 'TEACHER') {
-                NavigatorRoutes.adminEditTeacher(context,
-                    teacherDoc: widget.userDoc);
-              }
-            },
-            style: ElevatedButton.styleFrom(
-                backgroundColor: CustomColors.veryLightGrey),
-            child: interText('EDIT\nUSER',
-                color: Colors.black, textAlign: TextAlign.center))
-      ]),
-      floatingActionButton: ref.read(currentUserTypeProvider) == 'ADMIN'
-          ? ElevatedButton(
-              onPressed: () => displayDeleteEntryDialog(context,
-                      message:
-                          'Are you sure you want to delete this user and all their associated work?',
-                      deleteWord: 'Delete', deleteEntry: () {
-                    if (userType == 'STUDENT') {
-                      deleteStudentUser();
-                    } else if (userType == 'TEACHER') {
-                      deleteTeacherUser();
-                    }
-                  }),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              child: Icon(Icons.delete, color: Colors.white))
-          : null,
-      body: switchedLoadingContainer(
-        _isLoading,
-        SizedBox(
-          width: MediaQuery.of(context).size.width,
-          child: all20Pix(
-              child: Column(
-            children: [
-              interText(
-                  userType == 'TEACHER' ? 'Teacher Profile' : 'Student Profile',
-                  fontSize: 40),
-              _userNameContainer(formattedName),
-              _basicUserData(context,
-                  idNumber: idNumber,
-                  email: email,
-                  profileImageURL: profileImageURL),
-              const Gap(20),
-              if (userType == 'TEACHER')
-                _handledSections(handledSections: handledSections)
-              else if (userType == 'STUDENT')
-                _studentSection(),
-            ],
-          )),
+    // ignore: deprecated_member_use
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context).pop();
+        Navigator.of(context).pushReplacementNamed(widget.previousRoute);
+        return true;
+      },
+      child: Scaffold(
+        appBar: homeAppBarWidget(context, mayGoBack: true, actions: [
+          ElevatedButton(
+              onPressed: () {
+                if (userType == 'STUDENT') {
+                  NavigatorRoutes.adminEditStudent(context,
+                      studentID: widget.userID);
+                } else if (userType == 'TEACHER') {
+                  NavigatorRoutes.adminEditTeacher(context,
+                      teacherID: widget.userID);
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: CustomColors.veryLightGrey),
+              child: interText('EDIT\nUSER',
+                  color: Colors.black, textAlign: TextAlign.center))
+        ]),
+        floatingActionButton: ref.read(currentUserTypeProvider) == 'ADMIN'
+            ? ElevatedButton(
+                onPressed: () => displayDeleteEntryDialog(context,
+                        message:
+                            'Are you sure you want to delete this user and all their associated work?',
+                        deleteWord: 'Delete', deleteEntry: () {
+                      if (userType == 'STUDENT') {
+                        deleteStudentUser();
+                      } else if (userType == 'TEACHER') {
+                        deleteTeacherUser();
+                      }
+                    }),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                child: Icon(Icons.delete, color: Colors.white))
+            : null,
+        body: switchedLoadingContainer(
+          _isLoading,
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: all20Pix(
+                child: Column(
+              children: [
+                interText(
+                    userType == 'TEACHER'
+                        ? 'Teacher Profile'
+                        : 'Student Profile',
+                    fontSize: 40),
+                _userNameContainer(formattedName),
+                _basicUserData(context,
+                    idNumber: idNumber,
+                    email: email,
+                    profileImageURL: profileImageURL),
+                const Gap(20),
+                if (userType == 'TEACHER')
+                  _handledSections(handledSections: handledSections)
+                else if (userType == 'STUDENT')
+                  _studentSection(),
+                if (!adminApproved) _adminApproveButtons()
+              ],
+            )),
+          ),
         ),
       ),
     );
@@ -640,5 +690,38 @@ class _SelectedUserRecordScreenState
                 ],
               ),
             ));
+  }
+
+  Widget _adminApproveButtons() {
+    return vertical20Pix(
+      child: Container(
+        decoration: BoxDecoration(border: Border.all()),
+        child: Column(
+          children: [
+            interText('Would you like to verify this user?',
+                fontSize: 20, fontWeight: FontWeight.w500),
+            vertical10horizontal4(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ovalButton('YES',
+                      onPress: approveUser,
+                      backgroundColor: CustomColors.softOrange),
+                  ovalButton('NO',
+                      onPress: () => displayDeleteEntryDialog(context,
+                          message:
+                              'You will delete this user by not verifying. Do you wish to proceed?',
+                          deleteWord: 'Proceed',
+                          deleteEntry: userType == 'TEACHER'
+                              ? deleteTeacherUser
+                              : deleteStudentUser),
+                      backgroundColor: CustomColors.softOrange)
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -37,6 +37,15 @@ class _AdminAllLessonsScreenState extends ConsumerState<AdminAllLessonsScreen> {
       final lessons =
           await FirebaseFirestore.instance.collection('lessons').get();
       lessonDocs = lessons.docs;
+      lessonDocs.sort((a, b) {
+        final lessonA = a.data() as Map<dynamic, dynamic>;
+        final lessonB = b.data() as Map<dynamic, dynamic>;
+        DateTime lessonADateLastModified =
+            (lessonA['dateLastModified'] as Timestamp).toDate();
+        DateTime lessonBDateLastModified =
+            (lessonB['dateLastModified'] as Timestamp).toDate();
+        return lessonBDateLastModified.compareTo(lessonADateLastModified);
+      });
       setState(() {
         _isLoading = false;
       });

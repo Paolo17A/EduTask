@@ -54,6 +54,18 @@ class _TeacherLoginScreenState extends ConsumerState<TeacherLoginScreen> {
         });
         return;
       }
+      if (userData['adminApproved'] == false) {
+        scaffoldMessenger.showSnackBar(const SnackBar(
+            content:
+                Text('This account has not yet been approved by the admin.')));
+        await FirebaseAuth.instance.signOut();
+        emailController.clear();
+        passwordController.clear();
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
       //  reset the password in firebase in case users forgot their password and reset it using an email link.
       if (userData['password'] != passwordController.text) {
         await FirebaseFirestore.instance

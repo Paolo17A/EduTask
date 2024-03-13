@@ -144,9 +144,10 @@ class NavigatorRoutes {
   static const adminAllQuizzes = '/adminAllQuizzes';
 
   static void selectedUserRecord(BuildContext context,
-      {required DocumentSnapshot userDoc}) {
+      {required String userID, required String previousRoute}) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => SelectedUserRecordScreen(userDoc: userDoc)));
+        builder: (context) => SelectedUserRecordScreen(
+            userID: userID, previousRoute: previousRoute)));
   }
 
   static void adminSelectedSection(BuildContext context,
@@ -169,9 +170,9 @@ class NavigatorRoutes {
   }
 
   static void adminEditTeacher(BuildContext context,
-      {required DocumentSnapshot teacherDoc}) {
+      {required String teacherID}) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => AdminEditTeacherScreen(teacherDoc: teacherDoc)));
+        builder: (context) => AdminEditTeacherScreen(teacherID: teacherID)));
   }
 
   static void adminEditSection(BuildContext context,

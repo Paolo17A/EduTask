@@ -124,8 +124,8 @@ class _SelectedQuizResultScreenState extends State<SelectedQuizResultScreen> {
                   '${index + 1}. ${(quizQuestions[index]['question'].toString())}';
               String yourAnswer =
                   'Your Answer: ${userAnswers[index]}) ${quizQuestions[index]['options'][userAnswers[index]]}';
-              String correctAnswer =
-                  'Correct Answer: ${quizQuestions[index]['answer']}) ${quizQuestions[index]['options'][quizQuestions[index]['answer']]}';
+              /*String correctAnswer =
+                  'Correct Answer: ${quizQuestions[index]['answer']}) ${quizQuestions[index]['options'][quizQuestions[index]['answer']]}';*/
               return vertical10horizontal4(
                 Container(
                   decoration: BoxDecoration(
@@ -138,7 +138,7 @@ class _SelectedQuizResultScreenState extends State<SelectedQuizResultScreen> {
                       interText(formattedQuestion),
                       Gap(7),
                       interText(yourAnswer),
-                      interText(correctAnswer)
+                      //interText(correctAnswer)
                     ],
                   ),
                 ),

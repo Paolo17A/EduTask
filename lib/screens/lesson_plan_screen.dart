@@ -46,18 +46,47 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
           .where('teacherID', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .get();
       lessonDocs = lessons.docs;
+      lessonDocs.sort((a, b) {
+        final lessonA = a.data() as Map<dynamic, dynamic>;
+        final lessonB = b.data() as Map<dynamic, dynamic>;
+        DateTime lessonADateLastModified =
+            (lessonA['dateLastModified'] as Timestamp).toDate();
+        DateTime lessonBDateLastModified =
+            (lessonB['dateLastModified'] as Timestamp).toDate();
+        return lessonBDateLastModified.compareTo(lessonADateLastModified);
+      });
 
       final assignments = await FirebaseFirestore.instance
           .collection('assignments')
           .where('teacherID', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .get();
       assignmentDocs = assignments.docs;
+      assignmentDocs.sort((a, b) {
+        final assignmentA = a.data() as Map<dynamic, dynamic>;
+        final assignmentB = b.data() as Map<dynamic, dynamic>;
+        DateTime assignmentADateLastModified =
+            (assignmentA['dateLastModified'] as Timestamp).toDate();
+        DateTime assignmentBDateLastModified =
+            (assignmentB['dateLastModified'] as Timestamp).toDate();
+        return assignmentBDateLastModified
+            .compareTo(assignmentADateLastModified);
+      });
 
       final quizzes = await FirebaseFirestore.instance
           .collection('quizzes')
           .where('teacherID', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .get();
       quizDocs = quizzes.docs;
+      quizDocs.sort((a, b) {
+        final quizA = a.data() as Map<dynamic, dynamic>;
+        final quizB = b.data() as Map<dynamic, dynamic>;
+        DateTime quizADateLastModified =
+            (quizA['dateLastModified'] as Timestamp).toDate();
+        DateTime quizBDateLastModified =
+            (quizB['dateLastModified'] as Timestamp).toDate();
+        return quizBDateLastModified.compareTo(quizADateLastModified);
+      });
+
       setState(() {
         _isLoading = false;
       });

@@ -38,6 +38,15 @@ class _AdminAllQuizzesScreenState extends ConsumerState<AdminAllQuizzesScreen> {
       final quizzes =
           await FirebaseFirestore.instance.collection('quizzes').get();
       quizDocs = quizzes.docs;
+      quizDocs.sort((a, b) {
+        final quizA = a.data() as Map<dynamic, dynamic>;
+        final quizB = b.data() as Map<dynamic, dynamic>;
+        DateTime quizADateLastModified =
+            (quizA['dateLastModified'] as Timestamp).toDate();
+        DateTime quizBDateLastModified =
+            (quizB['dateLastModified'] as Timestamp).toDate();
+        return quizBDateLastModified.compareTo(quizADateLastModified);
+      });
       setState(() {
         _isLoading = false;
       });

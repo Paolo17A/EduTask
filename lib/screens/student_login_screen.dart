@@ -62,6 +62,18 @@ class _StudentLoginScreenState extends ConsumerState<StudentLoginScreen> {
         });
         return;
       }
+      if (userData['adminApproved'] == false) {
+        scaffoldMessenger.showSnackBar(const SnackBar(
+            content:
+                Text('This account has not yet been approved by the admin.')));
+        await FirebaseAuth.instance.signOut();
+        emailController.clear();
+        passwordController.clear();
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
       if (!FirebaseAuth.instance.currentUser!.emailVerified) {
         DateTime dateEmailVerificationSent =
             (userData['dateEmailVerificationSent'] as Timestamp).toDate();

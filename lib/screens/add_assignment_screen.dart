@@ -86,9 +86,9 @@ class _AddAssignmentScreenState extends ConsumerState<AddAssignmentScreen> {
                 colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey)),
             child: child!));
     if (picked != null && picked != DateTime.now()) {
-      if (picked.difference(DateTime.now()).inDays < 2) {
+      if (picked.difference(DateTime.now()).inDays < 1) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Event date must be at least 2 days from now.')));
+            content: Text('Event date must be at least 1 day from now.')));
         return;
       }
       setState(() {

@@ -27,9 +27,30 @@ class _AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
   String profileImageURL = '';
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     super.didChangeDependencies();
+    //await fixAllMaterials();
     getBasicUserData();
+  }
+
+  Future fixAllMaterials() async {
+    final lessons =
+        await FirebaseFirestore.instance.collection('lessons').get();
+    for (var lessonDoc in lessons.docs) {
+      await lessonDoc.reference.update({'dateLastModified': DateTime.now()});
+    }
+
+    final quizzes =
+        await FirebaseFirestore.instance.collection('quizzes').get();
+    for (var quizDoc in quizzes.docs) {
+      await quizDoc.reference.update({'dateLastModified': DateTime.now()});
+    }
+
+    final assignments =
+        await FirebaseFirestore.instance.collection('assignments').get();
+    for (var assignment in assignments.docs) {
+      await assignment.reference.update({'dateLastModified': DateTime.now()});
+    }
   }
 
   void getBasicUserData() async {

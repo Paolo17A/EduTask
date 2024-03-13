@@ -112,8 +112,10 @@ class _AdminStudentRecordsScreenState
             return userRecordEntry(
                 userDoc: studentDocs[index],
                 color: backgroundColor,
+                displayVerificationStatus: true,
                 onTap: () => NavigatorRoutes.selectedUserRecord(context,
-                    userDoc: studentDocs[index]));
+                    userID: studentDocs[index].id,
+                    previousRoute: NavigatorRoutes.adminStudentRecords));
           }),
     );
   }

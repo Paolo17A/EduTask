@@ -12,8 +12,8 @@ import '../widgets/app_bottom_nav_bar_widget.dart';
 import '../widgets/edutask_text_field_widget.dart';
 
 class AdminEditTeacherScreen extends ConsumerStatefulWidget {
-  final DocumentSnapshot teacherDoc;
-  const AdminEditTeacherScreen({super.key, required this.teacherDoc});
+  final String teacherID;
+  const AdminEditTeacherScreen({super.key, required this.teacherID});
 
   @override
   ConsumerState<AdminEditTeacherScreen> createState() =>
@@ -30,8 +30,12 @@ class _AdminEditTeacherScreenState
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final teacherData = widget.teacherDoc.data() as Map<dynamic, dynamic>;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final teacher = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.teacherID)
+          .get();
+      final teacherData = teacher.data() as Map<dynamic, dynamic>;
       teacherNumberController.text = teacherData['IDNumber'];
       firstNameController.text = teacherData['firstName'];
       lastNameController.text = teacherData['lastName'];
@@ -47,7 +51,7 @@ class _AdminEditTeacherScreenState
     try {
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(widget.teacherDoc.id)
+          .doc(widget.teacherID)
           .update({
         'IDNumber': teacherNumberController.text,
         'firstName': firstNameController.text,

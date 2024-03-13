@@ -73,6 +73,15 @@ class _TeacherSelectedSectionScreenState
         List<dynamic> associatedSections = lessonData['associatedSections'];
         return associatedSections.contains(widget.sectionID);
       }).toList();
+      assignedLessonDocs.sort((a, b) {
+        final lessonA = a.data() as Map<dynamic, dynamic>;
+        final lessonB = b.data() as Map<dynamic, dynamic>;
+        DateTime lessonADateLastModified =
+            (lessonA['dateLastModified'] as Timestamp).toDate();
+        DateTime lessonBDateLastModified =
+            (lessonB['dateLastModified'] as Timestamp).toDate();
+        return lessonBDateLastModified.compareTo(lessonADateLastModified);
+      });
 
       //  Initialize Assignments
       final assignments = await FirebaseFirestore.instance
@@ -85,6 +94,16 @@ class _TeacherSelectedSectionScreenState
         List<dynamic> associatedSections = assignmentData['associatedSections'];
         return associatedSections.contains(widget.sectionID);
       }).toList();
+      assignedAssignmentDocs.sort((a, b) {
+        final assignmentA = a.data() as Map<dynamic, dynamic>;
+        final assignmentB = b.data() as Map<dynamic, dynamic>;
+        DateTime assignmentADateLastModified =
+            (assignmentA['dateLastModified'] as Timestamp).toDate();
+        DateTime assignmentBDateLastModified =
+            (assignmentB['dateLastModified'] as Timestamp).toDate();
+        return assignmentBDateLastModified
+            .compareTo(assignmentADateLastModified);
+      });
 
       //  Initialize Quizzes
       final quizzes = await FirebaseFirestore.instance
@@ -97,6 +116,15 @@ class _TeacherSelectedSectionScreenState
         List<dynamic> associatedSections = quizData['associatedSections'];
         return associatedSections.contains(widget.sectionID);
       }).toList();
+      assignedQuizDocs.sort((a, b) {
+        final quizA = a.data() as Map<dynamic, dynamic>;
+        final quizB = b.data() as Map<dynamic, dynamic>;
+        DateTime quizADateLastModified =
+            (quizA['dateLastModified'] as Timestamp).toDate();
+        DateTime quizBDateLastModified =
+            (quizB['dateLastModified'] as Timestamp).toDate();
+        return quizBDateLastModified.compareTo(quizADateLastModified);
+      });
 
       List<dynamic> studentIDs = sectionData['students'];
       if (studentIDs.isNotEmpty) {

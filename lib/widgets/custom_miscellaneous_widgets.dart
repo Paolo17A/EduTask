@@ -81,20 +81,29 @@ Widget welcomeWidgets(
 Widget userRecordEntry(
     {required DocumentSnapshot userDoc,
     required Color color,
-    required Function onTap}) {
+    required Function onTap,
+    bool displayVerificationStatus = false}) {
   final userData = userDoc.data() as Map<dynamic, dynamic>;
   String formattedName = '${userData['firstName']} ${userData['lastName']}';
   String profileImageURL = userData['profileImageURL'];
+  bool adminApproved = userData['adminApproved'];
   return GestureDetector(
     onTap: () => onTap(),
     child: Container(
       color: color,
-      height: 50,
+      height: displayVerificationStatus ? 60 : 50,
       padding: const EdgeInsets.all(10),
       child: Row(children: [
         buildProfileImageWidget(profileImageURL: profileImageURL, radius: 15),
         const Gap(16),
-        interText(formattedName, fontSize: 16)
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            interText(formattedName, fontSize: 16),
+            if (displayVerificationStatus)
+              interText('Account Verified: $adminApproved', fontSize: 12)
+          ],
+        )
       ]),
     ),
   );

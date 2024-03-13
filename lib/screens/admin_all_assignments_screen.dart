@@ -38,6 +38,16 @@ class _AdminAllAssignmentsScreenState
       final assignments =
           await FirebaseFirestore.instance.collection('assignments').get();
       assignmentDocs = assignments.docs;
+      assignmentDocs.sort((a, b) {
+        final assignmentA = a.data() as Map<dynamic, dynamic>;
+        final assignmentB = b.data() as Map<dynamic, dynamic>;
+        DateTime assignmentADateLastModified =
+            (assignmentA['dateLastModified'] as Timestamp).toDate();
+        DateTime assignmentBDateLastModified =
+            (assignmentB['dateLastModified'] as Timestamp).toDate();
+        return assignmentBDateLastModified
+            .compareTo(assignmentADateLastModified);
+      });
       setState(() {
         _isLoading = false;
       });

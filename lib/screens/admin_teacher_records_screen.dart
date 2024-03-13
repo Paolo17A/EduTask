@@ -108,7 +108,9 @@ class _AdminTeacherRecordsScreenState
                 userDoc: teacherDocs[index],
                 color: backgroundColor,
                 onTap: () => NavigatorRoutes.selectedUserRecord(context,
-                    userDoc: teacherDocs[index]));
+                    userID: teacherDocs[index].id,
+                    previousRoute: NavigatorRoutes.adminTeacherRecords),
+                displayVerificationStatus: true);
           }),
     );
   }
