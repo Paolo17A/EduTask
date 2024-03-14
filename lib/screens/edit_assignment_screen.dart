@@ -86,6 +86,7 @@ class _EditAssignmentScreenState extends State<EditAssignmentScreen> {
         'assignmentType': assignmentType,
         'teacherID': FirebaseAuth.instance.currentUser!.uid,
         'deadline': deadline,
+        'dateLastModified': DateTime.now()
       });
 
       scaffoldMessenger.showSnackBar(const SnackBar(

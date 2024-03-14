@@ -103,7 +103,8 @@ class _AddLessonScreenState extends ConsumerState<AddLessonScreen> {
         'content': contentController.text,
         'additionalResources': additionalResources,
         'additionalDocuments': documentEntries,
-        'associatedSections': []
+        'associatedSections': [],
+        'dateLastModified': DateTime.now()
       });
 
       scaffoldMessenger.showSnackBar(

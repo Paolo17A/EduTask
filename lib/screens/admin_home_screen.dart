@@ -29,7 +29,7 @@ class _AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
-    //await fixAllMaterials();
+    await fixAllMaterials();
     getBasicUserData();
   }
 
@@ -37,19 +37,28 @@ class _AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
     final lessons =
         await FirebaseFirestore.instance.collection('lessons').get();
     for (var lessonDoc in lessons.docs) {
-      await lessonDoc.reference.update({'dateLastModified': DateTime.now()});
+      final lessonData = lessonDoc.data();
+      if (!lessonData.containsKey('dateLastModified')) {
+        await lessonDoc.reference.update({'dateLastModified': DateTime.now()});
+      }
     }
 
     final quizzes =
         await FirebaseFirestore.instance.collection('quizzes').get();
     for (var quizDoc in quizzes.docs) {
-      await quizDoc.reference.update({'dateLastModified': DateTime.now()});
+      final quizData = quizDoc.data();
+      if (!quizData.containsKey('dateLastModified')) {
+        await quizDoc.reference.update({'dateLastModified': DateTime.now()});
+      }
     }
 
     final assignments =
         await FirebaseFirestore.instance.collection('assignments').get();
     for (var assignment in assignments.docs) {
-      await assignment.reference.update({'dateLastModified': DateTime.now()});
+      final assignmentData = assignment.data();
+      if (!assignmentData.containsKey('dateLastModified')) {
+        await assignment.reference.update({'dateLastModified': DateTime.now()});
+      }
     }
   }
 

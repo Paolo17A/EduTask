@@ -176,7 +176,8 @@ class _AddQuizScreenState extends ConsumerState<AddQuizScreen> {
         'subject': ref.read(selectedSubjectProvider),
         'title': _titleController.text.trim(),
         'quizContent': encodedQuiz,
-        'associatedSections': []
+        'associatedSections': [],
+        'dateLastModified': DateTime.now()
       });
 
       scaffoldMessenger

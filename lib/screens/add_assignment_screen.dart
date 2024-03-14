@@ -59,7 +59,8 @@ class _AddAssignmentScreenState extends ConsumerState<AddAssignmentScreen> {
         'directions': directionsController.text,
         'assignmentType': assignmentType,
         'deadline': deadline,
-        'associatedSections': []
+        'associatedSections': [],
+        'dateLastModified': DateTime.now()
       });
 
       scaffoldMessenger.showSnackBar(const SnackBar(

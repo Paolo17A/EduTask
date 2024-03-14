@@ -220,6 +220,7 @@ class _EditQuizScreenState extends State<EditQuizScreen> {
         'title': _titleController.text.trim(),
         'quizContent': encodedQuiz,
         'teacherID': FirebaseAuth.instance.currentUser!.uid,
+        'dateLastModified': DateTime.now()
       });
 
       scaffoldMessenger.showSnackBar(

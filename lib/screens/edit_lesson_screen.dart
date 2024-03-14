@@ -117,6 +117,7 @@ class _EditLessonScreenState extends State<EditLessonScreen> {
         'content': contentController.text,
         'teacherID': FirebaseAuth.instance.currentUser!.uid,
         'additionalResources': additionalResources,
+        'dateLastModified': DateTime.now()
       });
 
       scaffoldMessenger.showSnackBar(
