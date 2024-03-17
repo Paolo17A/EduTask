@@ -58,6 +58,7 @@ class _SelectedUserRecordScreenState
         .get();
     final userData = user.data() as Map<dynamic, dynamic>;
     formattedName = '${userData['firstName']} ${userData['lastName']}';
+    print(formattedName);
     idNumber = userData['IDNumber'];
     email = userData['email'];
     profileImageURL = userData['profileImageURL'];
@@ -69,7 +70,14 @@ class _SelectedUserRecordScreenState
       if (advisorySection.isNotEmpty) {
         getAdvisorySection();
       }
-      if (handledSections.isNotEmpty) getHandledSections();
+      if (handledSections.isNotEmpty) {
+        getHandledSections();
+      }
+      if (advisorySection.isEmpty && handledSections.isEmpty) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     } else if (userType == 'STUDENT') {
       section = userData['section'];
       if (section.isNotEmpty)

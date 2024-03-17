@@ -130,7 +130,8 @@ class _AdminAddStudentScreenState extends State<AdminAddStudentScreen> {
         'firstName': firstNameController.text,
         'lastName': lastNameController.text,
         'section': selectedSection,
-        'profileImageURL': ''
+        'profileImageURL': '',
+        'adminApproved': false
       });
 
       await FirebaseFirestore.instance

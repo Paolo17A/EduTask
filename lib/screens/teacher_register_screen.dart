@@ -154,7 +154,8 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
         'lastName': lastNameController.text,
         'advisorySection': '',
         'handledSections': [],
-        'profileImageURL': ''
+        'profileImageURL': '',
+        'adminApproved': false
       });
       await FirebaseAuth.instance.signOut();
       scaffoldMessenger.showSnackBar(const SnackBar(

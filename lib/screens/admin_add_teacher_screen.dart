@@ -87,7 +87,8 @@ class _AdminAddTeacherScreenState extends State<AdminAddTeacherScreen> {
         'firstName': firstNameController.text,
         'lastName': lastNameController.text,
         'handledSections': [],
-        'profileImageURL': ''
+        'profileImageURL': '',
+        'adminApproved': false
       });
 
       //  Sign out the newly created student and return to admin or teacher's account

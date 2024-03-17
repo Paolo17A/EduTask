@@ -165,7 +165,8 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
         'lastName': lastNameController.text,
         'section': '',
         'profileImageURL': '',
-        'dateEmailVerificationSent': DateTime.now()
+        'dateEmailVerificationSent': DateTime.now(),
+        'adminApproved': false
       });
       setState(() {
         _isLoading = false;
