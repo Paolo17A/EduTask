@@ -29,6 +29,7 @@ class _EditAssignmentScreenState extends State<EditAssignmentScreen> {
   String assignmentType = '';
   final titleController = TextEditingController();
   final directionsController = TextEditingController();
+  int selectedQuarter = 1;
   DateTime? deadline;
 
   @override
@@ -49,6 +50,7 @@ class _EditAssignmentScreenState extends State<EditAssignmentScreen> {
       titleController.text = assignmentData['title'];
       directionsController.text = assignmentData['directions'];
       deadline = (assignmentData['deadline'] as Timestamp).toDate();
+      selectedQuarter = assignmentData['quarter'];
       setState(() {
         _isLoading = false;
         _isInitialized = true;
@@ -86,7 +88,8 @@ class _EditAssignmentScreenState extends State<EditAssignmentScreen> {
         'assignmentType': assignmentType,
         'teacherID': FirebaseAuth.instance.currentUser!.uid,
         'deadline': deadline,
-        'dateLastModified': DateTime.now()
+        'dateLastModified': DateTime.now(),
+        'quarter': selectedQuarter
       });
 
       scaffoldMessenger.showSnackBar(const SnackBar(
@@ -143,6 +146,7 @@ class _EditAssignmentScreenState extends State<EditAssignmentScreen> {
                   _assignmentType(),
                   _assignmentTitle(),
                   _assignmentDirections(),
+                  _quarterDropdown(),
                   _dateSelectionContainer(),
                   Gap(30),
                   ovalButton('EDIT ASSIGNMENT',
@@ -208,6 +212,25 @@ class _EditAssignmentScreenState extends State<EditAssignmentScreen> {
         ],
       ),
     );
+  }
+
+  Widget _quarterDropdown() {
+    return vertical10horizontal4(Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        interText('Quarter', fontSize: 18),
+        Container(
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(10)),
+          child: dropdownWidget('QUARTER', (number) {
+            setState(() {
+              selectedQuarter = int.parse(number!);
+            });
+          }, ['1', '2', '3', '4'], selectedQuarter.toString(), false),
+        ),
+      ],
+    ));
   }
 
   Widget _dateSelectionContainer() {

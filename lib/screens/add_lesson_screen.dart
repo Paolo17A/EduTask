@@ -17,6 +17,7 @@ import 'package:gap/gap.dart';
 import '../util/color_util.dart';
 import '../util/string_util.dart';
 import '../widgets/custom_text_widgets.dart';
+import '../widgets/dropdown_widget.dart';
 import '../widgets/edutask_text_field_widget.dart';
 
 class AddLessonScreen extends ConsumerStatefulWidget {
@@ -34,6 +35,7 @@ class _AddLessonScreenState extends ConsumerState<AddLessonScreen> {
   final List<File?> _documentFiles = [];
   final List<TextEditingController> _fileNameControllers = [];
   final List<TextEditingController> _downloadLinkControllers = [];
+  int selectedQuarter = 1;
 
   void addNewLesson() async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
@@ -104,7 +106,8 @@ class _AddLessonScreenState extends ConsumerState<AddLessonScreen> {
         'additionalResources': additionalResources,
         'additionalDocuments': documentEntries,
         'associatedSections': [],
-        'dateLastModified': DateTime.now()
+        'dateLastModified': DateTime.now(),
+        'quarter': selectedQuarter
       });
 
       scaffoldMessenger.showSnackBar(
@@ -154,6 +157,7 @@ class _AddLessonScreenState extends ConsumerState<AddLessonScreen> {
                   Gap(30),
                   _lessonTitle(),
                   _lessonContent(),
+                  _quarterDropdown(),
                   _additionalDocuments(),
                   _additionalResources(),
                   ovalButton('CREATE LESSON',
@@ -201,6 +205,25 @@ class _AddLessonScreenState extends ConsumerState<AddLessonScreen> {
         ],
       ),
     );
+  }
+
+  Widget _quarterDropdown() {
+    return vertical10horizontal4(Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        interText('Quarter', fontSize: 18),
+        Container(
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(10)),
+          child: dropdownWidget('QUARTER', (number) {
+            setState(() {
+              selectedQuarter = int.parse(number!);
+            });
+          }, ['1', '2', '3', '4'], selectedQuarter.toString(), false),
+        ),
+      ],
+    ));
   }
 
   Widget _additionalDocuments() {

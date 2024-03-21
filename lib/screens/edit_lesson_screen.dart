@@ -11,6 +11,7 @@ import 'package:gap/gap.dart';
 
 import '../util/color_util.dart';
 import '../widgets/custom_text_widgets.dart';
+import '../widgets/dropdown_widget.dart';
 import '../widgets/edutask_text_field_widget.dart';
 
 class EditLessonScreen extends StatefulWidget {
@@ -27,6 +28,7 @@ class _EditLessonScreenState extends State<EditLessonScreen> {
 
   final titleController = TextEditingController();
   final contentController = TextEditingController();
+  int selectedQuarter = 1;
   List<dynamic> additionalResources = [];
   final List<TextEditingController> _fileNameControllers = [];
   final List<TextEditingController> _downloadLinkControllers = [];
@@ -59,7 +61,7 @@ class _EditLessonScreenState extends State<EditLessonScreen> {
         _downloadLinkControllers[i].text = resourceEntry['downloadLink'];
       }
       additionalDocuments = lessonData['additionalDocuments'];
-
+      selectedQuarter = lessonData['quarter'];
       setState(() {
         _isLoading = false;
         _isInitialized = true;
@@ -117,7 +119,8 @@ class _EditLessonScreenState extends State<EditLessonScreen> {
         'content': contentController.text,
         'teacherID': FirebaseAuth.instance.currentUser!.uid,
         'additionalResources': additionalResources,
-        'dateLastModified': DateTime.now()
+        'dateLastModified': DateTime.now(),
+        'quarter': selectedQuarter
       });
 
       scaffoldMessenger.showSnackBar(
@@ -153,6 +156,7 @@ class _EditLessonScreenState extends State<EditLessonScreen> {
                   Gap(30),
                   _lessonTitle(),
                   _lessonContent(),
+                  _quarterDropdown(),
                   _additionalDocuments(),
                   _additionalResources(),
                   ovalButton('EDIT LESSON',
@@ -200,6 +204,25 @@ class _EditLessonScreenState extends State<EditLessonScreen> {
         ],
       ),
     );
+  }
+
+  Widget _quarterDropdown() {
+    return vertical10horizontal4(Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        interText('Quarter', fontSize: 18),
+        Container(
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(10)),
+          child: dropdownWidget('QUARTER', (number) {
+            setState(() {
+              selectedQuarter = int.parse(number!);
+            });
+          }, ['1', '2', '3', '4'], selectedQuarter.toString(), false),
+        ),
+      ],
+    ));
   }
 
   Widget _additionalDocuments() {

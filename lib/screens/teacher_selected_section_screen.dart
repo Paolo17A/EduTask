@@ -35,12 +35,31 @@ class _TeacherSelectedSectionScreenState
   List<DocumentSnapshot> allAssignmentDocs = [];
 
   //  All documents assigned to this section.
+  //  LESSONS
   List<DocumentSnapshot> assignedLessonDocs = [];
   List<dynamic> assignedLessonIDs = [];
+  List<DocumentSnapshot> quarter1LessonDocs = [];
+  List<DocumentSnapshot> quarter2LessonDocs = [];
+  List<DocumentSnapshot> quarter3LessonDocs = [];
+  List<DocumentSnapshot> quarter4LessonDocs = [];
+
+  //  QUIZZES
   List<DocumentSnapshot> assignedQuizDocs = [];
   List<dynamic> assignedQuizIDs = [];
+  List<DocumentSnapshot> quarter1QuizDocs = [];
+  List<DocumentSnapshot> quarter2QuizDocs = [];
+  List<DocumentSnapshot> quarter3QuizDocs = [];
+  List<DocumentSnapshot> quarter4QuizDocs = [];
+
+  //  ASSIGNMENTS
   List<DocumentSnapshot> assignedAssignmentDocs = [];
   List<dynamic> assignedAssignmentIDs = [];
+  List<DocumentSnapshot> quarter1AssignmentDocs = [];
+  List<DocumentSnapshot> quarter2AssignmentDocs = [];
+  List<DocumentSnapshot> quarter3AssignmentDocs = [];
+  List<DocumentSnapshot> quarter4AssignmentDocs = [];
+
+  //  STUDENTS
   List<DocumentSnapshot> associatedStudentDocs = [];
 
   @override
@@ -82,6 +101,26 @@ class _TeacherSelectedSectionScreenState
             (lessonB['dateLastModified'] as Timestamp).toDate();
         return lessonBDateLastModified.compareTo(lessonADateLastModified);
       });
+      quarter1LessonDocs = assignedLessonDocs.where((lesson) {
+        final lessonData = lesson.data() as Map<dynamic, dynamic>;
+        return lessonData['quarter'] == 1 &&
+            assignedLessonIDs.contains(lesson.id);
+      }).toList();
+      quarter2LessonDocs = assignedLessonDocs.where((lesson) {
+        final lessonData = lesson.data() as Map<dynamic, dynamic>;
+        return lessonData['quarter'] == 2 &&
+            assignedLessonIDs.contains(lesson.id);
+      }).toList();
+      quarter3LessonDocs = assignedLessonDocs.where((lesson) {
+        final lessonData = lesson.data() as Map<dynamic, dynamic>;
+        return lessonData['quarter'] == 3 &&
+            assignedLessonIDs.contains(lesson.id);
+      }).toList();
+      quarter4LessonDocs = assignedLessonDocs.where((lesson) {
+        final lessonData = lesson.data() as Map<dynamic, dynamic>;
+        return lessonData['quarter'] == 4 &&
+            assignedLessonIDs.contains(lesson.id);
+      }).toList();
 
       //  Initialize Assignments
       final assignments = await FirebaseFirestore.instance
@@ -104,6 +143,26 @@ class _TeacherSelectedSectionScreenState
         return assignmentBDateLastModified
             .compareTo(assignmentADateLastModified);
       });
+      quarter1AssignmentDocs = assignedAssignmentDocs.where((assignment) {
+        final assignmentData = assignment.data() as Map<dynamic, dynamic>;
+        return assignmentData['quarter'] == 1 &&
+            assignedAssignmentIDs.contains(assignment.id);
+      }).toList();
+      quarter2AssignmentDocs = assignedAssignmentDocs.where((assignment) {
+        final assignmentData = assignment.data() as Map<dynamic, dynamic>;
+        return assignmentData['quarter'] == 2 &&
+            assignedAssignmentIDs.contains(assignment.id);
+      }).toList();
+      quarter3AssignmentDocs = assignedAssignmentDocs.where((assignment) {
+        final assignmentData = assignment.data() as Map<dynamic, dynamic>;
+        return assignmentData['quarter'] == 3 &&
+            assignedAssignmentIDs.contains(assignment.id);
+      }).toList();
+      quarter4AssignmentDocs = assignedAssignmentDocs.where((assignment) {
+        final assignmentData = assignment.data() as Map<dynamic, dynamic>;
+        return assignmentData['quarter'] == 4 &&
+            assignedAssignmentIDs.contains(assignment.id);
+      }).toList();
 
       //  Initialize Quizzes
       final quizzes = await FirebaseFirestore.instance
@@ -125,6 +184,22 @@ class _TeacherSelectedSectionScreenState
             (quizB['dateLastModified'] as Timestamp).toDate();
         return quizBDateLastModified.compareTo(quizADateLastModified);
       });
+      quarter1QuizDocs = assignedQuizDocs.where((quiz) {
+        final quizData = quiz.data() as Map<dynamic, dynamic>;
+        return quizData['quarter'] == 1 && assignedQuizIDs.contains(quiz.id);
+      }).toList();
+      quarter2QuizDocs = assignedQuizDocs.where((quiz) {
+        final quizData = quiz.data() as Map<dynamic, dynamic>;
+        return quizData['quarter'] == 2 && assignedQuizIDs.contains(quiz.id);
+      }).toList();
+      quarter3QuizDocs = assignedQuizDocs.where((quiz) {
+        final quizData = quiz.data() as Map<dynamic, dynamic>;
+        return quizData['quarter'] == 3 && assignedQuizIDs.contains(quiz.id);
+      }).toList();
+      quarter4QuizDocs = assignedQuizDocs.where((quiz) {
+        final quizData = quiz.data() as Map<dynamic, dynamic>;
+        return quizData['quarter'] == 4 && assignedQuizIDs.contains(quiz.id);
+      }).toList();
 
       List<dynamic> studentIDs = sectionData['students'];
       if (studentIDs.isNotEmpty) {
@@ -530,16 +605,137 @@ class _TeacherSelectedSectionScreenState
                 backgroundColor: CustomColors.softOrange),
           Gap(15),
           assignedLessonDocs.isNotEmpty
+              ? Column(
+                  children: [
+                    _quarter1Lessons(),
+                    _quarter2Lessons(),
+                    _quarter3Lessons(),
+                    _quarter4Lessons()
+                  ],
+                )
+              : interText('NO ASSIGNED LESSONS', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter1Lessons() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 1'),
+        children: [
+          quarter1LessonDocs.isNotEmpty
               ? SizedBox(
                   height: MediaQuery.of(context).size.height * 0.3,
                   child: ListView.builder(
                       shrinkWrap: false,
-                      itemCount: assignedLessonDocs.length,
+                      itemCount: quarter1LessonDocs.length,
                       itemBuilder: (context, index) => sectionMaterialEntry(
                           context,
-                          materialDoc: assignedLessonDocs[index],
+                          materialDoc: quarter1LessonDocs[index],
                           onRemove: () =>
-                              removeThisLesson(assignedLessonDocs[index]))),
+                              removeThisLesson(quarter1LessonDocs[index]))),
+                )
+              : interText('NO ASSIGNED LESSONS', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter2Lessons() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 2'),
+        children: [
+          quarter2LessonDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: quarter2LessonDocs.length,
+                      itemBuilder: (context, index) => sectionMaterialEntry(
+                          context,
+                          materialDoc: quarter2LessonDocs[index],
+                          onRemove: () =>
+                              removeThisLesson(quarter2LessonDocs[index]))),
+                )
+              : interText('NO ASSIGNED LESSONS', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter3Lessons() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 3'),
+        children: [
+          quarter3LessonDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: quarter3LessonDocs.length,
+                      itemBuilder: (context, index) => sectionMaterialEntry(
+                          context,
+                          materialDoc: quarter3LessonDocs[index],
+                          onRemove: () =>
+                              removeThisLesson(quarter3LessonDocs[index]))),
+                )
+              : interText('NO ASSIGNED LESSONS', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter4Lessons() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 4'),
+        children: [
+          quarter4LessonDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: quarter4LessonDocs.length,
+                      itemBuilder: (context, index) => sectionMaterialEntry(
+                          context,
+                          materialDoc: quarter4LessonDocs[index],
+                          onRemove: () =>
+                              removeThisLesson(quarter4LessonDocs[index]))),
                 )
               : interText('NO ASSIGNED LESSONS', fontSize: 20)
         ],
@@ -596,18 +792,139 @@ class _TeacherSelectedSectionScreenState
                 backgroundColor: CustomColors.softOrange),
           Gap(15),
           assignedAssignmentDocs.isNotEmpty
+              ? Column(
+                  children: [
+                    _quarter1Assignments(),
+                    _quarter2Assignments(),
+                    _quarter3Assignments(),
+                    _quarter4Assignments()
+                  ],
+                )
+              : interText('NO ASSIGNED LESSONS', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter1Assignments() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 1'),
+        children: [
+          quarter1AssignmentDocs.isNotEmpty
               ? SizedBox(
                   height: MediaQuery.of(context).size.height * 0.3,
                   child: ListView.builder(
                       shrinkWrap: false,
-                      itemCount: assignedAssignmentDocs.length,
+                      itemCount: quarter1AssignmentDocs.length,
                       itemBuilder: (context, index) => sectionMaterialEntry(
                           context,
-                          materialDoc: assignedAssignmentDocs[index],
+                          materialDoc: quarter1AssignmentDocs[index],
                           onRemove: () => removeThisAssignment(
-                              assignedAssignmentDocs[index]))),
+                              quarter1AssignmentDocs[index]))),
                 )
-              : interText('NO ASSIGNED LESSONS', fontSize: 20)
+              : interText('NO ASSIGNED ASSIGNMENTS', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter2Assignments() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 2'),
+        children: [
+          quarter2AssignmentDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: quarter2AssignmentDocs.length,
+                      itemBuilder: (context, index) => sectionMaterialEntry(
+                          context,
+                          materialDoc: quarter2AssignmentDocs[index],
+                          onRemove: () => removeThisAssignment(
+                              quarter2AssignmentDocs[index]))),
+                )
+              : interText('NO ASSIGNED ASSIGNMENTS', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter3Assignments() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 3'),
+        children: [
+          quarter3AssignmentDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: quarter3AssignmentDocs.length,
+                      itemBuilder: (context, index) => sectionMaterialEntry(
+                          context,
+                          materialDoc: quarter3AssignmentDocs[index],
+                          onRemove: () => removeThisAssignment(
+                              quarter3AssignmentDocs[index]))),
+                )
+              : interText('NO ASSIGNED ASSIGNMENTS', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter4Assignments() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 4'),
+        children: [
+          quarter4AssignmentDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: quarter4AssignmentDocs.length,
+                      itemBuilder: (context, index) => sectionMaterialEntry(
+                          context,
+                          materialDoc: quarter4AssignmentDocs[index],
+                          onRemove: () => removeThisAssignment(
+                              quarter4AssignmentDocs[index]))),
+                )
+              : interText('NO ASSIGNED ASSIGNMENTS', fontSize: 20)
         ],
       ),
     );
@@ -663,18 +980,139 @@ class _TeacherSelectedSectionScreenState
                 backgroundColor: CustomColors.softOrange),
           Gap(15),
           assignedQuizDocs.isNotEmpty
+              ? Column(
+                  children: [
+                    _quarter1Quizzes(),
+                    _quarter2Quizzes(),
+                    _quarter3Quizzes(),
+                    _quarter4Quizzes()
+                  ],
+                )
+              : interText('NO ASSIGNED LESSONS', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter1Quizzes() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 1'),
+        children: [
+          quarter1QuizDocs.isNotEmpty
               ? SizedBox(
                   height: MediaQuery.of(context).size.height * 0.3,
                   child: ListView.builder(
                       shrinkWrap: false,
-                      itemCount: assignedQuizDocs.length,
+                      itemCount: quarter1QuizDocs.length,
                       itemBuilder: (context, index) => sectionMaterialEntry(
                           context,
-                          materialDoc: assignedQuizDocs[index],
+                          materialDoc: quarter1QuizDocs[index],
                           onRemove: () =>
-                              removeThisQuiz(assignedQuizDocs[index]))),
+                              removeThisQuiz(quarter1QuizDocs[index]))),
                 )
-              : interText('NO ASSIGNED LESSONS', fontSize: 20)
+              : interText('NO ASSIGNED QUIZZES', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter2Quizzes() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 2'),
+        children: [
+          quarter2QuizDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: quarter2QuizDocs.length,
+                      itemBuilder: (context, index) => sectionMaterialEntry(
+                          context,
+                          materialDoc: quarter2QuizDocs[index],
+                          onRemove: () =>
+                              removeThisQuiz(quarter2QuizDocs[index]))),
+                )
+              : interText('NO ASSIGNED QUIZZES', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter3Quizzes() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 3'),
+        children: [
+          quarter3QuizDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: quarter3QuizDocs.length,
+                      itemBuilder: (context, index) => sectionMaterialEntry(
+                          context,
+                          materialDoc: quarter3QuizDocs[index],
+                          onRemove: () =>
+                              removeThisQuiz(quarter3QuizDocs[index]))),
+                )
+              : interText('NO ASSIGNED QUIZZES', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter4Quizzes() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 4'),
+        children: [
+          quarter4QuizDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: quarter4QuizDocs.length,
+                      itemBuilder: (context, index) => sectionMaterialEntry(
+                          context,
+                          materialDoc: quarter4QuizDocs[index],
+                          onRemove: () =>
+                              removeThisQuiz(quarter4QuizDocs[index]))),
+                )
+              : interText('NO ASSIGNED QUIZZES', fontSize: 20)
         ],
       ),
     );
@@ -751,7 +1189,7 @@ class _TeacherSelectedSectionScreenState
                   subjectButton(studentDoc: studentDoc, subject: 'AP'),
                   subjectButton(studentDoc: studentDoc, subject: 'ENGLISH'),
                   subjectButton(studentDoc: studentDoc, subject: 'EPP'),
-                  subjectButton(studentDoc: studentDoc, subject: 'ESP'),
+                  subjectButton(studentDoc: studentDoc, subject: 'TLE'),
                   subjectButton(studentDoc: studentDoc, subject: 'FILIPINO'),
                   subjectButton(studentDoc: studentDoc, subject: 'MAPEH'),
                   subjectButton(studentDoc: studentDoc, subject: 'MATHEMATICS'),

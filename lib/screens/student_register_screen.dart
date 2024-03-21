@@ -147,7 +147,7 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
         'FILIPINO': {'assignments': {}, 'quizzes': {}},
         'EPP': {'assignments': {}, 'quizzes': {}},
         'MAPEH': {'assignments': {}, 'quizzes': {}},
-        'ESP': {'assignments': {}, 'quizzes': {}}
+        'TLE': {'assignments': {}, 'quizzes': {}}
       });
 
       // Send email confirmation link to user

@@ -29,7 +29,24 @@ class _AdminAllQuizzesScreenState extends ConsumerState<AdminAllQuizzesScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => getAllQuizzes());
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      fixQuizzes();
+      getAllQuizzes();
+    });
+  }
+
+  void fixQuizzes() async {
+    final quizzes =
+        await FirebaseFirestore.instance.collection('quizzes').get();
+    for (var quiz in quizzes.docs) {
+      final quizData = quiz.data();
+      if (!quizData.containsKey('quarter')) {
+        await FirebaseFirestore.instance
+            .collection('quizzes')
+            .doc(quiz.reference.id)
+            .update({'quarter': 1});
+      }
+    }
   }
 
   void getAllQuizzes() async {

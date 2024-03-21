@@ -23,6 +23,7 @@ class _AdminSelectedLessonScreenState extends State<AdminSelectedLessonScreen> {
   String teacherID = '';
   List<dynamic> associatedSections = [];
   String lessonContent = '';
+  int quarter = 0;
   List<dynamic> additionalResources = [];
 
   @override
@@ -35,6 +36,7 @@ class _AdminSelectedLessonScreenState extends State<AdminSelectedLessonScreen> {
     associatedSections = lessonData['associatedSections'];
     lessonContent = lessonData['content'];
     additionalResources = lessonData['additionalResources'];
+    quarter = lessonData['quarter'];
   }
 
   @override
@@ -62,6 +64,7 @@ class _AdminSelectedLessonScreenState extends State<AdminSelectedLessonScreen> {
       interText('Title: $title', fontWeight: FontWeight.bold, fontSize: 24),
       Gap(12),
       interText('Subject: $subject', fontSize: 20),
+      interText('Quarter: ${quarter.toString()}', fontSize: 20),
       teacherName(teacherID),
       Divider(thickness: 4),
     ]);

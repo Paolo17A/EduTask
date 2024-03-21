@@ -28,7 +28,25 @@ class _AdminAllLessonsScreenState extends ConsumerState<AdminAllLessonsScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => getAllLessons());
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      //fixLessons();
+      getAllLessons();
+    });
+  }
+
+  void fixLessons() async {
+    final lessons =
+        await FirebaseFirestore.instance.collection('lessons').get();
+    lessonDocs = lessons.docs;
+    for (var lesson in lessons.docs) {
+      final lessonData = lesson.data();
+      if (!lessonData.containsKey('quarter')) {
+        await FirebaseFirestore.instance
+            .collection('lessons')
+            .doc(lesson.reference.id)
+            .update({'quarter': 1});
+      }
+    }
   }
 
   void getAllLessons() async {

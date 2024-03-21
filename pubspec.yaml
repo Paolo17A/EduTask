@@ -57,7 +57,7 @@ dev_dependencies:
 
 flutter_launcher_icons:
   android: true
-  image_path_android: "assets/images/App Logo_EduTask Bottom- White.png"
+  image_path_android: "assets/images/central_elem_logo.png"
   min_sdk_android: 21
 
   # The "flutter_lints" package below contains a set of recommended lints to

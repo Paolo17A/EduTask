@@ -134,20 +134,21 @@ Widget sectionTeacherContainer(BuildContext context,
 Widget teacherMaterialEntry(BuildContext context,
     {required DocumentSnapshot materialDoc,
     required Function onEdit,
-    required Function onDelete}) {
+    required Function onDelete,
+    Color color = Colors.grey}) {
   final materialData = materialDoc.data() as Map<dynamic, dynamic>;
   String title = materialData['title'];
   String subject = materialData['subject'];
   return vertical10horizontal4(Container(
     decoration: BoxDecoration(
-      color: Colors.grey,
+      color: color,
       border: Border.all(),
       borderRadius: BorderRadius.circular(10),
     ),
     padding: EdgeInsets.all(10),
     child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       SizedBox(
-          width: MediaQuery.of(context).size.width * 0.5,
+          width: MediaQuery.of(context).size.width * 0.45,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -182,6 +183,7 @@ Widget adminMaterialEntry(BuildContext context,
     required Function onDelete}) {
   final materialData = materialDoc.data() as Map<dynamic, dynamic>;
   String title = materialData['title'];
+  String subject = materialData['subject'];
   return vertical10horizontal4(Container(
     decoration: BoxDecoration(
       color: color,
@@ -192,7 +194,13 @@ Widget adminMaterialEntry(BuildContext context,
     child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       SizedBox(
           width: MediaQuery.of(context).size.width * 0.5,
-          child: interText(title, fontSize: 15)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              interText(title, fontSize: 15),
+              interText(subject, fontSize: 15)
+            ],
+          )),
       Row(
         children: [
           IconButton(
@@ -226,7 +234,7 @@ Widget sectionMaterialEntry(BuildContext context,
     padding: EdgeInsets.all(10),
     child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       SizedBox(
-          width: MediaQuery.of(context).size.width * 0.5,
+          width: MediaQuery.of(context).size.width * 0.45,
           child: interText(title, fontSize: 15)),
       ovalButton('REMOVE',
           onPress: () => onRemove(),

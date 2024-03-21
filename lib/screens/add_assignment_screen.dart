@@ -30,6 +30,7 @@ class _AddAssignmentScreenState extends ConsumerState<AddAssignmentScreen> {
   String assignmentType = '';
   final titleController = TextEditingController();
   final directionsController = TextEditingController();
+  int selectedQuarter = 1;
   DateTime? deadline;
 
   void createAssignment() async {
@@ -60,7 +61,8 @@ class _AddAssignmentScreenState extends ConsumerState<AddAssignmentScreen> {
         'assignmentType': assignmentType,
         'deadline': deadline,
         'associatedSections': [],
-        'dateLastModified': DateTime.now()
+        'dateLastModified': DateTime.now(),
+        'quarter': selectedQuarter
       });
 
       scaffoldMessenger.showSnackBar(const SnackBar(
@@ -116,6 +118,7 @@ class _AddAssignmentScreenState extends ConsumerState<AddAssignmentScreen> {
                   _assignmentType(),
                   _assignmentTitle(),
                   _assignmentDirections(),
+                  _quarterDropdown(),
                   _dateSelectionContainer(),
                   Gap(30),
                   ovalButton('CREATE ASSIGNMENT',
@@ -181,6 +184,25 @@ class _AddAssignmentScreenState extends ConsumerState<AddAssignmentScreen> {
         ],
       ),
     );
+  }
+
+  Widget _quarterDropdown() {
+    return vertical10horizontal4(Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        interText('Quarter', fontSize: 18),
+        Container(
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(10)),
+          child: dropdownWidget('QUARTER', (number) {
+            setState(() {
+              selectedQuarter = int.parse(number!);
+            });
+          }, ['1', '2', '3', '4'], selectedQuarter.toString(), false),
+        ),
+      ],
+    ));
   }
 
   Widget _dateSelectionContainer() {

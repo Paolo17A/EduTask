@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
+import '../widgets/dropdown_widget.dart';
 import '../widgets/string_choices_radio_widget.dart';
 
 class AddQuizScreen extends ConsumerStatefulWidget {
@@ -29,6 +30,7 @@ class _AddQuizScreenState extends ConsumerState<AddQuizScreen> {
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _questionController = TextEditingController();
+  int selectedQuarter = 1;
   final List<TextEditingController> _choicesControllers = [];
   final List<String> choiceLetters = ['a', 'b', 'c', 'd'];
   String? _correctChoiceString;
@@ -177,7 +179,8 @@ class _AddQuizScreenState extends ConsumerState<AddQuizScreen> {
         'title': _titleController.text.trim(),
         'quizContent': encodedQuiz,
         'associatedSections': [],
-        'dateLastModified': DateTime.now()
+        'dateLastModified': DateTime.now(),
+        'quarter': selectedQuarter
       });
 
       scaffoldMessenger
@@ -207,7 +210,11 @@ class _AddQuizScreenState extends ConsumerState<AddQuizScreen> {
             SingleChildScrollView(
               child: all20Pix(
                   child: Column(
-                children: [_quizTitle(), _quizInputContainer()],
+                children: [
+                  _quizTitle(),
+                  _quizInputContainer(),
+                  _quarterDropdown()
+                ],
               )),
             )),
       ),
@@ -304,5 +311,24 @@ class _AddQuizScreenState extends ConsumerState<AddQuizScreen> {
         ),
       ],
     );
+  }
+
+  Widget _quarterDropdown() {
+    return vertical10horizontal4(Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        interText('Quarter', fontSize: 18),
+        Container(
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(10)),
+          child: dropdownWidget('QUARTER', (number) {
+            setState(() {
+              selectedQuarter = int.parse(number!);
+            });
+          }, ['1', '2', '3', '4'], selectedQuarter.toString(), false),
+        ),
+      ],
+    ));
   }
 }

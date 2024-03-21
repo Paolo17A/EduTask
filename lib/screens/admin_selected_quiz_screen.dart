@@ -26,6 +26,7 @@ class _AdminSelectedQuizScreenState extends State<AdminSelectedQuizScreen> {
   String teacherID = '';
   List<dynamic> associatedSections = [];
   List<dynamic> quizQuestions = [];
+  int quarter = 0;
 
   @override
   void initState() {
@@ -37,6 +38,7 @@ class _AdminSelectedQuizScreenState extends State<AdminSelectedQuizScreen> {
     associatedSections = quizData['associatedSections'];
     final quizContent = quizData['quizContent'];
     quizQuestions = jsonDecode(quizContent);
+    quarter = quizData['quarter'];
   }
 
   @override
@@ -68,6 +70,7 @@ class _AdminSelectedQuizScreenState extends State<AdminSelectedQuizScreen> {
         Gap(12),
         interText('Subject: $subject', fontSize: 20),
         teacherName(teacherID),
+        interText('Quarter: ${quarter.toString()}', fontSize: 18),
         Divider(thickness: 4)
       ],
     );

@@ -28,9 +28,26 @@ class LessonPlanScreen extends ConsumerStatefulWidget {
 
 class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
   bool _isLoading = true;
+
+  //  LESSONS
   List<DocumentSnapshot> lessonDocs = [];
-  List<DocumentSnapshot> quizDocs = [];
+  List<DocumentSnapshot> quarter1LessonDocs = [];
+  List<DocumentSnapshot> quarter2LessonDocs = [];
+  List<DocumentSnapshot> quarter3LessonDocs = [];
+  List<DocumentSnapshot> quarter4LessonDocs = [];
+
+  //  ASSIGNMENTS
   List<DocumentSnapshot> assignmentDocs = [];
+  List<DocumentSnapshot> quarter1AssignmentDocs = [];
+  List<DocumentSnapshot> quarter2AssignmentDocs = [];
+  List<DocumentSnapshot> quarter3AssignmentDocs = [];
+  List<DocumentSnapshot> quarter4AssignmentDocs = [];
+
+  List<DocumentSnapshot> quizDocs = [];
+  List<DocumentSnapshot> quarter1QuizDocs = [];
+  List<DocumentSnapshot> quarter2QuizDocs = [];
+  List<DocumentSnapshot> quarter3QuizDocs = [];
+  List<DocumentSnapshot> quarter4QuizDocs = [];
 
   @override
   void didChangeDependencies() {
@@ -55,6 +72,22 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
             (lessonB['dateLastModified'] as Timestamp).toDate();
         return lessonBDateLastModified.compareTo(lessonADateLastModified);
       });
+      quarter1LessonDocs = lessonDocs.where((lesson) {
+        final lessonData = lesson.data() as Map<dynamic, dynamic>;
+        return lessonData['quarter'] == 1;
+      }).toList();
+      quarter2LessonDocs = lessonDocs.where((lesson) {
+        final lessonData = lesson.data() as Map<dynamic, dynamic>;
+        return lessonData['quarter'] == 2;
+      }).toList();
+      quarter3LessonDocs = lessonDocs.where((lesson) {
+        final lessonData = lesson.data() as Map<dynamic, dynamic>;
+        return lessonData['quarter'] == 3;
+      }).toList();
+      quarter4LessonDocs = lessonDocs.where((lesson) {
+        final lessonData = lesson.data() as Map<dynamic, dynamic>;
+        return lessonData['quarter'] == 4;
+      }).toList();
 
       final assignments = await FirebaseFirestore.instance
           .collection('assignments')
@@ -71,6 +104,22 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
         return assignmentBDateLastModified
             .compareTo(assignmentADateLastModified);
       });
+      quarter1AssignmentDocs = assignmentDocs.where((assignment) {
+        final assignmentData = assignment.data() as Map<dynamic, dynamic>;
+        return assignmentData['quarter'] == 1;
+      }).toList();
+      quarter2AssignmentDocs = assignmentDocs.where((assignment) {
+        final assignmentData = assignment.data() as Map<dynamic, dynamic>;
+        return assignmentData['quarter'] == 2;
+      }).toList();
+      quarter3AssignmentDocs = assignmentDocs.where((assignment) {
+        final assignmentData = assignment.data() as Map<dynamic, dynamic>;
+        return assignmentData['quarter'] == 3;
+      }).toList();
+      quarter4AssignmentDocs = assignmentDocs.where((assignment) {
+        final assignmentData = assignment.data() as Map<dynamic, dynamic>;
+        return assignmentData['quarter'] == 4;
+      }).toList();
 
       final quizzes = await FirebaseFirestore.instance
           .collection('quizzes')
@@ -86,6 +135,22 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
             (quizB['dateLastModified'] as Timestamp).toDate();
         return quizBDateLastModified.compareTo(quizADateLastModified);
       });
+      quarter1QuizDocs = quizDocs.where((quiz) {
+        final quizData = quiz.data() as Map<dynamic, dynamic>;
+        return quizData['quarter'] == 1;
+      }).toList();
+      quarter2QuizDocs = quizDocs.where((quiz) {
+        final quizData = quiz.data() as Map<dynamic, dynamic>;
+        return quizData['quarter'] == 2;
+      }).toList();
+      quarter3QuizDocs = quizDocs.where((quiz) {
+        final quizData = quiz.data() as Map<dynamic, dynamic>;
+        return quizData['quarter'] == 3;
+      }).toList();
+      quarter4QuizDocs = quizDocs.where((quiz) {
+        final quizData = quiz.data() as Map<dynamic, dynamic>;
+        return quizData['quarter'] == 4;
+      }).toList();
 
       setState(() {
         _isLoading = false;
@@ -272,8 +337,8 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
   Widget _expandableLessons() {
     return vertical20Pix(
       child: ExpansionTile(
-        collapsedBackgroundColor: CustomColors.veryLightGrey,
-        backgroundColor: CustomColors.veryLightGrey,
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
         textColor: Colors.black,
         iconColor: Colors.black,
         collapsedShape: RoundedRectangleBorder(
@@ -285,25 +350,168 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
           ovalButton('CREATE LESSON',
               onPress: () => showSubjectSelectDialog(() =>
                   Navigator.of(context).pushNamed(NavigatorRoutes.addLesson)),
-              backgroundColor: CustomColors.veryLightGrey),
+              backgroundColor: CustomColors.softOrange),
           Gap(15),
           lessonDocs.isNotEmpty
+              ? Column(
+                  children: [
+                    _quarter1Lessons(),
+                    _quarter2Lessons(),
+                    _quarter3Lessons(),
+                    _quarter4Lessons()
+                  ],
+                )
+              : interText('NO AVAILABLE  LESSONS', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter1Lessons() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.softOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 1'),
+        children: [
+          quarter1LessonDocs.isNotEmpty
               ? SizedBox(
                   height: MediaQuery.of(context).size.height * 0.3,
                   child: ListView.builder(
                       shrinkWrap: false,
-                      itemCount: lessonDocs.length,
+                      itemCount: quarter1LessonDocs.length,
                       itemBuilder: (context, index) => teacherMaterialEntry(
                           context,
-                          materialDoc: lessonDocs[index],
+                          color: CustomColors.verySoftOrange,
+                          materialDoc: quarter1LessonDocs[index],
                           onEdit: () => NavigatorRoutes.editLesson(context,
-                              lessonID: lessonDocs[index].id),
+                              lessonID: quarter1LessonDocs[index].id),
                           onDelete: () => displayDeleteEntryDialog(context,
                               message:
                                   'Are you sure you want to delete this lesson?',
                               deleteWord: 'Delete',
                               deleteEntry: () =>
-                                  deleteLesson(lessonDocs[index])))),
+                                  deleteLesson(quarter1LessonDocs[index])))),
+                )
+              : interText('NO AVAILABLE  LESSONS', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter2Lessons() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.softOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 2'),
+        children: [
+          quarter2LessonDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: quarter2LessonDocs.length,
+                      itemBuilder: (context, index) => teacherMaterialEntry(
+                          context,
+                          color: CustomColors.verySoftOrange,
+                          materialDoc: quarter2LessonDocs[index],
+                          onEdit: () => NavigatorRoutes.editLesson(context,
+                              lessonID: quarter2LessonDocs[index].id),
+                          onDelete: () => displayDeleteEntryDialog(context,
+                              message:
+                                  'Are you sure you want to delete this lesson?',
+                              deleteWord: 'Delete',
+                              deleteEntry: () =>
+                                  deleteLesson(quarter2LessonDocs[index])))),
+                )
+              : interText('NO AVAILABLE  LESSONS', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter3Lessons() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.softOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 3'),
+        children: [
+          quarter3LessonDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: quarter3LessonDocs.length,
+                      itemBuilder: (context, index) => teacherMaterialEntry(
+                          context,
+                          color: CustomColors.verySoftOrange,
+                          materialDoc: quarter3LessonDocs[index],
+                          onEdit: () => NavigatorRoutes.editLesson(context,
+                              lessonID: quarter3LessonDocs[index].id),
+                          onDelete: () => displayDeleteEntryDialog(context,
+                              message:
+                                  'Are you sure you want to delete this lesson?',
+                              deleteWord: 'Delete',
+                              deleteEntry: () =>
+                                  deleteLesson(quarter3LessonDocs[index])))),
+                )
+              : interText('NO AVAILABLE  LESSONS', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter4Lessons() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.softOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 4'),
+        children: [
+          quarter4LessonDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: quarter4LessonDocs.length,
+                      itemBuilder: (context, index) => teacherMaterialEntry(
+                          context,
+                          color: CustomColors.verySoftOrange,
+                          materialDoc: quarter4LessonDocs[index],
+                          onEdit: () => NavigatorRoutes.editLesson(context,
+                              lessonID: quarter4LessonDocs[index].id),
+                          onDelete: () => displayDeleteEntryDialog(context,
+                              message:
+                                  'Are you sure you want to delete this lesson?',
+                              deleteWord: 'Delete',
+                              deleteEntry: () =>
+                                  deleteLesson(quarter4LessonDocs[index])))),
                 )
               : interText('NO AVAILABLE  LESSONS', fontSize: 20)
         ],
@@ -314,8 +522,8 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
   Widget _expandableAssignments() {
     return vertical20Pix(
       child: ExpansionTile(
-        collapsedBackgroundColor: CustomColors.veryLightGrey,
-        backgroundColor: CustomColors.veryLightGrey,
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
         textColor: Colors.black,
         iconColor: Colors.black,
         collapsedShape: RoundedRectangleBorder(
@@ -327,25 +535,168 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
           ovalButton('CREATE ASSIGNMENT',
               onPress: () => showSubjectSelectDialog(() => Navigator.of(context)
                   .pushNamed(NavigatorRoutes.addAssignment)),
-              backgroundColor: CustomColors.veryLightGrey),
+              backgroundColor: CustomColors.softOrange),
           Gap(15),
           assignmentDocs.isNotEmpty
+              ? Column(
+                  children: [
+                    _quarter1Assignments(),
+                    _quarter2Assignments(),
+                    _quarter3Assignments(),
+                    _quarter4Assignments()
+                  ],
+                )
+              : interText('NO AVAILABLE ASSIGNMENTS', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter1Assignments() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.softOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 1'),
+        children: [
+          quarter1AssignmentDocs.isNotEmpty
               ? SizedBox(
                   height: MediaQuery.of(context).size.height * 0.3,
                   child: ListView.builder(
                       shrinkWrap: false,
-                      itemCount: assignmentDocs.length,
+                      itemCount: quarter1AssignmentDocs.length,
                       itemBuilder: (context, index) => teacherMaterialEntry(
                           context,
-                          materialDoc: assignmentDocs[index],
+                          color: CustomColors.verySoftOrange,
+                          materialDoc: quarter1AssignmentDocs[index],
                           onEdit: () => NavigatorRoutes.editAssignment(context,
-                              assignmentID: assignmentDocs[index].id),
+                              assignmentID: quarter1AssignmentDocs[index].id),
                           onDelete: () => displayDeleteEntryDialog(context,
                               message:
                                   'Are you sure you want to delete this assignment?',
                               deleteWord: 'Delete',
-                              deleteEntry: () =>
-                                  deleteAssignment(assignmentDocs[index])))),
+                              deleteEntry: () => deleteLesson(
+                                  quarter1AssignmentDocs[index])))),
+                )
+              : interText('NO AVAILABLE  ASSIGNMENTS', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter2Assignments() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.softOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 2'),
+        children: [
+          quarter2AssignmentDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: quarter2AssignmentDocs.length,
+                      itemBuilder: (context, index) => teacherMaterialEntry(
+                          context,
+                          color: CustomColors.verySoftOrange,
+                          materialDoc: quarter2AssignmentDocs[index],
+                          onEdit: () => NavigatorRoutes.editAssignment(context,
+                              assignmentID: quarter2AssignmentDocs[index].id),
+                          onDelete: () => displayDeleteEntryDialog(context,
+                              message:
+                                  'Are you sure you want to delete this assignment?',
+                              deleteWord: 'Delete',
+                              deleteEntry: () => deleteLesson(
+                                  quarter2AssignmentDocs[index])))),
+                )
+              : interText('NO AVAILABLE ASSIGNMENTS', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter3Assignments() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.softOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 3'),
+        children: [
+          quarter3AssignmentDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: quarter3AssignmentDocs.length,
+                      itemBuilder: (context, index) => teacherMaterialEntry(
+                          context,
+                          color: CustomColors.verySoftOrange,
+                          materialDoc: quarter3AssignmentDocs[index],
+                          onEdit: () => NavigatorRoutes.editAssignment(context,
+                              assignmentID: quarter3AssignmentDocs[index].id),
+                          onDelete: () => displayDeleteEntryDialog(context,
+                              message:
+                                  'Are you sure you want to delete this assignment?',
+                              deleteWord: 'Delete',
+                              deleteEntry: () => deleteLesson(
+                                  quarter3AssignmentDocs[index])))),
+                )
+              : interText('NO AVAILABLE ASSIGNMENTS', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter4Assignments() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.softOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 4'),
+        children: [
+          quarter4AssignmentDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: quarter4AssignmentDocs.length,
+                      itemBuilder: (context, index) => teacherMaterialEntry(
+                          context,
+                          color: CustomColors.verySoftOrange,
+                          materialDoc: quarter4AssignmentDocs[index],
+                          onEdit: () => NavigatorRoutes.editAssignment(context,
+                              assignmentID: quarter4AssignmentDocs[index].id),
+                          onDelete: () => displayDeleteEntryDialog(context,
+                              message:
+                                  'Are you sure you want to delete this assignment?',
+                              deleteWord: 'Delete',
+                              deleteEntry: () => deleteLesson(
+                                  quarter4AssignmentDocs[index])))),
                 )
               : interText('NO AVAILABLE ASSIGNMENTS', fontSize: 20)
         ],
@@ -356,8 +707,8 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
   Widget _expandableQuizzes() {
     return vertical20Pix(
       child: ExpansionTile(
-        collapsedBackgroundColor: CustomColors.veryLightGrey,
-        backgroundColor: CustomColors.veryLightGrey,
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
         textColor: Colors.black,
         iconColor: Colors.black,
         collapsedShape: RoundedRectangleBorder(
@@ -369,24 +720,168 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
           ovalButton('CREATE QUIZ',
               onPress: () => showSubjectSelectDialog(() =>
                   Navigator.of(context).pushNamed(NavigatorRoutes.addQuiz)),
-              backgroundColor: CustomColors.veryLightGrey),
+              backgroundColor: CustomColors.softOrange),
           Gap(15),
           quizDocs.isNotEmpty
+              ? Column(
+                  children: [
+                    _quarter1Quizzes(),
+                    _quarter2Quizzes(),
+                    _quarter3Quizzes(),
+                    _quarter4Quizzes()
+                  ],
+                )
+              : interText('NO AVAILABLE QUIZZES', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter1Quizzes() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.softOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 1'),
+        children: [
+          quarter1QuizDocs.isNotEmpty
               ? SizedBox(
                   height: MediaQuery.of(context).size.height * 0.3,
                   child: ListView.builder(
                       shrinkWrap: false,
-                      itemCount: quizDocs.length,
+                      itemCount: quarter1QuizDocs.length,
                       itemBuilder: (context, index) => teacherMaterialEntry(
                           context,
-                          materialDoc: quizDocs[index],
+                          color: CustomColors.verySoftOrange,
+                          materialDoc: quarter1QuizDocs[index],
                           onEdit: () => NavigatorRoutes.editQuiz(context,
-                              quizID: quizDocs[index].id),
+                              quizID: quarter1QuizDocs[index].id),
                           onDelete: () => displayDeleteEntryDialog(context,
                               message:
                                   'Are you sure you want to delete this quiz?',
                               deleteWord: 'Delete',
-                              deleteEntry: () => deleteQuiz(quizDocs[index])))),
+                              deleteEntry: () =>
+                                  deleteLesson(quarter1QuizDocs[index])))),
+                )
+              : interText('NO AVAILABLE QUIZZES', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter2Quizzes() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.softOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 2'),
+        children: [
+          quarter2QuizDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: quarter2QuizDocs.length,
+                      itemBuilder: (context, index) => teacherMaterialEntry(
+                          context,
+                          color: CustomColors.verySoftOrange,
+                          materialDoc: quarter2QuizDocs[index],
+                          onEdit: () => NavigatorRoutes.editQuiz(context,
+                              quizID: quarter2QuizDocs[index].id),
+                          onDelete: () => displayDeleteEntryDialog(context,
+                              message:
+                                  'Are you sure you want to delete this quiz?',
+                              deleteWord: 'Delete',
+                              deleteEntry: () =>
+                                  deleteLesson(quarter2QuizDocs[index])))),
+                )
+              : interText('NO AVAILABLE QUIZZES', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter3Quizzes() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.softOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 3'),
+        children: [
+          quarter3QuizDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: quarter3QuizDocs.length,
+                      itemBuilder: (context, index) => teacherMaterialEntry(
+                          context,
+                          color: CustomColors.verySoftOrange,
+                          materialDoc: quarter3QuizDocs[index],
+                          onEdit: () => NavigatorRoutes.editQuiz(context,
+                              quizID: quarter3QuizDocs[index].id),
+                          onDelete: () => displayDeleteEntryDialog(context,
+                              message:
+                                  'Are you sure you want to delete this quiz?',
+                              deleteWord: 'Delete',
+                              deleteEntry: () =>
+                                  deleteLesson(quarter3QuizDocs[index])))),
+                )
+              : interText('NO AVAILABLE QUIZZES', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
+  Widget _quarter4Quizzes() {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.softOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER 4'),
+        children: [
+          quarter4QuizDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: quarter4QuizDocs.length,
+                      itemBuilder: (context, index) => teacherMaterialEntry(
+                          context,
+                          color: CustomColors.verySoftOrange,
+                          materialDoc: quarter4QuizDocs[index],
+                          onEdit: () => NavigatorRoutes.editQuiz(context,
+                              quizID: quarter4QuizDocs[index].id),
+                          onDelete: () => displayDeleteEntryDialog(context,
+                              message:
+                                  'Are you sure you want to delete this quiz?',
+                              deleteWord: 'Delete',
+                              deleteEntry: () =>
+                                  deleteLesson(quarter4QuizDocs[index])))),
                 )
               : interText('NO AVAILABLE QUIZZES', fontSize: 20)
         ],
@@ -406,7 +901,7 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
                     _subjectTile('AP', onPress),
                     _subjectTile('ENGLISH', onPress),
                     _subjectTile('EPP', onPress),
-                    _subjectTile('ESP', onPress),
+                    _subjectTile('TLE', onPress),
                     _subjectTile('FILIPINO', onPress),
                     _subjectTile('MATH', onPress),
                     _subjectTile('MAPEH', onPress),

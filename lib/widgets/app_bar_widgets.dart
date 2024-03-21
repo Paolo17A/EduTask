@@ -10,8 +10,10 @@ PreferredSizeWidget homeAppBarWidget(BuildContext context,
       backgroundColor: backgroundColor,
       foregroundColor: Colors.white,
       title: Center(
-          child: Image.asset('assets/images/App Logo_EduTask Side-White.png',
-              scale: 50)),
+          child: CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Image.asset('assets/images/central_elem_logo.png',
+                  scale: 3))),
       actions: actions);
 }
 
@@ -21,7 +23,12 @@ PreferredSizeWidget authenticationAppBarWidget() {
     automaticallyImplyLeading: false,
     backgroundColor: CustomColors.veryDarkGrey,
     title: Center(
-        child: Image.asset('assets/images/App Logo_EduTask Side-White.png',
-            scale: 50)),
+        child: CircleAvatar(
+      backgroundColor: Colors.white,
+      child: Image.asset(
+        'assets/images/central_elem_logo.png',
+        scale: 3,
+      ),
+    )),
   );
 }

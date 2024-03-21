@@ -37,7 +37,7 @@ class StudentMaterialsSubjectSelectScreen extends ConsumerWidget {
             subjectButton(context, label: 'AP'),
             subjectButton(context, label: 'ENGLISH'),
             subjectButton(context, label: 'EPP'),
-            subjectButton(context, label: 'ESP'),
+            subjectButton(context, label: 'TLE'),
             subjectButton(context, label: 'FILIPINO'),
             subjectButton(context, label: 'MAPEH'),
             subjectButton(context, label: 'MATHEMATICS'),

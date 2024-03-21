@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import '../util/color_util.dart';
+import '../widgets/dropdown_widget.dart';
 import '../widgets/string_choices_radio_widget.dart';
 
 class EditQuizScreen extends StatefulWidget {
@@ -29,6 +30,7 @@ class _EditQuizScreenState extends State<EditQuizScreen> {
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _questionController = TextEditingController();
+  int selectedQuarter = 1;
   final List<TextEditingController> _choicesControllers = [];
   final List<String> choiceLetters = ['a', 'b', 'c', 'd'];
   String? _correctChoiceString;
@@ -82,6 +84,7 @@ class _EditQuizScreenState extends State<EditQuizScreen> {
       }
       _correctChoiceString = quizQuestions[currentQuestion]['answer'];
       stringChoice.currentState?.setChoice(_correctChoiceString!);
+      selectedQuarter = quizData['quarter'];
       setState(() {
         _isLoading = false;
         _isInitialized = true;
@@ -202,8 +205,9 @@ class _EditQuizScreenState extends State<EditQuizScreen> {
         final lessonData = lesson.data();
         String title = lessonData['title'];
         return title == _titleController.text.trim();
-      });
-      if (existingLesson.isNotEmpty) {
+      }).toList();
+      if (existingLesson.isNotEmpty &&
+          existingLesson.first.id != widget.quizID) {
         scaffoldMessenger.showSnackBar(const SnackBar(
             content: Text('A quiz with this title already exists')));
         setState(() {
@@ -220,7 +224,8 @@ class _EditQuizScreenState extends State<EditQuizScreen> {
         'title': _titleController.text.trim(),
         'quizContent': encodedQuiz,
         'teacherID': FirebaseAuth.instance.currentUser!.uid,
-        'dateLastModified': DateTime.now()
+        'dateLastModified': DateTime.now(),
+        'quarter': selectedQuarter
       });
 
       scaffoldMessenger.showSnackBar(
@@ -250,7 +255,11 @@ class _EditQuizScreenState extends State<EditQuizScreen> {
             SingleChildScrollView(
               child: all20Pix(
                   child: Column(
-                children: [_quizTitle(), _quizInputContainer()],
+                children: [
+                  _quizTitle(),
+                  _quizInputContainer(),
+                  _quarterDropdown()
+                ],
               )),
             )),
       ),
@@ -347,5 +356,24 @@ class _EditQuizScreenState extends State<EditQuizScreen> {
         ),
       ],
     );
+  }
+
+  Widget _quarterDropdown() {
+    return vertical10horizontal4(Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        interText('Quarter', fontSize: 18),
+        Container(
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(10)),
+          child: dropdownWidget('QUARTER', (number) {
+            setState(() {
+              selectedQuarter = int.parse(number!);
+            });
+          }, ['1', '2', '3', '4'], selectedQuarter.toString(), false),
+        ),
+      ],
+    ));
   }
 }

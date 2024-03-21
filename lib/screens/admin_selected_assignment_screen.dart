@@ -26,6 +26,7 @@ class _AdminSelectedAssignmentScreenState
   List<dynamic> associatedSections = [];
   String assignmentType = '';
   String directions = '';
+  int quarter = 0;
   DateTime deadline = DateTime.now();
 
   @override
@@ -38,6 +39,7 @@ class _AdminSelectedAssignmentScreenState
     associatedSections = assignmentData['associatedSections'];
     assignmentType = assignmentData['assignmentType'];
     directions = assignmentData['directions'];
+    quarter = assignmentData['quarter'];
     deadline = (assignmentData['deadline'] as Timestamp).toDate();
   }
 
@@ -68,6 +70,7 @@ class _AdminSelectedAssignmentScreenState
       Gap(12),
       interText('Subject: $subject', fontSize: 20),
       teacherName(teacherID),
+      interText('Quarter: ${quarter.toString()}'),
       interText('Deadline: ${DateFormat('MMM dd, yyyy').format(deadline)}'),
       Divider(thickness: 4),
     ]);

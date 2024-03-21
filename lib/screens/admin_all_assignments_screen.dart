@@ -29,7 +29,24 @@ class _AdminAllAssignmentsScreenState
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => getAllAssignments());
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      //fixAssignments();
+      getAllAssignments();
+    });
+  }
+
+  void fixAssignments() async {
+    final assignments =
+        await FirebaseFirestore.instance.collection('assignments').get();
+    for (var assignment in assignments.docs) {
+      final assignmentData = assignment.data();
+      if (!assignmentData.containsKey('quarter')) {
+        await FirebaseFirestore.instance
+            .collection('assignments')
+            .doc(assignment.reference.id)
+            .update({'quarter': 1});
+      }
+    }
   }
 
   void getAllAssignments() async {

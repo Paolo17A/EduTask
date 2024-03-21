@@ -116,7 +116,7 @@ class _AdminAddStudentScreenState extends State<AdminAddStudentScreen> {
         'FILIPINO': {'assignments': {}, 'quizzes': {}},
         'EPP': {'assignments': {}, 'quizzes': {}},
         'MAPEH': {'assignments': {}, 'quizzes': {}},
-        'ESP': {'assignments': {}, 'quizzes': {}}
+        'TLE': {'assignments': {}, 'quizzes': {}}
       });
 
       await FirebaseFirestore.instance
