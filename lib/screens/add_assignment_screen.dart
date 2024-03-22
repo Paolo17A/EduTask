@@ -58,7 +58,7 @@ class _AddAssignmentScreenState extends ConsumerState<AddAssignmentScreen> {
         'subject': ref.read(selectedSubjectProvider),
         'title': titleController.text,
         'directions': directionsController.text,
-        'assignmentType': assignmentType,
+        'assignmentType': 'FILE UPLOAD',
         'deadline': deadline,
         'associatedSections': [],
         'dateLastModified': DateTime.now(),
@@ -115,7 +115,7 @@ class _AddAssignmentScreenState extends ConsumerState<AddAssignmentScreen> {
                 children: [
                   newAssignmentHeader(),
                   Gap(30),
-                  _assignmentType(),
+                  //_assignmentType(),
                   _assignmentTitle(),
                   _assignmentDirections(),
                   _quarterDropdown(),
@@ -136,7 +136,7 @@ class _AddAssignmentScreenState extends ConsumerState<AddAssignmentScreen> {
         fontSize: 40, textAlign: TextAlign.center, color: Colors.black);
   }
 
-  Widget _assignmentType() {
+  /*Widget _assignmentType() {
     return vertical10horizontal4(Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -152,7 +152,7 @@ class _AddAssignmentScreenState extends ConsumerState<AddAssignmentScreen> {
         ),
       ],
     ));
-  }
+  }*/
 
   Widget _assignmentTitle() {
     return vertical10horizontal4(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/util/string_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
@@ -24,7 +25,7 @@ class _SelectedQuizResultScreenState extends State<SelectedQuizResultScreen> {
   //  QUIZ RESULTS
   num grade = 0;
   List<dynamic> userAnswers = [];
-
+  String quizType = QuizTypes.multipleChoice;
   String quizTitle = '';
   List<dynamic> quizQuestions = [];
 
@@ -55,6 +56,7 @@ class _SelectedQuizResultScreenState extends State<SelectedQuizResultScreen> {
       final quizData = quiz.data() as Map<dynamic, dynamic>;
       quizTitle = quizData['title'];
       final quizContent = quizData['quizContent'];
+      quizType = quizData['quizType'];
       quizQuestions = jsonDecode(quizContent);
 
       setState(() {
@@ -122,8 +124,15 @@ class _SelectedQuizResultScreenState extends State<SelectedQuizResultScreen> {
             itemBuilder: (context, index) {
               String formattedQuestion =
                   '${index + 1}. ${(quizQuestions[index]['question'].toString())}';
-              String yourAnswer =
-                  'Your Answer: ${userAnswers[index]}) ${quizQuestions[index]['options'][userAnswers[index]]}';
+
+              String yourAnswer = '';
+
+              if (quizType == QuizTypes.multipleChoice) {
+                yourAnswer =
+                    'Your Answer: ${userAnswers[index]}) ${quizQuestions[index]['options'][userAnswers[index]]}';
+              } else {
+                yourAnswer = 'Your Answer: ${userAnswers[index]}';
+              }
               /*String correctAnswer =
                   'Correct Answer: ${quizQuestions[index]['answer']}) ${quizQuestions[index]['options'][quizQuestions[index]['answer']]}';*/
               return vertical10horizontal4(

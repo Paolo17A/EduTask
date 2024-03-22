@@ -2,7 +2,9 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutask/providers/profile_image_provider.dart';
+import 'package:edutask/providers/selected_quiz_type_provider.dart';
 import 'package:edutask/providers/selected_subject_provider.dart';
+import 'package:edutask/util/string_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
@@ -581,7 +583,7 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
                               message:
                                   'Are you sure you want to delete this assignment?',
                               deleteWord: 'Delete',
-                              deleteEntry: () => deleteLesson(
+                              deleteEntry: () => deleteAssignment(
                                   quarter1AssignmentDocs[index])))),
                 )
               : interText('NO AVAILABLE  ASSIGNMENTS', fontSize: 20)
@@ -619,7 +621,7 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
                               message:
                                   'Are you sure you want to delete this assignment?',
                               deleteWord: 'Delete',
-                              deleteEntry: () => deleteLesson(
+                              deleteEntry: () => deleteAssignment(
                                   quarter2AssignmentDocs[index])))),
                 )
               : interText('NO AVAILABLE ASSIGNMENTS', fontSize: 20)
@@ -657,7 +659,7 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
                               message:
                                   'Are you sure you want to delete this assignment?',
                               deleteWord: 'Delete',
-                              deleteEntry: () => deleteLesson(
+                              deleteEntry: () => deleteAssignment(
                                   quarter3AssignmentDocs[index])))),
                 )
               : interText('NO AVAILABLE ASSIGNMENTS', fontSize: 20)
@@ -695,7 +697,7 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
                               message:
                                   'Are you sure you want to delete this assignment?',
                               deleteWord: 'Delete',
-                              deleteEntry: () => deleteLesson(
+                              deleteEntry: () => deleteAssignment(
                                   quarter4AssignmentDocs[index])))),
                 )
               : interText('NO AVAILABLE ASSIGNMENTS', fontSize: 20)
@@ -718,8 +720,7 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
         title: interText('QUIZZES'),
         children: [
           ovalButton('CREATE QUIZ',
-              onPress: () => showSubjectSelectDialog(() =>
-                  Navigator.of(context).pushNamed(NavigatorRoutes.addQuiz)),
+              onPress: () => showQuizTypeSelectDialog(),
               backgroundColor: CustomColors.softOrange),
           Gap(15),
           quizDocs.isNotEmpty
@@ -767,7 +768,7 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
                                   'Are you sure you want to delete this quiz?',
                               deleteWord: 'Delete',
                               deleteEntry: () =>
-                                  deleteLesson(quarter1QuizDocs[index])))),
+                                  deleteQuiz(quarter1QuizDocs[index])))),
                 )
               : interText('NO AVAILABLE QUIZZES', fontSize: 20)
         ],
@@ -805,7 +806,7 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
                                   'Are you sure you want to delete this quiz?',
                               deleteWord: 'Delete',
                               deleteEntry: () =>
-                                  deleteLesson(quarter2QuizDocs[index])))),
+                                  deleteQuiz(quarter2QuizDocs[index])))),
                 )
               : interText('NO AVAILABLE QUIZZES', fontSize: 20)
         ],
@@ -843,7 +844,7 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
                                   'Are you sure you want to delete this quiz?',
                               deleteWord: 'Delete',
                               deleteEntry: () =>
-                                  deleteLesson(quarter3QuizDocs[index])))),
+                                  deleteQuiz(quarter3QuizDocs[index])))),
                 )
               : interText('NO AVAILABLE QUIZZES', fontSize: 20)
         ],
@@ -881,12 +882,28 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
                                   'Are you sure you want to delete this quiz?',
                               deleteWord: 'Delete',
                               deleteEntry: () =>
-                                  deleteLesson(quarter4QuizDocs[index])))),
+                                  deleteQuiz(quarter4QuizDocs[index])))),
                 )
               : interText('NO AVAILABLE QUIZZES', fontSize: 20)
         ],
       ),
     );
+  }
+
+  void showQuizTypeSelectDialog() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              content: SingleChildScrollView(
+                child: Column(children: [
+                  interText('SELECT QUIZ TYPE',
+                      fontWeight: FontWeight.bold, fontSize: 20),
+                  _quizTypeTile(QuizTypes.multipleChoice),
+                  _quizTypeTile(QuizTypes.trueOrFalse),
+                  _quizTypeTile(QuizTypes.identification),
+                ]),
+              ),
+            ));
   }
 
   void showSubjectSelectDialog(Function onPress) {
@@ -910,6 +927,23 @@ class _LessonPlanScreenState extends ConsumerState<LessonPlanScreen> {
                 ),
               ),
             ));
+  }
+
+  Widget _quizTypeTile(String label) {
+    return InkWell(
+      onTap: () {
+        ref.read(selectedQuizTypeProvider.notifier).setSelectedQuizType(label);
+        Navigator.of(context).pop();
+        showSubjectSelectDialog(
+            () => Navigator.of(context).pushNamed(NavigatorRoutes.addQuiz));
+      },
+      child: Container(
+          decoration: BoxDecoration(border: Border.all()),
+          padding: EdgeInsets.all(10),
+          child: Center(
+            child: interText(label, fontSize: 20),
+          )),
+    );
   }
 
   Widget _subjectTile(String label, Function onPress) {

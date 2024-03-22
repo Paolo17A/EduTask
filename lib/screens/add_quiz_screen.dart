@@ -1,9 +1,13 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/providers/selected_quiz_type_provider.dart';
 import 'package:edutask/providers/selected_subject_provider.dart';
+import 'package:edutask/util/color_util.dart';
 import 'package:edutask/util/navigator_util.dart';
+import 'package:edutask/util/string_util.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
+import 'package:edutask/widgets/custom_button_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
 import 'package:edutask/widgets/custom_text_widgets.dart';
@@ -13,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
+import '../widgets/bool_choices_radio_widget.dart';
 import '../widgets/dropdown_widget.dart';
 import '../widgets/string_choices_radio_widget.dart';
 
@@ -30,12 +35,23 @@ class _AddQuizScreenState extends ConsumerState<AddQuizScreen> {
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _questionController = TextEditingController();
+  List<dynamic> quizQuestions = [];
+
   int selectedQuarter = 1;
+
+  //  MULTIPLE CHOICE VARIABLES
   final List<TextEditingController> _choicesControllers = [];
   final List<String> choiceLetters = ['a', 'b', 'c', 'd'];
   String? _correctChoiceString;
   final GlobalKey<ChoicesRadioWidgetState> stringChoice = GlobalKey();
-  List<dynamic> quizQuestions = [];
+
+  //  TRUE OR FALSE VARIABLES
+  bool? _correctChoiceBool;
+  final GlobalKey<BoolChoicesRadioWidgetState> boolChoice = GlobalKey();
+
+  //  IDENTIFICATION VARIABLES
+  final TextEditingController _identificationController =
+      TextEditingController();
 
   @override
   void initState() {
@@ -53,6 +69,7 @@ class _AddQuizScreenState extends ConsumerState<AddQuizScreen> {
     for (var choice in _choicesControllers) {
       choice.dispose();
     }
+    _identificationController.dispose();
   }
 
   void previousQuestion() {
@@ -61,18 +78,26 @@ class _AddQuizScreenState extends ConsumerState<AddQuizScreen> {
     }
     setState(() {
       currentQuestion--;
-
       _questionController.text = quizQuestions[currentQuestion]['question'];
-      _choicesControllers[0].text =
-          quizQuestions[currentQuestion]['options']['a'];
-      _choicesControllers[1].text =
-          quizQuestions[currentQuestion]['options']['b'];
-      _choicesControllers[2].text =
-          quizQuestions[currentQuestion]['options']['c'];
-      _choicesControllers[3].text =
-          quizQuestions[currentQuestion]['options']['d'];
-      _correctChoiceString = quizQuestions[currentQuestion]['answer'];
-      stringChoice.currentState?.setChoice(_correctChoiceString!);
+      if (ref.read(selectedQuizTypeProvider) == QuizTypes.multipleChoice) {
+        _choicesControllers[0].text =
+            quizQuestions[currentQuestion]['options']['a'];
+        _choicesControllers[1].text =
+            quizQuestions[currentQuestion]['options']['b'];
+        _choicesControllers[2].text =
+            quizQuestions[currentQuestion]['options']['c'];
+        _choicesControllers[3].text =
+            quizQuestions[currentQuestion]['options']['d'];
+        _correctChoiceString = quizQuestions[currentQuestion]['answer'];
+        stringChoice.currentState?.setChoice(_correctChoiceString!);
+      } else if (ref.read(selectedQuizTypeProvider) == QuizTypes.trueOrFalse) {
+        _correctChoiceBool = quizQuestions[currentQuestion]['answer'];
+        boolChoice.currentState?.setChoice(_correctChoiceBool!);
+      } else if (ref.read(selectedQuizTypeProvider) ==
+          QuizTypes.identification) {
+        _identificationController.text =
+            quizQuestions[currentQuestion]['answer'];
+      }
     });
   }
 
@@ -88,38 +113,78 @@ class _AddQuizScreenState extends ConsumerState<AddQuizScreen> {
           const SnackBar(content: Text('Please provide a question.')));
       return;
     }
-    if (_correctChoiceString == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content:
-              Text('Please select a correct answer from the four choices.')));
-      return;
-    }
-    for (int i = 0; i < _choicesControllers.length; i++) {
-      if (_choicesControllers[i].text.isEmpty) {
+    if (ref.read(selectedQuizTypeProvider) == QuizTypes.multipleChoice) {
+      if (_correctChoiceString == null) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Please provide four choices to choose from.')));
+            content:
+                Text('Please select a correct answer from the four choices.')));
         return;
       }
+      for (int i = 0; i < _choicesControllers.length; i++) {
+        if (_choicesControllers[i].text.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text('Please provide four choices to choose from.')));
+          return;
+        }
+      }
+    }
+    if (ref.read(selectedQuizTypeProvider) == QuizTypes.trueOrFalse &&
+        _correctChoiceBool == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Please select between True or False.')));
+      return;
+    } else if (ref.read(selectedQuizTypeProvider) == QuizTypes.identification &&
+        _identificationController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please input the correct answer.')));
+      return;
     }
 
     //  Create a custom map for this object
-
-    Map<String, dynamic> easyQuestionEntry = {
-      'question': _questionController.text.trim(),
-      'options': {
-        'a': _choicesControllers[0].text.trim(),
-        'b': _choicesControllers[1].text.trim(),
-        'c': _choicesControllers[2].text.trim(),
-        'd': _choicesControllers[3].text.trim()
-      },
-      'answer': _correctChoiceString
-    };
-    if (currentQuestion == quizQuestions.length) {
-      quizQuestions.add(easyQuestionEntry);
-    } else {
-      quizQuestions[currentQuestion] = easyQuestionEntry;
+    //  Create a multiple choice question map
+    if (ref.read(selectedQuizTypeProvider) == QuizTypes.multipleChoice) {
+      Map<String, dynamic> easyQuestionEntry = {
+        'question': _questionController.text.trim(),
+        'options': {
+          'a': _choicesControllers[0].text.trim(),
+          'b': _choicesControllers[1].text.trim(),
+          'c': _choicesControllers[2].text.trim(),
+          'd': _choicesControllers[3].text.trim()
+        },
+        'answer': _correctChoiceString
+      };
+      if (currentQuestion == quizQuestions.length) {
+        quizQuestions.add(easyQuestionEntry);
+      } else {
+        quizQuestions[currentQuestion] = easyQuestionEntry;
+      }
+    }
+    //  Create a true or false question map
+    else if (ref.read(selectedQuizTypeProvider) == QuizTypes.trueOrFalse) {
+      Map<String, dynamic> averageQuestionEntry = {
+        'question': _questionController.text.trim(),
+        'answer': _correctChoiceBool
+      };
+      if (currentQuestion == quizQuestions.length) {
+        quizQuestions.add(averageQuestionEntry);
+      } else {
+        quizQuestions[currentQuestion] = averageQuestionEntry;
+      }
+    }
+    //  Create an identification question map
+    else if (ref.read(selectedQuizTypeProvider) == QuizTypes.identification) {
+      Map<String, dynamic> difficultQuestionEntry = {
+        'question': _questionController.text.trim(),
+        'answer': _identificationController.text.trim()
+      };
+      if (currentQuestion == quizQuestions.length) {
+        quizQuestions.add(difficultQuestionEntry);
+      } else {
+        quizQuestions[currentQuestion] = difficultQuestionEntry;
+      }
     }
 
+    //  STORE THE INPUTTED DATA AND REBUILD THE WIDGET
     setState(() {
       currentQuestion++;
       if (currentQuestion == 10) {
@@ -130,25 +195,43 @@ class _AddQuizScreenState extends ConsumerState<AddQuizScreen> {
       if (currentQuestion <= quizQuestions.length - 1) {
         Map<dynamic, dynamic> selectedQuestion = quizQuestions[currentQuestion];
         _questionController.text = selectedQuestion['question'];
-        for (int i = 0; i < _choicesControllers.length; i++) {
-          _choicesControllers[i].text =
-              selectedQuestion['options'][choiceLetters[i]];
+        if (ref.read(selectedQuizTypeProvider) == QuizTypes.multipleChoice) {
+          for (int i = 0; i < _choicesControllers.length; i++) {
+            _choicesControllers[i].text =
+                selectedQuestion['options'][choiceLetters[i]];
+          }
+          _correctChoiceString = selectedQuestion['answer'];
+          stringChoice.currentState?.setChoice(_correctChoiceString!);
+        } else if (ref.read(selectedQuizTypeProvider) ==
+            QuizTypes.trueOrFalse) {
+          _correctChoiceBool = selectedQuestion['answer'];
+          boolChoice.currentState?.setChoice(_correctChoiceBool!);
+        } else if (ref.read(selectedQuizTypeProvider) ==
+            QuizTypes.identification) {
+          _identificationController.text = selectedQuestion['answer'];
         }
-        _correctChoiceString = selectedQuestion['answer'];
-        stringChoice.currentState?.setChoice(_correctChoiceString!);
       } else {
         _questionController.clear();
-
-        for (TextEditingController choice in _choicesControllers) {
-          choice.clear();
+        if (ref.read(selectedQuizTypeProvider) == QuizTypes.multipleChoice) {
+          for (TextEditingController choice in _choicesControllers) {
+            choice.clear();
+          }
+          _correctChoiceString = null;
+          stringChoice.currentState?.resetChoice();
+        } else if (ref.read(selectedQuizTypeProvider) ==
+            QuizTypes.trueOrFalse) {
+          _correctChoiceBool = null;
+          boolChoice.currentState?.resetChoice();
+        } else if (ref.read(selectedQuizTypeProvider) ==
+            QuizTypes.identification) {
+          _identificationController.clear();
         }
-        _correctChoiceString = null;
-        stringChoice.currentState?.resetChoice();
       }
     });
   }
 
   void addNewQuiz() async {
+    FocusScope.of(context).unfocus();
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
     try {
@@ -176,6 +259,7 @@ class _AddQuizScreenState extends ConsumerState<AddQuizScreen> {
       await FirebaseFirestore.instance.collection('quizzes').doc(quizID).set({
         'teacherID': FirebaseAuth.instance.currentUser!.uid,
         'subject': ref.read(selectedSubjectProvider),
+        'quizType': ref.read(selectedQuizTypeProvider),
         'title': _titleController.text.trim(),
         'quizContent': encodedQuiz,
         'associatedSections': [],
@@ -238,7 +322,7 @@ class _AddQuizScreenState extends ConsumerState<AddQuizScreen> {
   Widget _quizInputContainer() {
     return Container(
       decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.9),
+          color: CustomColors.verySoftOrange,
           border: Border.all(),
           borderRadius: BorderRadius.circular(20)),
       padding: EdgeInsets.all(10),
@@ -255,22 +339,26 @@ class _AddQuizScreenState extends ConsumerState<AddQuizScreen> {
               textInputType: TextInputType.text,
               displayPrefixIcon: null),
           const SizedBox(height: 15),
-          _easyQuestionInput(),
+          if (ref.read(selectedQuizTypeProvider) == QuizTypes.multipleChoice)
+            _multipleChoiceQuestionInput()
+          else if (ref.read(selectedQuizTypeProvider) == QuizTypes.trueOrFalse)
+            _trueOrFalseQuestionInput()
+          else if (ref.read(selectedQuizTypeProvider) ==
+              QuizTypes.identification)
+            _identificationQuestionInput(),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            ElevatedButton(
-                onPressed: previousQuestion,
-                child: interText('PREVIOUS', fontWeight: FontWeight.bold)),
-            ElevatedButton(
-                onPressed: nextQuestion,
-                child: interText(currentQuestion == 9 ? 'SUBMIT' : 'NEXT',
-                    fontWeight: FontWeight.bold))
+            ovalButton('PREVIOUS',
+                onPress: previousQuestion,
+                backgroundColor: CustomColors.softOrange),
+            ovalButton(currentQuestion == 9 ? 'SUBMIT' : 'NEXT',
+                onPress: nextQuestion, backgroundColor: CustomColors.softOrange)
           ])
         ],
       ),
     );
   }
 
-  Widget _easyQuestionInput() {
+  Widget _multipleChoiceQuestionInput() {
     return Column(
       children: [
         ListView.builder(
@@ -310,6 +398,31 @@ class _AddQuizScreenState extends ConsumerState<AddQuizScreen> {
               choiceLetters: choiceLetters),
         ),
       ],
+    );
+  }
+
+  Widget _trueOrFalseQuestionInput() {
+    return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: BoolChoicesRadioWidget(
+            key: boolChoice,
+            initialBool: _correctChoiceBool,
+            choiceSelectCallback: (boolVal) {
+              if (boolVal != null) {
+                setState(() {
+                  _correctChoiceBool = boolVal;
+                });
+              }
+            }));
+  }
+
+  Widget _identificationQuestionInput() {
+    return vertical20Pix(
+      child: EduTaskTextField(
+          text: 'Correct Answer',
+          controller: _identificationController,
+          textInputType: TextInputType.text,
+          displayPrefixIcon: null),
     );
   }
 

@@ -361,30 +361,32 @@ Widget pendingAssignmentEntry(BuildContext context,
   String title = assignmentData['title'];
   String subject = assignmentData['subject'];
   DateTime deadline = (assignmentData['deadline'] as Timestamp).toDate();
-  return ElevatedButton(
-      onPressed: () => NavigatorRoutes.answerAssignment(context,
-          assignmentID: assignmentDoc.id, fromHomeScreen: true),
-      style: ElevatedButton.styleFrom(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          backgroundColor: CustomColors.softOrange,
-          foregroundColor: Colors.white),
-      child: Container(
-        padding: EdgeInsets.all(4),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            interText('Subject: $subject',
-                fontWeight: FontWeight.bold, fontSize: 18),
-            interText(
-                'Deadline: ${DateFormat('MMM dd, yyyy').format(deadline)}',
-                fontSize: 18),
-            SizedBox(
-                width: MediaQuery.of(context).size.width * 0.75,
-                child: interText(title, fontSize: 16))
-          ],
-        ),
-      ));
+  return vertical10horizontal4(
+    ElevatedButton(
+        onPressed: () => NavigatorRoutes.answerAssignment(context,
+            assignmentID: assignmentDoc.id, fromHomeScreen: true),
+        style: ElevatedButton.styleFrom(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            backgroundColor: CustomColors.softOrange,
+            foregroundColor: Colors.white),
+        child: Container(
+          padding: EdgeInsets.all(4),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              interText('Subject: $subject',
+                  fontWeight: FontWeight.bold, fontSize: 18),
+              interText(
+                  'Deadline: ${DateFormat('MMM dd, yyyy').format(deadline)}',
+                  fontSize: 18),
+              SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.75,
+                  child: interText(title, fontSize: 16))
+            ],
+          ),
+        )),
+  );
 }
 
 Widget pendingQuizEntry(BuildContext context,
@@ -392,26 +394,29 @@ Widget pendingQuizEntry(BuildContext context,
   final quizData = quizDoc.data() as Map<dynamic, dynamic>;
   String title = quizData['title'];
   String subject = quizData['subject'];
-  return ElevatedButton(
-      onPressed: () => NavigatorRoutes.answerQuiz(context, quizID: quizDoc.id),
-      style: ElevatedButton.styleFrom(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          backgroundColor: CustomColors.softOrange,
-          foregroundColor: Colors.white),
-      child: Container(
-        padding: EdgeInsets.all(4),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            interText('Subject: $subject',
-                fontWeight: FontWeight.bold, fontSize: 18),
-            SizedBox(
-                width: MediaQuery.of(context).size.width * 0.75,
-                child: interText(title, fontSize: 16))
-          ],
-        ),
-      ));
+  return vertical10horizontal4(
+    ElevatedButton(
+        onPressed: () =>
+            NavigatorRoutes.answerQuiz(context, quizID: quizDoc.id),
+        style: ElevatedButton.styleFrom(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            backgroundColor: CustomColors.softOrange,
+            foregroundColor: Colors.white),
+        child: Container(
+          padding: EdgeInsets.all(4),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              interText('Subject: $subject',
+                  fontWeight: FontWeight.bold, fontSize: 18),
+              SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.75,
+                  child: interText(title, fontSize: 16))
+            ],
+          ),
+        )),
+  );
 }
 
 Widget submittedAssignmentEntry(BuildContext context,

@@ -138,8 +138,8 @@ class _AdminEditSectionState extends State<AdminEditSection> {
           content: Text('Successfully changed this section\'s adviser')));
       getSectionData();
     } catch (error) {
-      scaffoldMessenger
-          .showSnackBar(SnackBar(content: Text('Error changing ')));
+      scaffoldMessenger.showSnackBar(
+          SnackBar(content: Text('Error changing: ${error.toString()}')));
       setState(() {
         _isLoading = false;
       });
