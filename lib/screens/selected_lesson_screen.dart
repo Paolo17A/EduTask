@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutask/screens/view_pdf_screen.dart';
 import 'package:edutask/widgets/app_bar_widgets.dart';
 import 'package:edutask/widgets/custom_container_widgets.dart';
 import 'package:edutask/widgets/custom_padding_widgets.dart';
@@ -118,8 +119,12 @@ class _SelectedLessonScreenState extends State<SelectedLessonScreen> {
                   return SizedBox(
                       width: MediaQuery.of(context).size.width * 0.75,
                       child: ElevatedButton(
-                          onPressed: () async =>
-                              launchThisURL(externalDocument['docURL']),
+                          onPressed: () async {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => ViewPDFScreen(
+                                    pdfURL: externalDocument['docURL'])));
+                            //launchThisURL(externalDocument['docURL']);
+                          },
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(),
                               backgroundColor: CustomColors.softOrange),
