@@ -148,8 +148,8 @@ class _StudentSubjectMaterialsScreenState
   Widget _expandableLessons() {
     return vertical20Pix(
       child: ExpansionTile(
-        collapsedBackgroundColor: CustomColors.veryLightGrey,
-        backgroundColor: CustomColors.veryLightGrey,
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
         textColor: Colors.black,
         iconColor: Colors.black,
         collapsedShape: RoundedRectangleBorder(
@@ -166,29 +166,38 @@ class _StudentSubjectMaterialsScreenState
                 } else if (snapshot.hasError) {
                   return interText('Error getting section lessons');
                 }
+                List<DocumentSnapshot> quarter1LessonDocs = [];
+                List<DocumentSnapshot> quarter2LessonDocs = [];
+                List<DocumentSnapshot> quarter3LessonDocs = [];
+                List<DocumentSnapshot> quarter4LessonDocs = [];
+
+                quarter1LessonDocs = snapshot.data!.where((lesson) {
+                  final lessonData = lesson.data() as Map<dynamic, dynamic>;
+                  return lessonData['quarter'] == 1;
+                }).toList();
+
+                quarter2LessonDocs = snapshot.data!.where((lesson) {
+                  final lessonData = lesson.data() as Map<dynamic, dynamic>;
+                  return lessonData['quarter'] == 2;
+                }).toList();
+
+                quarter3LessonDocs = snapshot.data!.where((lesson) {
+                  final lessonData = lesson.data() as Map<dynamic, dynamic>;
+                  return lessonData['quarter'] == 3;
+                }).toList();
+
+                quarter4LessonDocs = snapshot.data!.where((lesson) {
+                  final lessonData = lesson.data() as Map<dynamic, dynamic>;
+                  return lessonData['quarter'] == 4;
+                }).toList();
                 return snapshot.data!.isNotEmpty
-                    ? all20Pix(
-                        child: SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.3,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: snapshot.data!.length,
-                              itemBuilder: (context, index) {
-                                final lessonData = snapshot.data![index].data()
-                                    as Map<dynamic, dynamic>;
-                                String title = lessonData['title'];
-                                return ElevatedButton(
-                                    onPressed: () =>
-                                        NavigatorRoutes.selectedLesson(context,
-                                            lessonID: snapshot.data![index].id),
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                            CustomColors.softOrange),
-                                    child: interText(title,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black));
-                              },
-                            )),
+                    ? Column(
+                        children: [
+                          _quarterLessons(1, quarter1LessonDocs),
+                          _quarterLessons(2, quarter2LessonDocs),
+                          _quarterLessons(3, quarter3LessonDocs),
+                          _quarterLessons(4, quarter4LessonDocs)
+                        ],
                       )
                     : interText('NO AVAILABLE LESSONS', fontSize: 20);
               })
@@ -197,11 +206,54 @@ class _StudentSubjectMaterialsScreenState
     );
   }
 
+  Widget _quarterLessons(
+      int quarter, List<DocumentSnapshot> quarterLessonDocs) {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.softOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER $quarter'),
+        children: [
+          quarterLessonDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: quarterLessonDocs.length,
+                      itemBuilder: (context, index) {
+                        final lessonData = quarterLessonDocs[index].data()
+                            as Map<dynamic, dynamic>;
+                        String title = lessonData['title'];
+                        return all10Pix(
+                          child: ElevatedButton(
+                              onPressed: () => NavigatorRoutes.selectedLesson(
+                                  context,
+                                  lessonID: quarterLessonDocs[index].id),
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: CustomColors.verySoftOrange),
+                              child: interText(title,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black)),
+                        );
+                      }),
+                )
+              : interText('NO AVAILABLE LESSONS', fontSize: 20)
+        ],
+      ),
+    );
+  }
+
   Widget _expandableAssignments() {
     return vertical20Pix(
       child: ExpansionTile(
-        collapsedBackgroundColor: CustomColors.veryLightGrey,
-        backgroundColor: CustomColors.veryLightGrey,
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
         textColor: Colors.black,
         iconColor: Colors.black,
         collapsedShape: RoundedRectangleBorder(
@@ -218,39 +270,94 @@ class _StudentSubjectMaterialsScreenState
                 } else if (snapshot.hasError) {
                   return interText('Error getting section assignments');
                 }
+                List<DocumentSnapshot> quarter1AssignmentDocs = [];
+                List<DocumentSnapshot> quarter2AssignmentDocs = [];
+                List<DocumentSnapshot> quarter3AssignmentDocs = [];
+                List<DocumentSnapshot> quarter4AssignmentDocs = [];
+                quarter1AssignmentDocs = snapshot.data!.where((assignment) {
+                  final assignmentData =
+                      assignment.data() as Map<dynamic, dynamic>;
+                  return assignmentData['quarter'] == 1;
+                }).toList();
+                quarter2AssignmentDocs = snapshot.data!.where((assignment) {
+                  final assignmentData =
+                      assignment.data() as Map<dynamic, dynamic>;
+                  return assignmentData['quarter'] == 2;
+                }).toList();
+                quarter3AssignmentDocs = snapshot.data!.where((assignment) {
+                  final assignmentData =
+                      assignment.data() as Map<dynamic, dynamic>;
+                  return assignmentData['quarter'] == 3;
+                }).toList();
+                quarter4AssignmentDocs = snapshot.data!.where((assignment) {
+                  final assignmentData =
+                      assignment.data() as Map<dynamic, dynamic>;
+                  return assignmentData['quarter'] == 4;
+                }).toList();
 
                 return snapshot.data!.isNotEmpty
-                    ? SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: snapshot.data!.length,
-                          itemBuilder: (context, index) {
-                            final lessonData = snapshot.data![index].data()
-                                as Map<dynamic, dynamic>;
-                            String title = lessonData['title'];
-                            return Container(
-                              color: Colors.grey,
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.5,
-                                    child: interText(title,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                        overflow: TextOverflow.ellipsis),
-                                  ),
-                                  _assignmentActionButton(
-                                      snapshot.data![index].id)
-                                ],
-                              ),
-                            );
-                          },
-                        ),
+                    ? Column(
+                        children: [
+                          _quarterAssignments(1, quarter1AssignmentDocs),
+                          _quarterAssignments(2, quarter2AssignmentDocs),
+                          _quarterAssignments(3, quarter3AssignmentDocs),
+                          _quarterAssignments(4, quarter4AssignmentDocs),
+                        ],
                       )
                     : interText('NO AVAILABLE ASSIGNMENTS', fontSize: 20);
               })
+        ],
+      ),
+    );
+  }
+
+  Widget _quarterAssignments(
+      int quarter, List<DocumentSnapshot> quarterAssignmentDocs) {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER $quarter'),
+        children: [
+          quarterAssignmentDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: quarterAssignmentDocs.length,
+                      itemBuilder: (context, index) {
+                        final assignmentData = quarterAssignmentDocs[index]
+                            .data() as Map<dynamic, dynamic>;
+                        String title = assignmentData['title'];
+                        return Container(
+                          color: CustomColors.softOrange,
+                          padding: EdgeInsets.all(4),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.4,
+                                child: interText(title,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    overflow: TextOverflow.ellipsis),
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.4,
+                                child: _assignmentActionButton(
+                                    quarterAssignmentDocs[index].id),
+                              )
+                            ],
+                          ),
+                        );
+                      }),
+                )
+              : interText('NO AVAILABLE LESSONS', fontSize: 20)
         ],
       ),
     );
@@ -268,12 +375,12 @@ class _StudentSubjectMaterialsScreenState
           return ovalButton('ANSWER\nASSIGNMENT',
               onPress: () => NavigatorRoutes.answerAssignment(context,
                   assignmentID: assignmentID),
-              backgroundColor: CustomColors.veryLightGrey);
+              backgroundColor: CustomColors.verySoftOrange);
         }
         return ovalButton('VIEW\nSUBMISSION',
             onPress: () => NavigatorRoutes.selectedSubmission(context,
                 submissionID: snapshot.data!.id),
-            backgroundColor: CustomColors.veryLightGrey);
+            backgroundColor: CustomColors.softOrange);
       },
     );
   }
@@ -281,8 +388,8 @@ class _StudentSubjectMaterialsScreenState
   Widget _expandableQuizzes() {
     return vertical20Pix(
       child: ExpansionTile(
-        collapsedBackgroundColor: CustomColors.veryLightGrey,
-        backgroundColor: CustomColors.veryLightGrey,
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
         textColor: Colors.black,
         iconColor: Colors.black,
         collapsedShape: RoundedRectangleBorder(
@@ -299,19 +406,88 @@ class _StudentSubjectMaterialsScreenState
                 } else if (snapshot.hasError) {
                   return interText('Error getting section quizzes');
                 }
+                List<DocumentSnapshot> quarter1QuizDocs = [];
+                List<DocumentSnapshot> quarter2QuizDocs = [];
+                List<DocumentSnapshot> quarter3QuizDocs = [];
+                List<DocumentSnapshot> quarter4QuizDocs = [];
+                quarter1QuizDocs = snapshot.data!.where((quiz) {
+                  final quizData = quiz.data() as Map<dynamic, dynamic>;
+                  return quizData['quarter'] == 1;
+                }).toList();
+                quarter2QuizDocs = snapshot.data!.where((quiz) {
+                  final quizData = quiz.data() as Map<dynamic, dynamic>;
+                  return quizData['quarter'] == 2;
+                }).toList();
+                quarter3QuizDocs = snapshot.data!.where((quiz) {
+                  final quizData = quiz.data() as Map<dynamic, dynamic>;
+                  return quizData['quarter'] == 3;
+                }).toList();
+                quarter4QuizDocs = snapshot.data!.where((quiz) {
+                  final quizData = quiz.data() as Map<dynamic, dynamic>;
+                  return quizData['quarter'] == 4;
+                }).toList();
                 return snapshot.data!.isNotEmpty
-                    ? SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: snapshot.data!.length,
-                          itemBuilder: (context, index) {
-                            return _quizEntry(snapshot.data![index], index);
-                          },
-                        ),
+                    ? Column(
+                        children: [
+                          _quarterQuizzes(1, quarter1QuizDocs),
+                          _quarterQuizzes(2, quarter2QuizDocs),
+                          _quarterQuizzes(3, quarter3QuizDocs),
+                          _quarterQuizzes(4, quarter4QuizDocs),
+                        ],
                       )
                     : interText('NO AVAILABLE QUIZZES', fontSize: 20);
               })
+        ],
+      ),
+    );
+  }
+
+  Widget _quarterQuizzes(int quarter, List<DocumentSnapshot> quarterQuizDocs) {
+    return all10Pix(
+      child: ExpansionTile(
+        collapsedBackgroundColor: CustomColors.softOrange,
+        backgroundColor: CustomColors.verySoftOrange,
+        textColor: Colors.black,
+        iconColor: Colors.black,
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), side: BorderSide()),
+        title: interText('QUARTER $quarter'),
+        children: [
+          quarterQuizDocs.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: quarterQuizDocs.length,
+                      itemBuilder: (context, index) {
+                        final quizData = quarterQuizDocs[index].data()
+                            as Map<dynamic, dynamic>;
+                        String title = quizData['title'];
+                        return Container(
+                          color: CustomColors.softOrange,
+                          padding: EdgeInsets.all(4),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.4,
+                                child: interText(title,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    overflow: TextOverflow.ellipsis),
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.4,
+                                child:
+                                    _quizEntry(quarterQuizDocs[index], index),
+                              )
+                            ],
+                          ),
+                        );
+                      }),
+                )
+              : interText('NO AVAILABLE LESSONS', fontSize: 20)
         ],
       ),
     );
@@ -321,22 +497,25 @@ class _StudentSubjectMaterialsScreenState
     final quizData = quizDoc.data() as Map<dynamic, dynamic>;
     String title = quizData['title'];
 
-    return Container(
-      color: index % 2 == 0 ? Colors.grey : Colors.white,
-      padding: EdgeInsets.all(5),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.5,
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            interText(title,
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-                overflow: TextOverflow.ellipsis),
-          ]),
-        ),
-        _quizActionButton(quizDoc.id)
-      ]),
+    return all10Pix(
+      child: Container(
+        color: CustomColors.softOrange,
+        padding: EdgeInsets.all(5),
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.4,
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              interText(title,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  overflow: TextOverflow.ellipsis),
+            ]),
+          ),
+          SizedBox(child: _quizActionButton(quizDoc.id))
+        ]),
+      ),
     );
   }
 
@@ -352,12 +531,12 @@ class _StudentSubjectMaterialsScreenState
           return ovalButton('ANSWER\nQUIZ',
               onPress: () =>
                   NavigatorRoutes.answerQuiz(context, quizID: quizID),
-              backgroundColor: CustomColors.veryLightGrey);
+              backgroundColor: CustomColors.verySoftOrange);
         }
         return ovalButton('VIEW\nRESULTS',
             onPress: () => NavigatorRoutes.selectedQuizResult(context,
                 quizResultID: snapshot.data!.id),
-            backgroundColor: CustomColors.veryLightGrey);
+            backgroundColor: CustomColors.verySoftOrange);
       },
     );
   }

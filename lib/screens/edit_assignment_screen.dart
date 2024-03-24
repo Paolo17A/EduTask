@@ -26,7 +26,6 @@ class _EditAssignmentScreenState extends State<EditAssignmentScreen> {
   bool _isLoading = true;
   bool _isInitialized = false;
 
-  String assignmentType = '';
   final titleController = TextEditingController();
   final directionsController = TextEditingController();
   int selectedQuarter = 1;
@@ -46,7 +45,6 @@ class _EditAssignmentScreenState extends State<EditAssignmentScreen> {
           .doc(widget.assignmentID)
           .get();
       final assignmentData = assignment.data() as Map<dynamic, dynamic>;
-      assignmentType = assignmentData['assignmentType'];
       titleController.text = assignmentData['title'];
       directionsController.text = assignmentData['directions'];
       deadline = (assignmentData['deadline'] as Timestamp).toDate();
@@ -69,7 +67,6 @@ class _EditAssignmentScreenState extends State<EditAssignmentScreen> {
     final navigator = Navigator.of(context);
     if (titleController.text.isEmpty ||
         directionsController.text.isEmpty ||
-        assignmentType.isEmpty ||
         deadline == null) {
       scaffoldMessenger.showSnackBar(
           const SnackBar(content: Text('Please fill up all provided fields.')));
@@ -85,7 +82,6 @@ class _EditAssignmentScreenState extends State<EditAssignmentScreen> {
           .update({
         'title': titleController.text,
         'directions': directionsController.text,
-        'assignmentType': assignmentType,
         'teacherID': FirebaseAuth.instance.currentUser!.uid,
         'deadline': deadline,
         'dateLastModified': DateTime.now(),
@@ -143,7 +139,6 @@ class _EditAssignmentScreenState extends State<EditAssignmentScreen> {
                 children: [
                   newAssignmentHeader(),
                   Gap(30),
-                  _assignmentType(),
                   _assignmentTitle(),
                   _assignmentDirections(),
                   _quarterDropdown(),
@@ -162,24 +157,6 @@ class _EditAssignmentScreenState extends State<EditAssignmentScreen> {
   Widget newAssignmentHeader() {
     return interText('NEW ASSIGNMENT',
         fontSize: 40, textAlign: TextAlign.center, color: Colors.black);
-  }
-
-  Widget _assignmentType() {
-    return vertical10horizontal4(Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        interText('Assignment Type', fontSize: 18),
-        Container(
-          decoration: BoxDecoration(
-              border: Border.all(), borderRadius: BorderRadius.circular(20)),
-          child: dropdownWidget(assignmentType, (newVal) {
-            setState(() {
-              assignmentType = newVal!;
-            });
-          }, ['ESSAY', 'FILE UPLOAD'], assignmentType, false),
-        ),
-      ],
-    ));
   }
 
   Widget _assignmentTitle() {

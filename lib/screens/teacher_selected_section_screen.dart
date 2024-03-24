@@ -800,7 +800,7 @@ class _TeacherSelectedSectionScreenState
                     _quarter4Assignments()
                   ],
                 )
-              : interText('NO ASSIGNED LESSONS', fontSize: 20)
+              : interText('NO ASSIGNED ASSIGNMENTS', fontSize: 20)
         ],
       ),
     );
@@ -988,7 +988,7 @@ class _TeacherSelectedSectionScreenState
                     _quarter4Quizzes()
                   ],
                 )
-              : interText('NO ASSIGNED LESSONS', fontSize: 20)
+              : interText('NO ASSIGNED QUIZZES', fontSize: 20)
         ],
       ),
     );

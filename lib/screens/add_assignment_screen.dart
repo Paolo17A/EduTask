@@ -38,7 +38,6 @@ class _AddAssignmentScreenState extends ConsumerState<AddAssignmentScreen> {
     final navigator = Navigator.of(context);
     if (titleController.text.isEmpty ||
         directionsController.text.isEmpty ||
-        assignmentType.isEmpty ||
         deadline == null) {
       scaffoldMessenger.showSnackBar(
           const SnackBar(content: Text('Please fill up all provided fields.')));

@@ -222,10 +222,10 @@ class _AnswerAssignmentScreenState extends State<AnswerAssignmentScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        interText('Type your essay here', fontWeight: FontWeight.bold),
+        interText('Type your answer here', fontWeight: FontWeight.bold),
         vertical10horizontal4(
           EduTaskTextField(
-              text: 'Type your essay here.',
+              text: 'Type your answer here.',
               controller: essayController,
               textInputType: TextInputType.multiline,
               displayPrefixIcon: null,
