@@ -462,29 +462,7 @@ class _StudentSubjectMaterialsScreenState
                       shrinkWrap: false,
                       itemCount: quarterQuizDocs.length,
                       itemBuilder: (context, index) {
-                        final quizData = quarterQuizDocs[index].data()
-                            as Map<dynamic, dynamic>;
-                        String title = quizData['title'];
-                        return Container(
-                          color: CustomColors.softOrange,
-                          padding: EdgeInsets.all(4),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width * 0.4,
-                                child: interText(title,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
-                                    overflow: TextOverflow.ellipsis),
-                              ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.4,
-                                child:
-                                    _quizEntry(quarterQuizDocs[index], index),
-                              )
-                            ],
-                          ),
-                        );
+                        return _quizEntry(quarterQuizDocs[index], index);
                       }),
                 )
               : interText('NO AVAILABLE LESSONS', fontSize: 20)
@@ -513,7 +491,7 @@ class _StudentSubjectMaterialsScreenState
                   overflow: TextOverflow.ellipsis),
             ]),
           ),
-          SizedBox(child: _quizActionButton(quizDoc.id))
+          _quizActionButton(quizDoc.id)
         ]),
       ),
     );

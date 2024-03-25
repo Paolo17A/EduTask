@@ -24,7 +24,7 @@ class _AnswerButtonState extends State<AnswerButton> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: widget.isSelected ? Colors.black : Colors.transparent,
+        color: widget.isSelected ? CustomColors.softOrange : Colors.transparent,
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -37,7 +37,7 @@ class _AnswerButtonState extends State<AnswerButton> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
                   foregroundColor: Colors.white,
-                  backgroundColor: CustomColors.veryDarkGrey),
+                  backgroundColor: CustomColors.softOrange),
               child: interText(widget.answer,
                   textAlign: TextAlign.center, fontWeight: FontWeight.bold)),
         ),
