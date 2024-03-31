@@ -126,15 +126,20 @@ class _SelectedQuizResultScreenState extends State<SelectedQuizResultScreen> {
                   '${index + 1}. ${(quizQuestions[index]['question'].toString())}';
 
               String yourAnswer = '';
-
+              String correctAnswer = '';
+              bool isCorrect = userAnswers[index].toString().toLowerCase() ==
+                  quizQuestions[index]['answer'].toString().toLowerCase();
               if (quizType == QuizTypes.multipleChoice) {
                 yourAnswer =
                     'Your Answer: ${userAnswers[index]}) ${quizQuestions[index]['options'][userAnswers[index]]}';
+                correctAnswer =
+                    'Correct Answer: ${quizQuestions[index]['answer']}) ${quizQuestions[index]['options'][quizQuestions[index]['answer']]}';
               } else {
                 yourAnswer = 'Your Answer: ${userAnswers[index]}';
+                correctAnswer =
+                    'Correct Answer: ${quizQuestions[index]['answer']}';
               }
-              /*String correctAnswer =
-                  'Correct Answer: ${quizQuestions[index]['answer']}) ${quizQuestions[index]['options'][quizQuestions[index]['answer']]}';*/
+
               return vertical10horizontal4(
                 Container(
                   decoration: BoxDecoration(
@@ -146,8 +151,25 @@ class _SelectedQuizResultScreenState extends State<SelectedQuizResultScreen> {
                     children: [
                       interText(formattedQuestion),
                       Gap(7),
-                      interText(yourAnswer),
-                      //interText(correctAnswer)
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(5)),
+                        padding: EdgeInsets.all(4),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            interText(yourAnswer,
+                                color: isCorrect ? Colors.green : Colors.red,
+                                fontWeight: FontWeight.bold),
+                            if (!isCorrect)
+                              interText(correctAnswer,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green)
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
